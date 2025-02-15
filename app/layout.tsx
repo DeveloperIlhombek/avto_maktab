@@ -27,7 +27,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
 	return (
 		<html lang='en' suppressHydrationWarning>
-			<body className={` ${roboto.className} antialiased`}>
+			<body className={` ${roboto.variable} ${inter.variable} antialiased`}>
 				<ThemeProvider
 					attribute='class'
 					defaultTheme='system'
