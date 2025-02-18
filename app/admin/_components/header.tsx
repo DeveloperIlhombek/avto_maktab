@@ -3,6 +3,7 @@
 import { Bell, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { ModeToggle } from '@/components/shared/mode-toggle'
 
 export function Header() {
 	return (
@@ -16,9 +17,9 @@ export function Header() {
 							<Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
 							<Input placeholder='Qidirish...' className='pl-8' />
 						</div>
-
-						<Button size='icon' variant='ghost'>
-							<Bell className='h-5 w-5' />
+						<ModeToggle />
+						<Button size='icon' variant='destructive'>
+							Til
 						</Button>
 
 						<div className='flex items-center space-x-4'>
