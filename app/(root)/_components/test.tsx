@@ -10,16 +10,17 @@ import {
 	ChevronRight,
 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const testInfo = [
 	{
 		icon: ClipboardCheck,
-		title: '600 ta test savoli',
+		title: '1000 ta test savoli',
 		description: "Barcha toifalar bo'yicha test savollari bazasi",
 	},
 	{
 		icon: Timer,
-		title: '30 daqiqa',
+		title: '25 daqiqa',
 		description: 'Test topshirish uchun ajratilgan vaqt',
 	},
 	{
@@ -100,10 +101,15 @@ export function Test() {
 						<div className='pt-4'>
 							<Button
 								size='lg'
-								className='text-lg px-8 bg-primary hover:bg-primary/90'
+								className=' text-lg px-8 bg-primary hover:bg-primary/90'
 							>
-								Testni boshlash
-								<ChevronRight className='ml-2 h-5 w-5' />
+								<Link
+									href={'/test'}
+									className='flex items-center justify-center '
+								>
+									Testni boshlash
+									<ChevronRight className='ml-2 h-5 w-5' />
+								</Link>
 							</Button>
 						</div>
 					</motion.div>

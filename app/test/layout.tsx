@@ -1,6 +1,5 @@
 import React from 'react'
-import Navbar from '../../components/shared/navbar'
-import Footer from '@/components/shared/footer'
+import NavbarTest from './_components/navbar-test'
 
 interface Props {
 	children: React.ReactNode
@@ -9,11 +8,10 @@ interface Props {
 function Layout({ children }: Props) {
 	return (
 		<>
-			<div>
-				<Navbar />
+			<div className='container'>
+				<NavbarTest />
 				<main>{children}</main>
 			</div>
-			<Footer />
 		</>
 	)
 }

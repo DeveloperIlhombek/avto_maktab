@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Page() {
-	return <div>Instructor Page</div>
+	return <div>Page Student id 123</div>
 }
 
 export default Page
