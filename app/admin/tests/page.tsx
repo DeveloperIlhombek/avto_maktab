@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
 	Card,
 	CardContent,
@@ -20,15 +19,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import {
-	Search,
-	Plus,
-	Filter,
-	Download,
-	Pencil,
-	Trash2,
-	Eye,
-} from 'lucide-react'
+import { Search, Plus, Pencil, Trash2, Eye } from 'lucide-react'
 
 // Mock data for questions
 const questions = [
@@ -48,9 +39,6 @@ const questions = [
 		media: { exist: true, name: '1' },
 		description:
 			"YHQ 1-ilovasi 3-bo'limi 2-xatboshiga asosan, qoidalarning 174-bandiga ko'ra «Nogiron» taniqlik belgisi o'rnatilgan avtomobil va motokolyaskalarni boshqarayotgan nogiron haydovchilar 3.2, 3.3 va 3.28 belgilari talablaridan chetga chiqishlari mumkin. 7.18 qo'shimcha belgisi bo'lganda 3.27 belgisining ta'sir oralig'ida to'xtashga ruxsat etiladi.",
-		category: 'B',
-		createdAt: '2024-03-15',
-		status: 'Faol',
 	},
 	// Add more mock questions as needed
 ]
@@ -58,21 +46,8 @@ const questions = [
 export default function QuestionsPage() {
 	const [searchTerm, setSearchTerm] = useState('')
 
-	const getStatusColor = (status: string) => {
-		switch (status.toLowerCase()) {
-			case 'faol':
-				return 'bg-green-500/10 text-green-500 hover:bg-green-500/20'
-			case 'nofaol':
-				return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'
-			default:
-				return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20'
-		}
-	}
-
-	const filteredQuestions = questions.filter(
-		question =>
-			question.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			question.category.toLowerCase().includes(searchTerm.toLowerCase())
+	const filteredQuestions = questions.filter(question =>
+		question.question.toLowerCase().includes(searchTerm.toLowerCase())
 	)
 
 	return (
@@ -103,14 +78,6 @@ export default function QuestionsPage() {
 							onChange={e => setSearchTerm(e.target.value)}
 						/>
 					</div>
-					<Button variant='outline' className='gap-2'>
-						<Filter className='h-4 w-4' />
-						Filter
-					</Button>
-					<Button variant='outline' className='gap-2'>
-						<Download className='h-4 w-4' />
-						Export
-					</Button>
 				</div>
 			</div>
 
@@ -126,9 +93,7 @@ export default function QuestionsPage() {
 						<TableHeader>
 							<TableRow>
 								<TableHead className='w-[400px]'>Savol</TableHead>
-								<TableHead>Toifa</TableHead>
-								<TableHead>Yaratilgan sana</TableHead>
-								<TableHead>Status</TableHead>
+
 								<TableHead className='text-right'>Amallar</TableHead>
 							</TableRow>
 						</TableHeader>
@@ -138,17 +103,9 @@ export default function QuestionsPage() {
 									<TableCell className='font-medium'>
 										{question.question}
 									</TableCell>
-									<TableCell>
-										<Badge variant='secondary'>{question.category}</Badge>
-									</TableCell>
-									<TableCell>{question.createdAt}</TableCell>
-									<TableCell>
-										<Badge className={getStatusColor(question.status)}>
-											{question.status}
-										</Badge>
-									</TableCell>
+
 									<TableCell className='text-right'>
-										<div className='flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity'>
+										<div className='flex justify-end gap-2 opacity-100 '>
 											<Link href={`/admin/tests/${question.id}`}>
 												<Button variant='ghost' size='icon' className='h-8 w-8'>
 													<Eye className='h-4 w-4' />

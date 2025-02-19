@@ -26,7 +26,12 @@ function Navbar() {
 						<ModeToggle />
 					</div>
 					<div>Til tanlash</div>
-					<Button variant={'outline'}>Tizimga kirish</Button>
+					<Button variant={'outline'}>
+						<Link href={'/admin'}>Admin</Link>
+					</Button>
+					<Button variant={'outline'}>
+						<Link href={'/student/123'}>Student</Link>
+					</Button>
 				</div>
 			</div>
 		</div>

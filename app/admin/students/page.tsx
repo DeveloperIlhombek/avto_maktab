@@ -11,7 +11,6 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
 	Card,
@@ -77,10 +76,11 @@ export default function StudentsPage() {
 						Barcha o&apos;quvchilar ro&apos;yxati va ma&apos;lumotlari
 					</p>
 				</div>
-				<Button className='gap-2'>
+
+				<Link href={'/admin/students/create-student'}>
 					<Plus className='h-4 w-4' />
 					Yangi o&apos;quvchi
-				</Button>
+				</Link>
 			</div>
 
 			<div className='flex items-center justify-between gap-4'>

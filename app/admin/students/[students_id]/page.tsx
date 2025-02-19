@@ -152,9 +152,7 @@ export default function StudentDetails() {
 											Ro&apos;yxatdan o&apos;tgan sana
 										</p>
 										<p className='font-medium'>
-											{new Date(
-												studentData.registrationDate
-											).toLocaleDateString('en-US')}
+											{studentData.registrationDate}
 										</p>
 									</div>
 								</CardContent>
