@@ -1,5 +1,5 @@
+import { getAllTests } from '@/lib/api'
 import { useState, useEffect } from 'react'
-import { getAllTests } from '@/app.ts'
 
 export default function TestPage() {
 	const [tests, setTests] = useState([])
@@ -20,7 +20,7 @@ export default function TestPage() {
 			<h1>Testlar</h1>
 			<ul>
 				{tests.map((test, index) => (
-					<li key={index}>{test.name}</li> // Test ma'lumotlarini ko'rsatish
+					<li key={index}>{test}</li> // Test ma'lumotlarini ko'rsatish
 				))}
 			</ul>
 		</div>
