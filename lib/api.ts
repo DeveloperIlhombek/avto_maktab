@@ -1,10 +1,9 @@
-//import axios from './../node_modules/axios/index.d'
 const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
-export const getUserById = async () => {
+export const getAllTests = async () => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/User/GetById?userId=08dd50b3-6767-48d7-87e9-5fa06850ab7a`,
+			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=uz&pageSize=10&pageNumber=0`,
 			{
 				method: 'GET',
 				headers: {
@@ -14,13 +13,16 @@ export const getUserById = async () => {
 		)
 
 		if (!response.ok) {
-			throw new Error(`API error: ${response.status}`)
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
-		//console.log(JSON.parse(JSON.stringify(response)))
 
-		return await response.json()
+		const data = await response.json() // JSON ma'lumotni olish
+
+		console.log('Fetched Tests:', data.isSuccess) // Konsolga chiqarish
+
+		return data
 	} catch (error) {
-		console.error('Error fetching user:', error)
+		console.error('Error fetching tests:', error)
 		return null
 	}
 }
