@@ -383,6 +383,262 @@ export const testData = {
 			explanation:
 				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
 		},
+		{
+			id: 21,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 22,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 23,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 24,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 25,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 26,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 27,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 28,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 29,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 30,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 31,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 32,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 33,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 34,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 35,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
+		{
+			id: 36,
+			question:
+				"Haydovchi transport vositasini to'xtatishi shart bo'lgan holatlar?",
+			image:
+				'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop',
+			options: [
+				'Svetofor taqiqlovchi signalida',
+				'STOP belgisi oldida',
+				"Piyodalar o'tish chizig'i oldida",
+				"Barcha javoblar to'g'ri",
+			],
+			correctAnswer: 3,
+			explanation:
+				"Haydovchi transport vositasini svetofor taqiqlovchi signalida, STOP belgisi oldida va piyodalar o'tish chizig'i oldida to'xtatishi shart.",
+		},
 	],
-	duration: 2 * 60, // 25 minutes in seconds
+	duration: 60, // bitta savolga 60 sekund
 }

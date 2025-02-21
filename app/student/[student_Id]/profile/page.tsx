@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { getUserById } from '@/lib/api'
 
 // Mock student data
 const studentData = {
@@ -32,6 +33,18 @@ const studentData = {
 
 export default function StudentProfile() {
 	const [isEditing, setIsEditing] = useState(false)
+	// const [user, setUser] = useState(null)
+
+	// useEffect(() => {
+	// 	const fetchUser = async () => {
+	// 		const data = await getUserById()
+	// 		if (data) {
+	// 			setUser(data)
+	// 		}
+	// 	}
+
+	// 	fetchUser()
+	// }, [])
 
 	return (
 		<div className='space-y-6'>
@@ -72,7 +85,7 @@ export default function StudentProfile() {
 									</AvatarFallback>
 								</Avatar>
 								<div>
-									<CardTitle>{studentData.name}</CardTitle>
+									<CardTitle>{}</CardTitle>
 									<CardDescription>ID: {studentData.id}</CardDescription>
 									<Badge variant='secondary' className='mt-1'>
 										{studentData.category} toifa
@@ -204,3 +217,20 @@ export default function StudentProfile() {
 		</div>
 	)
 }
+
+// Response body
+// Download
+// {
+//   "isSuccess": true,
+//   "result": {
+//     "id": "08dd50b3-6767-48d7-87e9-5fa06850ab7a",
+//     "name": "Ilhom",
+//     "surname": "Toshqulov",
+//     "username": "talaba",
+//     "email": "ilxomdeveloper@gmail.com",
+//     "phone": "+998771232115",
+//     "role": "student"
+//   },
+//   "statusCode": 200,
+//   "errorMessages": []
+// }

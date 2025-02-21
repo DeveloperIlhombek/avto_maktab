@@ -88,3 +88,23 @@ body {
 .animate-pulse {
 	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* ${
+	answer !== null
+		? answer === testData.questions[index].correctAnswer
+			? 'bg-green-500/10 hover:bg-green-500/20 text-green-500'
+			: 'bg-red-500/10 hover:bg-red-500/20 text-red-500'
+		: ''
+} */
+
+/* const getAnswerStyle = (answerIndex: number) => {
+	 	const correctAnswer = testData.questions[currentQuestion].correctAnswer
+	 	const selectedAnswer = answers[currentQuestion]
+
+	 	if (selectedAnswer === null) return ''
+	 	if (answerIndex === correctAnswer && selectedAnswer !== correctAnswer)
+	 		return 'bg-yellow-500/20 border-yellow-500'
+	 	if (answerIndex === correctAnswer) return 'bg-green-500/20 border-green-500'
+	 	if (answerIndex === selectedAnswer) return 'bg-red-500/20 border-red-500'
+	 	return ''
+	 } */

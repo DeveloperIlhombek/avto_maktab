@@ -19,80 +19,149 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog'
-import { ChevronLeft, ChevronRight, CheckCircle, XCircle } from 'lucide-react'
+import {
+	ChevronLeft,
+	ChevronRight,
+	CheckCircle,
+	XCircle,
+	ArrowLeft,
+	ArrowRight,
+} from 'lucide-react'
 import { testData } from '@/constanta'
+import { StartDialog } from './_components/start-dialog'
+import { Timer } from './_components/timer'
+import { ResultDialog } from './_components/result-dialog'
 
-// Mock test data
+const SECONDS_PER_QUESTION = 5
+const QUESTIONS_PER_PAGE = 30
 
 export default function TestPage() {
 	const [currentQuestion, setCurrentQuestion] = useState(0)
-	//const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-	const [timeLeft, setTimeLeft] = useState(testData.duration)
-	const [answers, setAnswers] = useState<(number | null)[]>(
-		new Array(testData.questions.length).fill(null)
-	)
+	const [currentPage, setCurrentPage] = useState(0)
+	const [isStartDialogOpen, setIsStartDialogOpen] = useState(true)
+	const [isTestCompleted, setIsTestCompleted] = useState(false)
+	const [isTestStarted, setIsTestStarted] = useState(false)
+	const [isResultDialogOpen, setIsResultDialogOpen] = useState(false)
+	const [selectedQuestions, setSelectedQuestions] = useState(testData.questions)
+	const [answers, setAnswers] = useState<(number | null)[]>([])
+	const [timeLeft, setTimeLeft] = useState(0)
+	const [testResults, setTestResults] = useState({
+		correctAnswers: 0,
+		totalQuestions: 0,
+		percentage: 0,
+	})
 
 	useEffect(() => {
-		const timer = setInterval(() => {
-			setTimeLeft(prev => {
-				if (prev <= 0) {
-					clearInterval(timer)
-					return 0
-				}
-				return prev - 1
-			})
-		}, 1000)
+		if (isTestStarted && timeLeft > 0) {
+			const timer = setInterval(() => {
+				setTimeLeft(prev => {
+					if (prev <= 1) {
+						// Changed to 1 to ensure handleTestComplete is called
+						clearInterval(timer)
+						handleTestComplete() // Automatically show results when time runs out
+						return 0
+					}
+					return prev - 1
+				})
+			}, 1000)
 
-		return () => clearInterval(timer)
-	}, [])
+			return () => clearInterval(timer)
+		}
+	}, [isTestStarted, timeLeft])
 
-	const formatTime = (seconds: number) => {
-		const minutes = Math.floor(seconds / 60)
-		const remainingSeconds = seconds % 60
-		return `${minutes.toString().padStart(2, '0')}:${remainingSeconds
-			.toString()
-			.padStart(2, '0')}`
+	useEffect(() => {
+		const newPage = Math.floor(currentQuestion / QUESTIONS_PER_PAGE)
+		if (newPage !== currentPage) {
+			setCurrentPage(newPage)
+		}
+	}, [currentQuestion])
+
+	const handleStartTest = (questionCount: number) => {
+		const shuffled = [...testData.questions].sort(() => 0.5 - Math.random())
+		const selected = shuffled.slice(0, Math.min(questionCount, shuffled.length))
+		setSelectedQuestions(selected)
+		setAnswers(new Array(selected.length).fill(null))
+		setTimeLeft(questionCount * SECONDS_PER_QUESTION)
+		setIsStartDialogOpen(false)
+		setIsTestStarted(true)
+		setIsTestCompleted(false)
+		setCurrentPage(0)
+		setCurrentQuestion(0)
+	}
+
+	const handleTestComplete = async () => {
+		if (isTestCompleted) return // Prevent multiple calls
+
+		const correctCount = answers.filter(
+			(answer, index) => answer === selectedQuestions[index].correctAnswer
+		).length
+
+		const results = {
+			correctAnswers: correctCount,
+			totalQuestions: answers.length,
+			percentage: (correctCount / answers.length) * 100,
+		}
+
+		setTestResults(results)
+		setIsTestCompleted(true)
+		setIsResultDialogOpen(true)
+		setTimeLeft(0) // Ensure timer shows 0
 	}
 
 	const handleAnswerSelect = (index: number) => {
-		//setSelectedAnswer(index)
+		if (isTestCompleted || answers[currentQuestion] !== null || timeLeft <= 0)
+			return
+
 		const newAnswers = [...answers]
 		newAnswers[currentQuestion] = index
 		setAnswers(newAnswers)
-
-		// Play sound effect
-		const audio = new Audio(
-			index === testData.questions[currentQuestion].correctAnswer
-				? '/correct.mp3'
-				: '/incorrect.mp3'
-		)
-		audio.play()
 	}
 
-	const progress = (timeLeft / testData.duration) * 100
-
-	const getTimerColor = () => {
-		if (timeLeft <= 10) return 'text-red-500'
-		if (timeLeft <= 60) return 'text-yellow-500'
-		return 'text-green-500'
+	if (!isTestStarted && isStartDialogOpen) {
+		return <StartDialog isOpen={isStartDialogOpen} onStart={handleStartTest} />
 	}
 
-	const getCircleColor = () => {
-		if (timeLeft <= 10) return 'stroke-red-500'
-		if (timeLeft <= 60) return 'stroke-yellow-500'
-		return 'stroke-green-500'
+	const currentQuestionData = selectedQuestions[currentQuestion]
+	if (!currentQuestionData) return <div>Savol topilmadi</div>
+
+	const resetTest = () => {
+		setCurrentQuestion(0)
+		setCurrentPage(0)
+		setIsTestStarted(false)
+		setIsTestCompleted(false)
+		setIsResultDialogOpen(false)
+		setAnswers([])
+		setTestResults({ correctAnswers: 0, totalQuestions: 0, percentage: 0 })
+		setIsStartDialogOpen(true)
 	}
 
-	const getAnswerStyle = (answerIndex: number) => {
-		const correctAnswer = testData.questions[currentQuestion].correctAnswer
-		const selectedAnswer = answers[currentQuestion]
+	const totalPages = Math.ceil(selectedQuestions.length / QUESTIONS_PER_PAGE)
+	const startIndex = currentPage * QUESTIONS_PER_PAGE
+	const endIndex = Math.min(
+		startIndex + QUESTIONS_PER_PAGE,
+		selectedQuestions.length
+	)
+	const currentPageQuestions = selectedQuestions.slice(startIndex, endIndex)
 
-		if (selectedAnswer === null) return ''
-		if (answerIndex === correctAnswer && selectedAnswer !== correctAnswer)
-			return 'bg-yellow-500/20 border-yellow-500'
-		if (answerIndex === correctAnswer) return 'bg-green-500/20 border-green-500'
-		if (answerIndex === selectedAnswer) return 'bg-red-500/20 border-red-500'
-		return ''
+	const handlePageChange = (newPage: number) => {
+		if (newPage >= 0 && newPage < totalPages) {
+			setCurrentPage(newPage)
+			setCurrentQuestion(newPage * QUESTIONS_PER_PAGE)
+		}
+	}
+
+	const handleNextQuestion = () => {
+		const nextQuestion = currentQuestion + 1
+		if (nextQuestion < selectedQuestions.length) {
+			setCurrentQuestion(nextQuestion)
+		}
+	}
+
+	const handlePrevQuestion = () => {
+		const prevQuestion = currentQuestion - 1
+		if (prevQuestion >= 0) {
+			setCurrentQuestion(prevQuestion)
+		}
 	}
 
 	return (
@@ -109,7 +178,7 @@ export default function TestPage() {
 					<motion.div
 						initial={{ x: '0%' }}
 						animate={{ x: '100%' }}
-						transition={{ duration: testData.duration, ease: 'linear' }}
+						transition={{ duration: timeLeft, ease: 'linear' }}
 						className='w-full'
 					>
 						<Image src='/car.png' alt='Car' width={80} height={40} />
@@ -118,58 +187,73 @@ export default function TestPage() {
 
 				{/* Question Navigation */}
 				<div className='flex items-center justify-between'>
-					<div className='relative w-20 h-20'>
-						<svg className='w-full h-full' viewBox='0 0 100 100'>
-							<circle
-								className='text-muted stroke-current'
-								strokeWidth='8'
-								fill='none'
-								r='44'
-								cx='50'
-								cy='50'
-							/>
-							<circle
-								className={`${getCircleColor()} transition-colors duration-300`}
-								strokeWidth='8'
-								fill='none'
-								r='44'
-								cx='50'
-								cy='50'
-								strokeDasharray={`${(progress * 276.32) / 100} 276.32`}
-								transform='rotate(-90 50 50)'
-							/>
-						</svg>
-						<div className='absolute inset-0 flex items-center justify-center'>
-							<span
-								className={`text-2xl font-bold ${getTimerColor()} transition-colors duration-300`}
-							>
-								{formatTime(timeLeft)}
-							</span>
-						</div>
-					</div>
+					<Timer
+						timeLeft={timeLeft}
+						duration={selectedQuestions.length * SECONDS_PER_QUESTION}
+						questionCount={selectedQuestions.length}
+					/>
 
 					<div className='flex-1 px-8'>
-						<div className='flex items-center justify-center gap-2 flex-wrap'>
-							{answers.map((answer, index) => (
-								<Button
-									key={index}
-									variant={currentQuestion === index ? 'default' : 'outline'}
-									className={`w-10 h-10 ${
-										answer !== null
-											? answer === testData.questions[index].correctAnswer
-												? 'bg-green-500/10 hover:bg-green-500/20 text-green-500'
-												: 'bg-red-500/10 hover:bg-red-500/20 text-red-500'
-											: ''
-									}`}
-									onClick={() => setCurrentQuestion(index)}
-								>
-									{index + 1}
-								</Button>
-							))}
+						<div className='flex items-center justify-center gap-4'>
+							<Button
+								variant='outline'
+								onClick={() => handlePageChange(currentPage - 1)}
+								disabled={currentPage === 0}
+								className='hidden md:flex'
+							>
+								<ArrowLeft className='h-4 w-4 mr-2' />
+								Avvalgi {QUESTIONS_PER_PAGE}
+							</Button>
+
+							<div className='flex items-center gap-2 flex-wrap max-w-3xl'>
+								{currentPageQuestions.map((_, idx) => {
+									const questionIndex = startIndex + idx
+									const answer = answers[questionIndex]
+									const isCorrect =
+										answer === selectedQuestions[questionIndex].correctAnswer
+
+									return (
+										<Button
+											key={idx}
+											variant={
+												currentQuestion === questionIndex
+													? 'default'
+													: 'outline'
+											}
+											className={`w-10 h-10 ${
+												isTestCompleted && answer !== null
+													? isCorrect
+														? 'bg-green-500/10 hover:bg-green-500/20 text-green-500'
+														: 'bg-red-500/10 hover:bg-red-500/20 text-red-500'
+													: ''
+											}`}
+											onClick={() => setCurrentQuestion(questionIndex)}
+										>
+											{questionIndex + 1}
+										</Button>
+									)
+								})}
+							</div>
+
+							<Button
+								variant='outline'
+								onClick={() => handlePageChange(currentPage + 1)}
+								disabled={currentPage >= totalPages - 1}
+								className='hidden md:flex'
+							>
+								Keyingi {QUESTIONS_PER_PAGE}
+								<ArrowRight className='h-4 w-4 ml-2' />
+							</Button>
 						</div>
 					</div>
 
-					<Button variant='destructive'>Testni yakunlash</Button>
+					{isTestCompleted ? (
+						<Button onClick={resetTest}>Testni boshlash</Button>
+					) : (
+						<Button variant='destructive' onClick={handleTestComplete}>
+							Testni yakunlash
+						</Button>
+					)}
 				</div>
 
 				{/* Question Card */}
@@ -177,46 +261,52 @@ export default function TestPage() {
 					<CardHeader>
 						<div className='flex items-center justify-between'>
 							<CardTitle className='text-2xl'>
-								Savol {currentQuestion + 1} / {testData.questions.length}
+								Savol {currentQuestion + 1} / {selectedQuestions.length}
 							</CardTitle>
-							<Dialog>
-								<DialogTrigger asChild>
-									<Button variant='ghost' size='icon' className='flex flex-col'>
-										<Image
-											src={'/bulb.png'}
-											alt='bulb '
-											width={40}
-											height={40}
-										/>
-										Izoh
-									</Button>
-								</DialogTrigger>
-								<DialogContent>
-									<DialogHeader>
-										<DialogTitle className='text-2xl'>Izoh:</DialogTitle>
-										<DialogDescription className='flex item-center justify-center gap-4'>
+							{isTestCompleted && (
+								<Dialog>
+									<DialogTrigger asChild>
+										<Button
+											variant='ghost'
+											size='icon'
+											className='flex flex-col'
+										>
 											<Image
-												src={'/teacher.jpg'}
-												alt='teacher'
-												width={200}
-												height={200}
+												src='/bulb.png'
+												alt='bulb'
+												width={40}
+												height={40}
 											/>
-											<span className='font-bold'>
-												{testData.questions[currentQuestion].explanation}
-											</span>
-										</DialogDescription>
-									</DialogHeader>
-								</DialogContent>
-							</Dialog>
+											Izoh
+										</Button>
+									</DialogTrigger>
+									<DialogContent>
+										<DialogHeader>
+											<DialogTitle className='text-2xl'>Izoh:</DialogTitle>
+											<DialogDescription className='flex items-center justify-center gap-4'>
+												<Image
+													src='/teacher.jpg'
+													alt='teacher'
+													width={200}
+													height={200}
+												/>
+												<span className='font-bold'>
+													{currentQuestionData.explanation}
+												</span>
+											</DialogDescription>
+										</DialogHeader>
+									</DialogContent>
+								</Dialog>
+							)}
 						</div>
 						<CardDescription className='text-lg'>
-							{testData.questions[currentQuestion].question}
+							{currentQuestionData.question}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='grid md:grid-cols-2 gap-8'>
 						<div className='relative rounded-lg overflow-hidden'>
 							<Image
-								src={testData.questions[currentQuestion].image}
+								src={currentQuestionData.image}
 								alt='question'
 								className='w-full h-full object-cover'
 								width={300}
@@ -225,29 +315,43 @@ export default function TestPage() {
 						</div>
 
 						<div className='space-y-4'>
-							{testData.questions[currentQuestion].options.map(
-								(option, index) => (
+							{currentQuestionData.options.map((option, index) => {
+								const isSelected = answers[currentQuestion] === index
+								const isCorrect = index === currentQuestionData.correctAnswer
+
+								return (
 									<motion.div
 										key={index}
-										whileHover={{ scale: 1.02 }}
-										whileTap={{ scale: 0.98 }}
+										whileHover={{
+											scale: isTestCompleted || timeLeft <= 0 ? 1 : 1.02,
+										}}
+										whileTap={{
+											scale: isTestCompleted || timeLeft <= 0 ? 1 : 0.98,
+										}}
 									>
 										<Button
 											variant='outline'
-											className={`w-full justify-start text-left p-4 h-auto ${getAnswerStyle(
-												index
-											)}`}
+											className={`w-full justify-start text-left p-4 h-auto ${
+												isTestCompleted && isSelected
+													? isCorrect
+														? 'border-green-500 bg-green-500/10'
+														: 'border-red-500 bg-red-500/10'
+													: ''
+											}`}
 											onClick={() => handleAnswerSelect(index)}
-											disabled={answers[currentQuestion] !== null}
+											disabled={
+												isTestCompleted ||
+												answers[currentQuestion] !== null ||
+												timeLeft <= 0
+											}
 										>
-											{answers[currentQuestion] === index && (
+											{isTestCompleted && isSelected && (
 												<motion.div
 													initial={{ scale: 0 }}
 													animate={{ scale: 1 }}
 													className='mr-2'
 												>
-													{index ===
-													testData.questions[currentQuestion].correctAnswer ? (
+													{isCorrect ? (
 														<CheckCircle className='h-5 w-5 text-green-500' />
 													) : (
 														<XCircle className='h-5 w-5 text-red-500' />
@@ -258,7 +362,7 @@ export default function TestPage() {
 										</Button>
 									</motion.div>
 								)
-							)}
+							})}
 						</div>
 					</CardContent>
 				</Card>
@@ -267,25 +371,28 @@ export default function TestPage() {
 				<div className='flex justify-between'>
 					<Button
 						variant='outline'
-						onClick={() => setCurrentQuestion(prev => Math.max(0, prev - 1))}
+						onClick={handlePrevQuestion}
 						disabled={currentQuestion === 0}
 					>
 						<ChevronLeft className='mr-2 h-4 w-4' />
 						Oldingi savol
 					</Button>
 					<Button
-						onClick={() =>
-							setCurrentQuestion(prev =>
-								Math.min(testData.questions.length - 1, prev + 1)
-							)
-						}
-						disabled={currentQuestion === testData.questions.length - 1}
+						onClick={handleNextQuestion}
+						disabled={currentQuestion === selectedQuestions.length - 1}
 					>
 						Keyingi savol
 						<ChevronRight className='ml-2 h-4 w-4' />
 					</Button>
 				</div>
 			</div>
+
+			<ResultDialog
+				isOpen={isResultDialogOpen}
+				onClose={() => setIsResultDialogOpen(false)}
+				onRestart={resetTest}
+				results={testResults}
+			/>
 		</div>
 	)
 }
