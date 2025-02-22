@@ -5,7 +5,6 @@ import { Functions } from './_components/functions'
 import { Statistics } from './_components/statistics'
 import { Contact } from './_components/contact'
 import { Test } from './_components/test'
-import { getAllTests } from '@/lib/api'
 
 function Page() {
 	return (
@@ -16,7 +15,6 @@ function Page() {
 			<Statistics />
 			<Test />
 			<Contact />
-			{getAllTests.length}
 		</>
 	)
 }

@@ -36,8 +36,8 @@ const SECONDS_PER_QUESTION = 5
 const QUESTIONS_PER_PAGE = 30
 
 export default function TestPage() {
-	const [currentQuestion, setCurrentQuestion] = useState(0)
-	const [currentPage, setCurrentPage] = useState(0)
+	const [hozirgiSavolIndexi, sethozirgiSavolIndexi] = useState(0)
+	const [hozirgiSahifa, sethozirgiSahifa] = useState(0)
 	const [isStartDialogOpen, setIsStartDialogOpen] = useState(true)
 	const [isTestCompleted, setIsTestCompleted] = useState(false)
 	const [isTestStarted, setIsTestStarted] = useState(false)
@@ -70,11 +70,11 @@ export default function TestPage() {
 	}, [isTestStarted, timeLeft])
 
 	useEffect(() => {
-		const newPage = Math.floor(currentQuestion / QUESTIONS_PER_PAGE)
-		if (newPage !== currentPage) {
-			setCurrentPage(newPage)
+		const newPage = Math.floor(hozirgiSavolIndexi / QUESTIONS_PER_PAGE)
+		if (newPage !== hozirgiSahifa) {
+			sethozirgiSahifa(newPage)
 		}
-	}, [currentQuestion])
+	}, [hozirgiSavolIndexi])
 
 	const handleStartTest = (questionCount: number) => {
 		const shuffled = [...testData.questions].sort(() => 0.5 - Math.random())
@@ -85,8 +85,8 @@ export default function TestPage() {
 		setIsStartDialogOpen(false)
 		setIsTestStarted(true)
 		setIsTestCompleted(false)
-		setCurrentPage(0)
-		setCurrentQuestion(0)
+		sethozirgiSahifa(0)
+		sethozirgiSavolIndexi(0)
 	}
 
 	const handleTestComplete = async () => {
@@ -109,11 +109,15 @@ export default function TestPage() {
 	}
 
 	const handleAnswerSelect = (index: number) => {
-		if (isTestCompleted || answers[currentQuestion] !== null || timeLeft <= 0)
+		if (
+			isTestCompleted ||
+			answers[hozirgiSavolIndexi] !== null ||
+			timeLeft <= 0
+		)
 			return
 
 		const newAnswers = [...answers]
-		newAnswers[currentQuestion] = index
+		newAnswers[hozirgiSavolIndexi] = index
 		setAnswers(newAnswers)
 	}
 
@@ -121,12 +125,12 @@ export default function TestPage() {
 		return <StartDialog isOpen={isStartDialogOpen} onStart={handleStartTest} />
 	}
 
-	const currentQuestionData = selectedQuestions[currentQuestion]
+	const currentQuestionData = selectedQuestions[hozirgiSavolIndexi]
 	if (!currentQuestionData) return <div>Savol topilmadi</div>
 
 	const resetTest = () => {
-		setCurrentQuestion(0)
-		setCurrentPage(0)
+		sethozirgiSavolIndexi(0)
+		sethozirgiSahifa(0)
 		setIsTestStarted(false)
 		setIsTestCompleted(false)
 		setIsResultDialogOpen(false)
@@ -136,31 +140,31 @@ export default function TestPage() {
 	}
 
 	const totalPages = Math.ceil(selectedQuestions.length / QUESTIONS_PER_PAGE)
-	const startIndex = currentPage * QUESTIONS_PER_PAGE
+	const startIndex = hozirgiSahifa * QUESTIONS_PER_PAGE
 	const endIndex = Math.min(
 		startIndex + QUESTIONS_PER_PAGE,
 		selectedQuestions.length
 	)
-	const currentPageQuestions = selectedQuestions.slice(startIndex, endIndex)
+	const hozirgiSahifaQuestions = selectedQuestions.slice(startIndex, endIndex)
 
 	const handlePageChange = (newPage: number) => {
 		if (newPage >= 0 && newPage < totalPages) {
-			setCurrentPage(newPage)
-			setCurrentQuestion(newPage * QUESTIONS_PER_PAGE)
+			sethozirgiSahifa(newPage)
+			sethozirgiSavolIndexi(newPage * QUESTIONS_PER_PAGE)
 		}
 	}
 
 	const handleNextQuestion = () => {
-		const nextQuestion = currentQuestion + 1
+		const nextQuestion = hozirgiSavolIndexi + 1
 		if (nextQuestion < selectedQuestions.length) {
-			setCurrentQuestion(nextQuestion)
+			sethozirgiSavolIndexi(nextQuestion)
 		}
 	}
 
 	const handlePrevQuestion = () => {
-		const prevQuestion = currentQuestion - 1
+		const prevQuestion = hozirgiSavolIndexi - 1
 		if (prevQuestion >= 0) {
-			setCurrentQuestion(prevQuestion)
+			sethozirgiSavolIndexi(prevQuestion)
 		}
 	}
 
@@ -197,8 +201,8 @@ export default function TestPage() {
 						<div className='flex items-center justify-center gap-4'>
 							<Button
 								variant='outline'
-								onClick={() => handlePageChange(currentPage - 1)}
-								disabled={currentPage === 0}
+								onClick={() => handlePageChange(hozirgiSahifa - 1)}
+								disabled={hozirgiSahifa === 0}
 								className='hidden md:flex'
 							>
 								<ArrowLeft className='h-4 w-4 mr-2' />
@@ -206,7 +210,7 @@ export default function TestPage() {
 							</Button>
 
 							<div className='flex items-center gap-2 flex-wrap max-w-3xl'>
-								{currentPageQuestions.map((_, idx) => {
+								{hozirgiSahifaQuestions.map((_, idx) => {
 									const questionIndex = startIndex + idx
 									const answer = answers[questionIndex]
 									const isCorrect =
@@ -216,7 +220,7 @@ export default function TestPage() {
 										<Button
 											key={idx}
 											variant={
-												currentQuestion === questionIndex
+												hozirgiSavolIndexi === questionIndex
 													? 'default'
 													: 'outline'
 											}
@@ -227,7 +231,7 @@ export default function TestPage() {
 														: 'bg-red-500/10 hover:bg-red-500/20 text-red-500'
 													: ''
 											}`}
-											onClick={() => setCurrentQuestion(questionIndex)}
+											onClick={() => sethozirgiSavolIndexi(questionIndex)}
 										>
 											{questionIndex + 1}
 										</Button>
@@ -237,8 +241,8 @@ export default function TestPage() {
 
 							<Button
 								variant='outline'
-								onClick={() => handlePageChange(currentPage + 1)}
-								disabled={currentPage >= totalPages - 1}
+								onClick={() => handlePageChange(hozirgiSahifa + 1)}
+								disabled={hozirgiSahifa >= totalPages - 1}
 								className='hidden md:flex'
 							>
 								Keyingi {QUESTIONS_PER_PAGE}
@@ -261,7 +265,7 @@ export default function TestPage() {
 					<CardHeader>
 						<div className='flex items-center justify-between'>
 							<CardTitle className='text-2xl'>
-								Savol {currentQuestion + 1} / {selectedQuestions.length}
+								Savol {hozirgiSavolIndexi + 1} / {selectedQuestions.length}
 							</CardTitle>
 							{isTestCompleted && (
 								<Dialog>
@@ -316,7 +320,7 @@ export default function TestPage() {
 
 						<div className='space-y-4'>
 							{currentQuestionData.options.map((option, index) => {
-								const isSelected = answers[currentQuestion] === index
+								const isSelected = answers[hozirgiSavolIndexi] === index
 								const isCorrect = index === currentQuestionData.correctAnswer
 
 								return (
@@ -341,7 +345,7 @@ export default function TestPage() {
 											onClick={() => handleAnswerSelect(index)}
 											disabled={
 												isTestCompleted ||
-												answers[currentQuestion] !== null ||
+												answers[hozirgiSavolIndexi] !== null ||
 												timeLeft <= 0
 											}
 										>
@@ -372,14 +376,14 @@ export default function TestPage() {
 					<Button
 						variant='outline'
 						onClick={handlePrevQuestion}
-						disabled={currentQuestion === 0}
+						disabled={hozirgiSavolIndexi === 0}
 					>
 						<ChevronLeft className='mr-2 h-4 w-4' />
 						Oldingi savol
 					</Button>
 					<Button
 						onClick={handleNextQuestion}
-						disabled={currentQuestion === selectedQuestions.length - 1}
+						disabled={hozirgiSavolIndexi === selectedQuestions.length - 1}
 					>
 						Keyingi savol
 						<ChevronRight className='ml-2 h-4 w-4' />
