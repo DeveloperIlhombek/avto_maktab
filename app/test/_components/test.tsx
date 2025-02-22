@@ -31,7 +31,7 @@ import { StartDialog } from './start-dialog'
 import { Timer } from './timer'
 import { ResultDialog } from './result-dialog'
 
-const SECONDS_PER_QUESTION = 75
+const SECONDS_PER_QUESTION = 5
 const QUESTIONS_PER_PAGE = 30
 
 interface ITestAnswer {
@@ -66,11 +66,11 @@ const getImageUrl = (mediaUrl: string | null) => {
 	if (!mediaUrl) return '/testbox.svg'
 
 	if (!mediaUrl.includes('\\')) {
-		return `https://9284dgg8-5000.euw.devtunnels.ms/Files/${mediaUrl}`
+		return `http://213.230.109.74:8080/${mediaUrl}`
 	}
 
 	const filename = mediaUrl.split('\\').pop()
-	return `https://9284dgg8-5000.euw.devtunnels.ms/Files/${filename}`
+	return `http://213.230.109.74:8080/${filename}`
 }
 
 export default function Test({ response }: Props) {

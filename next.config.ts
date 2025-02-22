@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
 				hostname: 'images.unsplash.com',
 			},
 			{
-				hostname: '9284dgg8-5000.euw.devtunnels.ms',
+				protocol: 'http',
+				hostname: '213.230.109.74',
+				port: '8080',
 			},
 		],
 	},
