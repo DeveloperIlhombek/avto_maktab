@@ -18,8 +18,6 @@ export const getAllTests = async () => {
 
 		const data = await response.json() // JSON ma'lumotni olish
 
-		console.log('Fetched Tests:', data.isSuccess) // Konsolga chiqarish
-
 		return data
 	} catch (error) {
 		console.error('Error fetching tests:', error)
