@@ -31,7 +31,7 @@ import { StartDialog } from './start-dialog'
 import { Timer } from './timer'
 import { ResultDialog } from './result-dialog'
 
-const SECONDS_PER_QUESTION = 5
+const SECONDS_PER_QUESTION = 25
 const QUESTIONS_PER_PAGE = 30
 
 interface ITestAnswer {
@@ -243,7 +243,7 @@ export default function Test({ response }: Props) {
 								Avvalgi {QUESTIONS_PER_PAGE}
 							</Button>
 
-							<div className='flex items-center gap-2 flex-wrap max-w-3xl'>
+							<div className='flex items-center gap-2 flex-wrap max-w-3xl justify-center'>
 								{currentPageQuestions.map((_, idx) => {
 									const questionIndex = startIndex + idx
 									const answer = answers[questionIndex]
@@ -344,11 +344,11 @@ export default function Test({ response }: Props) {
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='grid md:grid-cols-2 gap-8'>
-						<div className='relative rounded-lg overflow-hidden'>
+						<div className='relative rounded-lg overflow-hidden h-[300px]'>
 							<Image
 								src={getImageUrl(currentQuestionData.mediaUrl)}
 								alt='question'
-								className='w-full h-full object-cover'
+								className='w-full h-full object-contain bg-gray-100'
 								width={300}
 								height={300}
 							/>
@@ -369,37 +369,44 @@ export default function Test({ response }: Props) {
 											scale: isTestCompleted || timeLeft <= 0 ? 1 : 0.98,
 										}}
 									>
-										<Button
-											variant={isSelected ? 'default' : 'outline'}
-											className={`w-full justify-start text-left p-4 h-auto ${
+										<div
+											className={`relative rounded-lg border ${
+												isSelected ? 'border-primary' : 'border-input'
+											} ${
 												isTestCompleted && isSelected
 													? isCorrect
 														? 'border-green-500 bg-green-500/10'
 														: 'border-red-500 bg-red-500/10'
 													: ''
-											}`}
-											onClick={() => handleAnswerSelect(index)}
-											disabled={
-												isTestCompleted ||
-												answers[currentQuestion] !== null ||
-												timeLeft <= 0
-											}
+											} transition-colors hover:bg-accent hover:text-accent-foreground`}
 										>
-											{isTestCompleted && isSelected && (
-												<motion.div
-													initial={{ scale: 0 }}
-													animate={{ scale: 1 }}
-													className='mr-2'
-												>
-													{isCorrect ? (
-														<CheckCircle className='h-5 w-5 text-green-500' />
-													) : (
-														<XCircle className='h-5 w-5 text-red-500' />
-													)}
-												</motion.div>
-											)}
-											{answer.answerText}
-										</Button>
+											<button
+												className='w-full p-4 text-left flex items-start gap-3 disabled:cursor-not-allowed disabled:opacity-50'
+												onClick={() => handleAnswerSelect(index)}
+												disabled={
+													isTestCompleted ||
+													answers[currentQuestion] !== null ||
+													timeLeft <= 0
+												}
+											>
+												{isTestCompleted && isSelected && (
+													<motion.div
+														initial={{ scale: 0 }}
+														animate={{ scale: 1 }}
+														className='mt-1'
+													>
+														{isCorrect ? (
+															<CheckCircle className='h-5 w-5 text-green-500 flex-shrink-0' />
+														) : (
+															<XCircle className='h-5 w-5 text-red-500 flex-shrink-0' />
+														)}
+													</motion.div>
+												)}
+												<span className='text-base leading-relaxed break-words'>
+													{answer.answerText}
+												</span>
+											</button>
+										</div>
 									</motion.div>
 								)
 							})}
