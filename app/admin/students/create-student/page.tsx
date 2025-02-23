@@ -30,10 +30,19 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { ArrowLeft } from 'lucide-react'
+import { createUser } from '@/lib/api'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
 	name: z.string().min(3, {
 		message: "Ism kamida 3 ta belgidan iborat bo'lishi kerak",
+	}),
+	surname: z.string().min(3, {
+		message: "Familiya kamida 3 ta belgidan iborat bo'lishi kerak",
+	}),
+	username: z.string().min(3, {
+		message: "Foydalanuvchi nomi kamida 3 ta belgidan iborat bo'lishi kerak",
 	}),
 	email: z.string().email({
 		message: "Noto'g'ri email format",
@@ -41,44 +50,42 @@ const formSchema = z.object({
 	phone: z.string().min(9, {
 		message: "Telefon raqam kamida 9 ta raqamdan iborat bo'lishi kerak",
 	}),
-	address: z.string().min(5, {
-		message: "Manzil kamida 5 ta belgidan iborat bo'lishi kerak",
+	password: z.string().min(6, {
+		message: "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
 	}),
-	birthData: z.string(),
-	category: z.string({
-		required_error: 'Toifani tanlang',
+	role: z.string({
+		required_error: 'Rolni tanlang',
 	}),
-	instructor: z.string({
-		required_error: 'Instruktorni tanlang',
-	}),
-	totalPayment: z.number().min(0),
-	paidAmount: z.number().min(0),
 })
-
-const instructors = [
-	{ id: '1', name: 'Anvar Qodirov' },
-	{ id: '2', name: 'Botir Zokirov' },
-	{ id: '3', name: 'Sardor Mahmudov' },
-]
 
 export default function CreateStudent() {
 	const router = useRouter()
+	const [isLoading, setIsLoading] = useState(false)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			totalPayment: 0,
-			paidAmount: 0,
+			name: '',
+			surname: '',
+			username: '',
+			email: '',
+			phone: '',
+			password: '',
+			role: 'student',
 		},
 	})
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			// Add your submission logic here
-			console.log(values)
+			setIsLoading(true)
+			await createUser(values)
+			toast.success("O'quvchi muvaffaqiyatli qo'shildi")
 			router.push('/admin/students')
 		} catch (error) {
+			toast.error("O'quvchini qo'shishda xatolik yuz berdi")
 			console.error('Error creating student:', error)
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
@@ -113,9 +120,40 @@ export default function CreateStudent() {
 									name='name'
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>F.I.O</FormLabel>
+											<FormLabel>Ism</FormLabel>
 											<FormControl>
-												<Input placeholder="To'liq ismni kiriting" {...field} />
+												<Input placeholder='Ismni kiriting' {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name='surname'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Familiya</FormLabel>
+											<FormControl>
+												<Input placeholder='Familiyani kiriting' {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name='username'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Foydalanuvchi nomi</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Foydalanuvchi nomini kiriting'
+													{...field}
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -131,6 +169,7 @@ export default function CreateStudent() {
 											<FormControl>
 												<Input
 													placeholder='Email manzilini kiriting'
+													type='email'
 													{...field}
 												/>
 											</FormControl>
@@ -155,27 +194,14 @@ export default function CreateStudent() {
 
 								<FormField
 									control={form.control}
-									name='birthData'
+									name='password'
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Tug&apos;ilgan sana</FormLabel>
-											<FormControl>
-												<Input type='date' {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name='address'
-									render={({ field }) => (
-										<FormItem className='md:col-span-2'>
-											<FormLabel>Manzil</FormLabel>
+											<FormLabel>Parol</FormLabel>
 											<FormControl>
 												<Input
-													placeholder='Yashash manzilini kiriting'
+													type='password'
+													placeholder='Parolni kiriting'
 													{...field}
 												/>
 											</FormControl>
@@ -183,125 +209,28 @@ export default function CreateStudent() {
 										</FormItem>
 									)}
 								/>
-							</div>
-						</CardContent>
-					</Card>
 
-					<Card>
-						<CardHeader>
-							<CardTitle>O&apos;quv ma&apos;lumotlari</CardTitle>
-							<CardDescription>
-								O&apos;qish bilan bog&apos;liq ma&apos;lumotlarni kiriting
-							</CardDescription>
-						</CardHeader>
-						<CardContent className='space-y-6'>
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
 								<FormField
 									control={form.control}
-									name='category'
+									name='role'
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Toifa</FormLabel>
+											<FormLabel>Rol</FormLabel>
 											<Select
 												onValueChange={field.onChange}
 												defaultValue={field.value}
 											>
 												<FormControl>
 													<SelectTrigger>
-														<SelectValue placeholder='Toifani tanlang' />
+														<SelectValue placeholder='Rolni tanlang' />
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													<SelectItem value='A'>A toifa</SelectItem>
-													<SelectItem value='B'>B toifa</SelectItem>
-													<SelectItem value='C'>C toifa</SelectItem>
-													<SelectItem value='D'>D toifa</SelectItem>
-													<SelectItem value='BE'>BE toifa</SelectItem>
-													<SelectItem value='CE'>CE toifa</SelectItem>
-													<SelectItem value='DE'>DE toifa</SelectItem>
+													<SelectItem value='admin'>Admin</SelectItem>
+													<SelectItem value='teacher'>O'qituvchi</SelectItem>
+													<SelectItem value='student'>O'quvchi</SelectItem>
 												</SelectContent>
 											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name='instructor'
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Instruktor</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder='Instruktorni tanlang' />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{instructors.map(instructor => (
-														<SelectItem
-															key={instructor.id}
-															value={instructor.id}
-														>
-															{instructor.name}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle>To&apos;lov ma&apos;lumotlari</CardTitle>
-							<CardDescription>
-								O&apos;quv kursi uchun to&apos;lov ma&apos;lumotlarini kiriting
-							</CardDescription>
-						</CardHeader>
-						<CardContent className='space-y-6'>
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-								<FormField
-									control={form.control}
-									name='totalPayment'
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Umumiy to&apos;lov</FormLabel>
-											<FormControl>
-												<Input
-													type='number'
-													placeholder='0'
-													{...field}
-													onChange={e => field.onChange(Number(e.target.value))}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name='paidAmount'
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>To&apos;langan summa</FormLabel>
-											<FormControl>
-												<Input
-													type='number'
-													placeholder='0'
-													{...field}
-													onChange={e => field.onChange(Number(e.target.value))}
-												/>
-											</FormControl>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -314,7 +243,9 @@ export default function CreateStudent() {
 						<Link href='/admin/students'>
 							<Button variant='outline'>Bekor qilish</Button>
 						</Link>
-						<Button type='submit'>Saqlash</Button>
+						<Button type='submit' disabled={isLoading}>
+							{isLoading ? 'Saqlanmoqda...' : 'Saqlash'}
+						</Button>
 					</div>
 				</form>
 			</Form>

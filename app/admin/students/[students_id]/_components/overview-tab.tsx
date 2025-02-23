@@ -8,13 +8,6 @@ interface OverviewTabProps {
 	userId: string
 }
 
-// interface UserResponse {
-// 	isSuccess: boolean
-// 	result: UserData
-// 	statusCode: number
-// 	errorMessages: string[]
-// }
-
 interface UserData {
 	id: string
 	name: string
@@ -41,11 +34,12 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 					setUserData(response.result)
 				} else {
 					setError(
-						response?.errorMessages?.join(', ') || 'Failed to fetch user data'
+						response?.errorMessages?.join(', ') ||
+							"Ma'lumotlarni yuklashda xatolik yuz berdi"
 					)
 				}
 			} catch (error) {
-				setError('An error occurred while fetching user data')
+				setError("Foydalanuvchi ma'lumotlarini yuklashda xatolik yuz berdi")
 				console.error('Error fetching user:', error)
 			} finally {
 				setLoading(false)
@@ -83,7 +77,7 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 				<Card>
 					<CardContent className='p-6'>
 						<div className='text-center text-destructive'>
-							<p>Error: {error}</p>
+							<p>Xatolik: {error}</p>
 						</div>
 					</CardContent>
 				</Card>
@@ -97,7 +91,7 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 				<Card>
 					<CardContent className='p-6'>
 						<div className='text-center'>
-							<p>User not found</p>
+							<p>Foydalanuvchi topilmadi</p>
 						</div>
 					</CardContent>
 				</Card>
@@ -113,6 +107,14 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 				</CardHeader>
 				<CardContent className='grid grid-cols-2 gap-4'>
 					<div>
+						<p className='text-sm text-muted-foreground'>Ism</p>
+						<p className='font-medium'>{userData.name}</p>
+					</div>
+					<div>
+						<p className='text-sm text-muted-foreground'>Familiya</p>
+						<p className='font-medium'>{userData.surname}</p>
+					</div>
+					<div>
 						<p className='text-sm text-muted-foreground'>Telefon</p>
 						<p className='font-medium'>{userData.phone}</p>
 					</div>
@@ -121,12 +123,12 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 						<p className='font-medium'>{userData.email}</p>
 					</div>
 					<div>
-						<p className='text-sm text-muted-foreground'>Username</p>
+						<p className='text-sm text-muted-foreground'>Foydalanuvchi nomi</p>
 						<p className='font-medium'>{userData.username}</p>
 					</div>
 					<div>
 						<p className='text-sm text-muted-foreground'>Role</p>
-						<p className='font-medium'>{userData.role}</p>
+						<p className='font-medium capitalize'>{userData.role}</p>
 					</div>
 				</CardContent>
 			</Card>

@@ -108,3 +108,14 @@ body {
 	 	if (answerIndex === selectedAnswer) return 'bg-red-500/20 border-red-500'
 	 	return ''
 	 } */
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+	}
+  body {
+    @apply bg-background text-foreground;
+	}
+}
