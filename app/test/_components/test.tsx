@@ -370,7 +370,7 @@ export default function Test({ response }: Props) {
 										}}
 									>
 										<Button
-											variant='outline'
+											variant={isSelected ? 'default' : 'outline'}
 											className={`w-full justify-start text-left p-4 h-auto ${
 												isTestCompleted && isSelected
 													? isCorrect
