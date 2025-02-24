@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Roboto } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/provider/theme-provider'
-
+import { Toaster } from '@/components/ui/sonner'
 const inter = Inter({
 	variable: '--font-inter',
 	subsets: ['latin'],
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: Props) {
 					enableSystem
 					disableTransitionOnChange
 				>
-					{/* <Toaster position='top-center' /> */}
+					<Toaster position='top-center' />
 					{children}
 				</ThemeProvider>
 			</body>

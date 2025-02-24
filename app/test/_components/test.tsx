@@ -32,7 +32,7 @@ import { Timer } from './timer'
 import { ResultDialog } from './result-dialog'
 
 const SECONDS_PER_QUESTION = 25
-const QUESTIONS_PER_PAGE = 20
+const QUESTIONS_PER_PAGE = 10
 
 interface ITestAnswer {
 	id: string

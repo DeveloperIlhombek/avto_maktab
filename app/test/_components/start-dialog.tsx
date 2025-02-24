@@ -18,7 +18,6 @@ interface StartDialogProps {
 
 export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 	const [questionCount, setQuestionCount] = useState(20)
-
 	return (
 		<Dialog open={isOpen}>
 			<DialogContent className='w-80 mx-6'>
@@ -33,13 +32,12 @@ export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 						<Input
 							type='number'
 							min={10}
-							max={100}
 							value={questionCount}
 							onChange={e => setQuestionCount(Number(e.target.value))}
 							className='text-center text-lg'
 						/>
 						<p className='text-sm text-muted-foreground text-center'>
-							10 tadan 100 tagacha savol tanlang
+							10 tadan ortiq savol tanlang
 						</p>
 					</div>
 					<div className='flex justify-end'>

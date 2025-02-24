@@ -15,8 +15,9 @@ import { useParams } from 'next/navigation'
 import { ProfileCard } from './_components/profile-card'
 
 export default function StudentDetails() {
-	const { id } = useParams()
+	const params = useParams()
 	const [activeTab, setActiveTab] = useState('overview')
+	const id = params.students_id
 
 	return (
 		<div className='space-y-6'>

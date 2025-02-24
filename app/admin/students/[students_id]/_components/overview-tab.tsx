@@ -30,11 +30,11 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 				setError(null)
 				const response = await getUserById(userId)
 
-				if (response && response.isSuccess) {
+				if (response.isSuccess && response.result) {
 					setUserData(response.result)
 				} else {
 					setError(
-						response?.errorMessages?.join(', ') ||
+						response.errorMessages?.join(', ') ||
 							"Ma'lumotlarni yuklashda xatolik yuz berdi"
 					)
 				}
@@ -77,7 +77,7 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 				<Card>
 					<CardContent className='p-6'>
 						<div className='text-center text-destructive'>
-							<p>Xatolik: {error}</p>
+							<p>{error}</p>
 						</div>
 					</CardContent>
 				</Card>
