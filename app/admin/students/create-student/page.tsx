@@ -227,8 +227,10 @@ export default function CreateStudent() {
 												</FormControl>
 												<SelectContent>
 													<SelectItem value='admin'>Admin</SelectItem>
-													<SelectItem value='teacher'>O'qituvchi</SelectItem>
-													<SelectItem value='student'>O'quvchi</SelectItem>
+													<SelectItem value='teacher'>
+														O&apos;qituvchi
+													</SelectItem>
+													<SelectItem value='student'>O&apos;quvchi</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormMessage />

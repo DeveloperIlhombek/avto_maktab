@@ -24,63 +24,111 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select'
 import { ArrowLeft, Plus, X } from 'lucide-react'
 import Image from 'next/image'
+import { createTest, uploadImage } from '@/lib/api'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const formSchema = z.object({
-	question: z.string().min(10, {
+	questionUZ: z.string().min(10, {
 		message: "Savol matni kamida 10 ta belgidan iborat bo'lishi kerak",
 	}),
-	description: z.string().min(10, {
-		message: "Savol izohi kamida 10 ta belgidan iborat bo'lishi kerak",
+	questionUZK: z.string().min(10, {
+		message: "Savol matni kamida 10 ta belgidan iborat bo'lishi kerak",
 	}),
-	category: z.string({
-		required_error: 'Toifani tanlang',
+	questionRU: z.string().min(10, {
+		message: 'Текст вопроса должен содержать не менее 10 символов',
+	}),
+	explanationUZ: z.string().min(10, {
+		message: "Tushuntirish matni kamida 10 ta belgidan iborat bo'lishi kerak",
+	}),
+	explanationUZK: z.string().min(10, {
+		message: "Tushuntirish matni kamida 10 ta belgidan iborat bo'lishi kerak",
+	}),
+	explanationRU: z.string().min(10, {
+		message: 'Текст объяснения должен содержать не менее 10 символов',
 	}),
 	choices: z
 		.array(
 			z.object({
-				text: z.string().min(1, 'Javob variantini kiriting'),
-				answer: z.boolean().default(false),
+				textUZ: z.string().min(1, 'Javob variantini kiriting'),
+				textUZK: z.string().min(1, 'Javob variantini kiriting'),
+				textRU: z.string().min(1, 'Введите вариант ответа'),
+				isCorrect: z.boolean().default(false),
 			})
 		)
 		.min(2, 'Kamida 2 ta javob varianti kiriting'),
 	media: z
 		.object({
 			exist: z.boolean().default(false),
-			file: z.any().optional(),
+			file: z.any().nullable(),
 		})
 		.optional(),
 })
 
+type FormValues = z.infer<typeof formSchema>
+
 export default function NewTest() {
 	const router = useRouter()
 	const [imagePreview, setImagePreview] = useState<string | null>(null)
+	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	const form = useForm<z.infer<typeof formSchema>>({
+	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
+			questionUZ: '',
+			questionUZK: '',
+			questionRU: '',
+			explanationUZ: '',
+			explanationUZK: '',
+			explanationRU: '',
 			choices: [
-				{ text: '', answer: false },
-				{ text: '', answer: false },
+				{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+				{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
 			],
+			media: {
+				exist: false,
+				file: null,
+			},
 		},
 	})
 
-	async function onSubmit(values: z.infer<typeof formSchema>) {
+	async function onSubmit(values: FormValues) {
 		try {
-			// Add your submission logic here
-			console.log(values)
-			router.push('/admin/tests')
+			setIsSubmitting(true)
+
+			let mediaUrl = null
+			if (values.media?.exist && values.media.file) {
+				mediaUrl = await uploadImage(values.media.file)
+			}
+
+			const testData = {
+				questionUZ: values.questionUZ,
+				questionUZK: values.questionUZK,
+				questionRU: values.questionRU,
+				explanationUZ: values.explanationUZ,
+				explanationUZK: values.explanationUZK,
+				explanationRU: values.explanationRU,
+				mediaUrl,
+				answers: values.choices.map(choice => ({
+					answerTextUZ: choice.textUZ,
+					answerTextUZK: choice.textUZK,
+					answerTextRU: choice.textRU,
+					isCorrect: choice.isCorrect,
+				})),
+			}
+
+			const response = await createTest(testData)
+
+			if (response.isSuccess) {
+				router.push('/admin/tests')
+			} else {
+				console.error('Failed to create test:', response.errorMessages)
+			}
 		} catch (error) {
 			console.error('Error creating test:', error)
+		} finally {
+			setIsSubmitting(false)
 		}
 	}
 
@@ -103,13 +151,16 @@ export default function NewTest() {
 		setImagePreview(null)
 		form.setValue('media', {
 			exist: false,
-			file: undefined,
+			file: null,
 		})
 	}
 
 	const addChoice = () => {
 		const currentChoices = form.getValues('choices')
-		form.setValue('choices', [...currentChoices, { text: '', answer: false }])
+		form.setValue('choices', [
+			...currentChoices,
+			{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+		])
 	}
 
 	const removeChoice = (index: number) => {
@@ -147,71 +198,141 @@ export default function NewTest() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-6'>
-							<FormField
-								control={form.control}
-								name='question'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Savol matni</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder='Savolni kiriting'
-												className='resize-none'
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							<Tabs defaultValue='uz' className='w-full'>
+								<TabsList className='grid w-full grid-cols-3'>
+									<TabsTrigger value='uz'>Ozbekcha (Lotin)</TabsTrigger>
+									<TabsTrigger value='uzk'>Ўзбекча (Кирил)</TabsTrigger>
+									<TabsTrigger value='ru'>Русский</TabsTrigger>
+								</TabsList>
 
-							<FormField
-								control={form.control}
-								name='category'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Toifa</FormLabel>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder='Toifani tanlang' />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value='A'>A toifa</SelectItem>
-												<SelectItem value='B'>B toifa</SelectItem>
-												<SelectItem value='C'>C toifa</SelectItem>
-												<SelectItem value='D'>D toifa</SelectItem>
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+								<TabsContent value='uz' className='space-y-4'>
+									<FormField
+										control={form.control}
+										name='questionUZ'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Savol matni</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Savolni kiriting'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name='explanationUZ'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Savol izohi</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Savol izohini kiriting'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</TabsContent>
 
-							<FormField
-								control={form.control}
-								name='description'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Savol izohi</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder='Savol izohini kiriting'
-												className='resize-none'
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+								<TabsContent value='uzk' className='space-y-4'>
+									<FormField
+										control={form.control}
+										name='questionUZK'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Савол матни</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Саволни киритинг'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name='explanationUZK'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Савол изоҳи</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Савол изоҳини киритинг'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</TabsContent>
+
+								<TabsContent value='ru' className='space-y-4'>
+									<FormField
+										control={form.control}
+										name='questionRU'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Текст вопроса</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Введите вопрос'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name='explanationRU'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Объяснение вопроса</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder='Введите объяснение вопроса'
+														className='resize-none'
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</TabsContent>
+							</Tabs>
 
 							<div>
-								<FormLabel>Rasm</FormLabel>
+								<FormLabel className='flex items-center justify-between'>
+									<span>Rasm (ixtiyoriy)</span>
+									{imagePreview && (
+										<Button
+											type='button'
+											variant='ghost'
+											size='sm'
+											onClick={removeImage}
+											className='text-destructive hover:text-destructive'
+										>
+											<X className='h-4 w-4 mr-2' />
+											Rasmni o&apos;chirish
+										</Button>
+									)}
+								</FormLabel>
 								<div className='mt-2'>
 									{!imagePreview ? (
 										<FormItem>
@@ -235,18 +356,9 @@ export default function NewTest() {
 												src={imagePreview}
 												alt='Preview'
 												width={500}
-												height={500}
-												className='rounded-lg max-h-[300px] w-auto'
+												height={300}
+												className='rounded-lg max-h-[300px] w-auto object-contain'
 											/>
-											<Button
-												type='button'
-												variant='destructive'
-												size='icon'
-												className='absolute top-2 right-2'
-												onClick={removeImage}
-											>
-												<X className='h-4 w-4' />
-											</Button>
 										</div>
 									)}
 								</div>
@@ -268,63 +380,112 @@ export default function NewTest() {
 								</div>
 
 								{form.getValues('choices').map((_, index) => (
-									<div key={index} className='flex gap-4'>
-										<FormField
-											control={form.control}
-											name={`choices.${index}.text`}
-											render={({ field }) => (
-												<FormItem className='flex-1'>
-													<FormControl>
-														<Input
-															placeholder={`${index + 1}-variant`}
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
+									<div key={index} className='space-y-4'>
+										<Tabs defaultValue='uz' className='w-full'>
+											<TabsList className='grid w-full grid-cols-3'>
+												<TabsTrigger value='uz'>Ozbekcha (Lotin)</TabsTrigger>
+												<TabsTrigger value='uzk'>Ўзбекча (Кирил)</TabsTrigger>
+												<TabsTrigger value='ru'>Русский</TabsTrigger>
+											</TabsList>
+
+											<TabsContent value='uz'>
+												<FormField
+													control={form.control}
+													name={`choices.${index}.textUZ`}
+													render={({ field }) => (
+														<FormItem>
+															<FormControl>
+																<Input
+																	placeholder={`${index + 1}-variant`}
+																	{...field}
+																/>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+											</TabsContent>
+
+											<TabsContent value='uzk'>
+												<FormField
+													control={form.control}
+													name={`choices.${index}.textUZK`}
+													render={({ field }) => (
+														<FormItem>
+															<FormControl>
+																<Input
+																	placeholder={`${index + 1}-вариант`}
+																	{...field}
+																/>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+											</TabsContent>
+
+											<TabsContent value='ru'>
+												<FormField
+													control={form.control}
+													name={`choices.${index}.textRU`}
+													render={({ field }) => (
+														<FormItem>
+															<FormControl>
+																<Input
+																	placeholder={`Вариант ${index + 1}`}
+																	{...field}
+																/>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+											</TabsContent>
+										</Tabs>
+
+										<div className='flex items-center justify-between'>
+											<FormField
+												control={form.control}
+												name={`choices.${index}.isCorrect`}
+												render={({ field }) => (
+													<FormItem>
+														<FormControl>
+															<div className='flex items-center gap-2'>
+																<Input
+																	type='radio'
+																	name='correctAnswer'
+																	className='w-4 h-4 text-primary border-gray-300 focus:ring-primary'
+																	checked={field.value}
+																	onChange={() => {
+																		const choices = form.getValues('choices')
+																		choices.forEach((_, i) => {
+																			form.setValue(
+																				`choices.${i}.isCorrect`,
+																				i === index
+																			)
+																		})
+																	}}
+																/>
+																<span className='text-sm text-gray-600'>
+																	To&apos;g&apos;ri javob
+																</span>
+															</div>
+														</FormControl>
+													</FormItem>
+												)}
+											/>
+
+											{form.getValues('choices').length > 2 && (
+												<Button
+													type='button'
+													variant='ghost'
+													size='icon'
+													onClick={() => removeChoice(index)}
+												>
+													<X className='h-4 w-4' />
+												</Button>
 											)}
-										/>
-										<FormField
-											control={form.control}
-											name={`choices.${index}.answer`}
-											render={({ field }) => (
-												<FormItem>
-													<FormControl>
-														<div className='flex items-center gap-2'>
-															<Input
-																type='radio'
-																name='correctAnswer'
-																className='w-4 h-4 text-primary border-gray-300 focus:ring-primary'
-																checked={field.value}
-																onChange={() => {
-																	// Uncheck all other answers
-																	const choices = form.getValues('choices')
-																	choices.forEach((_, i) => {
-																		form.setValue(
-																			`choices.${i}.answer`,
-																			i === index
-																		)
-																	})
-																}}
-															/>
-															<span className='text-sm text-gray-600'>
-																To&apos;g&apos;ri javob
-															</span>
-														</div>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-										{form.getValues('choices').length > 2 && (
-											<Button
-												type='button'
-												variant='ghost'
-												size='icon'
-												onClick={() => removeChoice(index)}
-											>
-												<X className='h-4 w-4' />
-											</Button>
-										)}
+										</div>
 									</div>
 								))}
 							</div>
@@ -335,7 +496,9 @@ export default function NewTest() {
 						<Link href='/admin/tests'>
 							<Button variant='outline'>Bekor qilish</Button>
 						</Link>
-						<Button type='submit'>Saqlash</Button>
+						<Button type='submit' disabled={isSubmitting}>
+							{isSubmitting ? 'Saqlanmoqda...' : 'Saqlash'}
+						</Button>
 					</div>
 				</form>
 			</Form>

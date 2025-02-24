@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
 
 interface UserResponse {
@@ -126,6 +127,106 @@ export const createUser = async (
 		return data
 	} catch (error) {
 		console.error('Error creating user:', error)
+		throw error
+	}
+}
+
+//Create Test
+interface TestAnswer {
+	testCaseId?: string
+	answerTextUZ: string
+	answerTextUZK: string
+	answerTextRU: string
+	isCorrect: boolean
+}
+
+interface CreateTestResponse {
+	isSuccess: boolean
+	result: {
+		id: string
+		name: string | null
+		question: string | null
+		explanation: string | null
+		mediaUrl: string | null
+		testAnswers: any[]
+		testAnswersForUser: any[]
+	}
+	statusCode: number
+	errorMessages: string[]
+}
+
+export async function uploadImage(file: File): Promise<string> {
+	try {
+		const formData = new FormData()
+		formData.append('file', file)
+
+		const response = await fetch(`${API_URL}/api/upload`, {
+			method: 'POST',
+			body: formData,
+		})
+
+		if (!response.ok) {
+			throw new Error('Failed to upload image')
+		}
+
+		const data = await response.json()
+		return data.url
+	} catch (error) {
+		console.error('Error uploading image:', error)
+		throw new Error('Failed to upload image')
+	}
+}
+
+export async function createTest(data: {
+	questionUZ: string
+	questionUZK: string
+	questionRU: string
+	explanationUZ: string
+	explanationUZK: string
+	explanationRU: string
+	mediaUrl?: string | null
+	answers: Omit<TestAnswer, 'testCaseId'>[]
+}): Promise<CreateTestResponse> {
+	try {
+		const params = new URLSearchParams()
+		params.append('QuestionUZ', data.questionUZ)
+		params.append('QuestionUZK', data.questionUZK)
+		params.append('QuestionRU', data.questionRU)
+		params.append('ExplanationUZ', data.explanationUZ)
+		params.append('ExplanationUZK', data.explanationUZK)
+		params.append('ExplanationRU', data.explanationRU)
+
+		if (data.mediaUrl) {
+			params.append('MediaUrl', data.mediaUrl)
+		}
+
+		data.answers.forEach(answer => {
+			params.append(
+				'Answers',
+				JSON.stringify({
+					answerTextUZ: answer.answerTextUZ,
+					answerTextUZK: answer.answerTextUZK,
+					answerTextRU: answer.answerTextRU,
+					isCorrect: answer.isCorrect,
+				})
+			)
+		})
+
+		const response = await fetch(`${API_URL}/api/TestCase/Create?${params}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+
+		if (!response.ok) {
+			throw new Error('Failed to create test')
+		}
+
+		const responseData = await response.json()
+		return responseData
+	} catch (error) {
+		console.error('Error creating test:', error)
 		throw error
 	}
 }
