@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -97,18 +97,9 @@ export default function NewTest() {
 		},
 	})
 
-	useEffect(() => {
-		console.log(file1)
-	}, [file1])
-
 	async function onSubmit(values: FormValues) {
 		try {
 			setIsSubmitting(true)
-
-			//const mediaUrl = null
-			// if (values.media?.exist && values.media.file) {
-			// 	media = await uploadImage(values.media.file)
-			// }
 
 			const testData = {
 				questionUZ: values.questionUZ,
@@ -117,7 +108,7 @@ export default function NewTest() {
 				explanationUZ: values.explanationUZ,
 				explanationUZK: values.explanationUZK,
 				explanationRU: values.explanationRU,
-				media: file1,
+				media: file1 || undefined,
 				answers: values.choices.map(choice => ({
 					answerTextUZ: choice.textUZ,
 					answerTextUZK: choice.textUZK,
