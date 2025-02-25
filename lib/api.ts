@@ -48,10 +48,16 @@ interface CreateTestResponse {
 }
 //Barcha testlarni olish
 
-export const getAllTests = async () => {
+export const getAllTests = async ({
+	pageSize,
+	pageNumber,
+}: {
+	pageSize: number
+	pageNumber: number
+}) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=uz&pageSize=10&pageNumber=0`,
+			`${API_URL}/api/UserTest/GetQuestions?language=uz&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {

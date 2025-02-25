@@ -47,7 +47,7 @@ interface ITestItem {
 	question: string
 	explanation: string
 	mediaUrl: string
-	testAnswers: ITestAnswer[]
+	testAnswersForUser: ITestAnswer[]
 }
 
 interface ITestResponse {
@@ -131,7 +131,7 @@ export default function Test({ response }: Props) {
 
 		const correctCount = answers.filter((answer, index) => {
 			if (answer === null) return false
-			return selectedQuestions[index].testAnswers[answer].isCorrect
+			return selectedQuestions[index].testAnswersForUser[answer].isCorrect
 		}).length
 
 		const results = {
@@ -249,7 +249,7 @@ export default function Test({ response }: Props) {
 									const answer = answers[questionIndex]
 									const isCorrect =
 										answer !== null &&
-										selectedQuestions[questionIndex].testAnswers[answer]
+										selectedQuestions[questionIndex].testAnswersForUser[answer]
 											.isCorrect
 
 									return (
@@ -355,7 +355,7 @@ export default function Test({ response }: Props) {
 						</div>
 
 						<div className='space-y-4'>
-							{currentQuestionData.testAnswers.map((answer, index) => {
+							{currentQuestionData?.testAnswersForUser?.map((answer, index) => {
 								const isSelected = answers[currentQuestion] === index
 								const isCorrect = answer.isCorrect
 
