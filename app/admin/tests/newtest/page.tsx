@@ -104,7 +104,10 @@ export default function NewTest() {
 				explanationUZK: values.explanationUZK,
 				explanationRU: values.explanationRU,
 				media: file1 || undefined,
-				answers: values.choices.map(choice => ({
+				answers: values.choices.map((choice, index) => ({
+					id: index.toString(),
+					testCaseId: 'testCaseId', // Replace with actual testCaseId if available
+					answerText: choice.textUZ, // Assuming answerText is the same as textUZ  / ikkalasi qo'shilgan
 					answerTextUZ: choice.textUZ,
 					answerTextUZK: choice.textUZK,
 					answerTextRU: choice.textRU,

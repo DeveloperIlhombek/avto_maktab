@@ -46,7 +46,7 @@ interface CreateTestResponse {
 	statusCode: number
 	errorMessages: string[]
 }
-//Barcha testlarni olish
+//Barcha testlarni olish test uchun
 
 export const getAllTests = async ({
 	pageSize,
@@ -206,6 +206,65 @@ export async function createTest(data: {
 		return responseData
 	} catch (error) {
 		console.error('Error creating test:', error)
+		throw error
+	}
+}
+
+//barcha testlarni ko'rish admin uchun
+
+interface TestAnswer {
+	id: string
+	testCaseId: string
+	answerText: string
+	isCorrect: boolean
+}
+
+export interface Test {
+	id: string
+	name: string | null
+	question: string
+	explanation: string
+	mediaUrl: string | null
+	testAnswers: TestAnswer[]
+	testAnswersForUser: any[] | null
+}
+
+interface TestsResponse {
+	isSuccess: boolean
+	result: {
+		items: Test[]
+		pageNumber: number
+		pageSize: number
+		totalCount: number
+		totalPages: number
+	}
+	statusCode: number
+	errorMessages: string[]
+}
+
+export const getAllTestsAdmin = async (
+	pageNumber: number = 0,
+	pageSize: number = 10
+): Promise<TestsResponse> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=uz&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error('Error fetching tests:', error)
 		throw error
 	}
 }
