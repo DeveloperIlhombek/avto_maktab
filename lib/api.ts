@@ -268,3 +268,54 @@ export const getAllTestsAdmin = async (
 		throw error
 	}
 }
+
+interface TestAnswerResponse {
+	id: string
+	testCaseId: string
+	answerText: string
+	isCorrect: boolean
+}
+interface TestDetailsResponse {
+	isSuccess: boolean
+	result: {
+		id: string
+		name: string | null
+		question: string
+		explanation: string
+		mediaUrl: string | null
+		testAnswers: TestAnswerResponse[]
+		testAnswersForUser: any[] | null
+	}
+	statusCode: number
+	errorMessages: string[]
+}
+
+export async function getTestById(
+	testId: string
+): Promise<TestDetailsResponse> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/GetById?testCaseId=${testId}&language=uz`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+
+		const data = await response.json()
+
+		if (!response.ok) {
+			throw new Error(
+				data.errorMessages?.join(', ') || 'Failed to fetch test data'
+			)
+		}
+		console.log(data.result)
+
+		return data
+	} catch (error) {
+		console.error('Error fetching test:', error)
+		throw error
+	}
+}

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -15,55 +16,118 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, ImageIcon } from 'lucide-react'
 import Image from 'next/image'
+import { getTestById } from '@/lib/api'
 
-// Mock data for a single question
-const questionData = {
-	id: 1,
-	question:
-		"Qaysi avtomobil uchun bu belgilarning ta'sir oralig'ida to'xtashga ruxsat etiladi?",
-	choises: [
-		{ text: 'Qizilga', answer: false },
-		{ text: 'Ikkala avtomobilga', answer: false },
-		{ text: 'Hech qaysi biriga', answer: false },
-		{
-			text: "<<Nogiron>> taniqlik belgisi bo'lgan sariq avtomobilga",
-			answer: true,
-		},
-	],
-	media: { exist: true, name: '1' },
-	description:
-		"YHQ 1-ilovasi 3-bo'limi 2-xatboshiga asosan, qoidalarning 174-bandiga ko'ra «Nogiron» taniqlik belgisi o'rnatilgan avtomobil va motokolyaskalarni boshqarayotgan nogiron haydovchilar 3.2, 3.3 va 3.28 belgilari talablaridan chetga chiqishlari mumkin. 7.18 qo'shimcha belgisi bo'lganda 3.27 belgisining ta'sir oralig'ida to'xtashga ruxsat etiladi.",
-	category: 'B',
-	createdAt: '2024-03-15',
-	status: 'Faol',
+interface TestData {
+	id: string
+	question: string
+	explanation: string
+	mediaUrl: string | null
+	testAnswers: {
+		id: string
+		testCaseId: string
+		answerText: string
+		isCorrect: boolean
+	}[]
 }
 
 export default function QuestionDetails() {
-	const { id } = useParams()
+	const params = useParams()
+
+	const testId = params.test_Id as string
 	const router = useRouter()
+	const [testData, setTestData] = useState<TestData | null>(null)
+	const [error, setError] = useState<string | null>(null)
+	const [imageError, setImageError] = useState(false)
+
+	useEffect(() => {
+		const fetchTestData = async () => {
+			try {
+				const response = await getTestById(testId)
+				if (response.isSuccess) {
+					setTestData(response.result)
+				} else {
+					setError(response.errorMessages?.join(', ') || 'Xatolik yuz berdi')
+				}
+			} catch (error) {
+				setError("Test ma'lumotlarini yuklashda xatolik yuz berdi")
+				console.error('Error fetching test:', error)
+			}
+		}
+
+		console.log(testId)
+		if (testId) {
+			fetchTestData()
+		}
+	}, [testId])
 
 	const handleDelete = async () => {
 		try {
 			// Add your delete logic here
-			// await deleteQuestion(id)
+			//await deleteQuestion(testId)
 			router.push('/admin/tests')
 		} catch (error) {
 			console.error('Error deleting question:', error)
 		}
 	}
 
-	const getStatusColor = (status: string) => {
-		switch (status.toLowerCase()) {
-			case 'faol':
-				return 'bg-green-500/10 text-green-500 hover:bg-green-500/20'
-			case 'nofaol':
-				return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'
-			default:
-				return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20'
-		}
+	const handleImageError = () => {
+		setImageError(true)
+	}
+
+	if (error) {
+		return (
+			<div className='space-y-6'>
+				<div className='flex items-center gap-4'>
+					<Link href='/admin/tests'>
+						<Button variant='ghost' size='icon'>
+							<ArrowLeft className='h-4 w-4' />
+						</Button>
+					</Link>
+					<h2 className='text-3xl font-bold tracking-tight'>Xatolik</h2>
+				</div>
+				<Card>
+					<CardContent className='p-6'>
+						<div className='text-center text-destructive'>
+							<p>{error}</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		)
+	}
+
+	if (!testData) {
+		return (
+			<div className='space-y-6'>
+				<div className='flex items-center gap-4'>
+					<Link href='/admin/tests'>
+						<Button variant='ghost' size='icon'>
+							<ArrowLeft className='h-4 w-4' />
+						</Button>
+					</Link>
+					<h2 className='text-3xl font-bold tracking-tight'>Yuklanmoqda...</h2>
+				</div>
+				<Card>
+					<CardContent className='p-6'>
+						<div className='space-y-4'>
+							<div className='h-4 w-3/4 bg-muted animate-pulse rounded'></div>
+							<div className='h-20 bg-muted animate-pulse rounded'></div>
+							<div className='space-y-2'>
+								{[1, 2, 3].map(i => (
+									<div
+										key={i}
+										className='h-10 bg-muted animate-pulse rounded'
+									></div>
+								))}
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		)
 	}
 
 	return (
@@ -80,7 +144,7 @@ export default function QuestionDetails() {
 					</h2>
 				</div>
 				<div className='flex gap-2'>
-					<Link href={`/admin/tests/${id}/edit`}>
+					<Link href={`/admin/tests/${testId}/edit`}>
 						<Button variant='outline' className='gap-2'>
 							<Pencil className='h-4 w-4' />
 							Tahrirlash
@@ -118,7 +182,6 @@ export default function QuestionDetails() {
 			</div>
 
 			<div className='grid grid-cols-1 gap-6'>
-				{/* Question Info Card */}
 				<Card>
 					<CardHeader>
 						<CardTitle>Savol ma&apos;lumotlari</CardTitle>
@@ -126,63 +189,55 @@ export default function QuestionDetails() {
 					<CardContent className='space-y-6'>
 						<div className='space-y-1'>
 							<p className='text-sm text-muted-foreground'>Savol matni</p>
-							<p className='font-medium'>{questionData.question}</p>
-						</div>
-
-						<div className='space-y-1'>
-							<p className='text-sm text-muted-foreground'>Toifa</p>
-							<Badge variant='secondary'>{questionData.category}</Badge>
-						</div>
-
-						<div className='space-y-1'>
-							<p className='text-sm text-muted-foreground'>Status</p>
-							<Badge className={getStatusColor(questionData.status)}>
-								{questionData.status}
-							</Badge>
-						</div>
-
-						<div className='space-y-1'>
-							<p className='text-sm text-muted-foreground'>Yaratilgan sana</p>
-							<p className='font-medium'>{questionData.createdAt}</p>
+							<p className='font-medium'>{testData.question}</p>
 						</div>
 
 						<div className='space-y-1'>
 							<p className='text-sm text-muted-foreground'>Savol izohi</p>
-							<p className='text-sm'>{questionData.description}</p>
+							<p className='text-sm'>{testData.explanation}</p>
 						</div>
 
 						<div className='space-y-2'>
 							<p className='text-sm text-muted-foreground'>Javob variantlari</p>
 							<div className='space-y-2'>
-								{questionData.choises.map((choice, index) => (
+								{testData.testAnswers.map(answer => (
 									<div
-										key={index}
-										className={`p-3 rounded-lg ${
-											choice.answer
+										key={answer.id}
+										className={`p-3 rounded-lg  ${
+											answer.isCorrect
 												? 'bg-green-500/10 border border-green-500/20'
-												: 'bg-gray-100'
+												: 'bg-yellow-500/10 border border-yellow-500/40'
 										}`}
 									>
-										<p className={`${choice.answer ? 'text-green-600' : ''}`}>
-											{choice.text}
-											{choice.answer && "(To'g'ri javob)"}
+										<p
+											className={`${answer.isCorrect ? 'text-green-600' : ''}`}
+										>
+											{answer.answerText}
+											{answer.isCorrect && " (To'g'ri javob)"}
 										</p>
 									</div>
 								))}
 							</div>
 						</div>
 
-						{questionData.media.exist && (
+						{testData.mediaUrl && (
 							<div className='space-y-2'>
-								<p className='text-sm text-muted-foreground'>Rasm</p>
-								<div className='rounded-lg overflow-hidden border'>
-									<Image
-										src={`/car.png`}
-										alt='Question illustration'
-										width={500}
-										height={500}
-										className='w-full h-auto'
-									/>
+								<p className='text-sm text-muted-foreground'>Savol Rasmi</p>
+								<div className='rounded-lg overflow-hidden border w-1/2 h-1/2'>
+									{!imageError ? (
+										<Image
+											src={`http://213.230.109.74:8080/${testData.mediaUrl}`}
+											alt='Question illustration'
+											width={500}
+											height={300}
+											className='w-full h-auto object-contain'
+											onError={handleImageError}
+										/>
+									) : (
+										<div className='w-full h-[300px] bg-muted flex items-center justify-center'>
+											<ImageIcon className='h-8 w-8 text-muted-foreground' />
+										</div>
+									)}
 								</div>
 							</div>
 						)}

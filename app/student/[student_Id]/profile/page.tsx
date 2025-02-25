@@ -32,18 +32,6 @@ const studentData = {
 
 export default function StudentProfile() {
 	const [isEditing, setIsEditing] = useState(false)
-	// const [user, setUser] = useState(null)
-
-	// useEffect(() => {
-	// 	const fetchUser = async () => {
-	// 		const data = await getUserById()
-	// 		if (data) {
-	// 			setUser(data)
-	// 		}
-	// 	}
-
-	// 	fetchUser()
-	// }, [])
 
 	return (
 		<div className='space-y-6'>
