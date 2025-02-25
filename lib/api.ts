@@ -9,14 +9,12 @@ interface UserData {
 	phone: string
 	role: string
 }
-
 interface UserResponse {
 	isSuccess: boolean
 	result: UserData
 	statusCode: number
 	errorMessages: string[]
 }
-
 interface CreateUserData {
 	name: string
 	surname: string
@@ -27,6 +25,27 @@ interface CreateUserData {
 	role: string
 }
 
+interface TestAnswer {
+	answerTextUZ: string
+	answerTextUZK: string
+	answerTextRU: string
+	isCorrect: boolean
+}
+
+interface CreateTestResponse {
+	isSuccess: boolean
+	result: {
+		id: string
+		name: string | null
+		question: string | null
+		explanation: string | null
+		mediaUrl: FormData | null
+		testAnswers: TestAnswer[]
+		testAnswersForUser: any[]
+	}
+	statusCode: number
+	errorMessages: string[]
+}
 //Barcha testlarni olish
 
 export const getAllTests = async () => {
@@ -133,29 +152,6 @@ export const createUser = async (
 }
 
 //Create Test
-interface TestAnswer {
-	answerTextUZ: string
-	answerTextUZK: string
-	answerTextRU: string
-	isCorrect: boolean
-}
-
-interface CreateTestResponse {
-	isSuccess: boolean
-	result: {
-		id: string
-		name: string | null
-		question: string | null
-		explanation: string | null
-		mediaUrl: FormData | null
-		testAnswers: TestAnswer[]
-		testAnswersForUser: any[]
-	}
-	statusCode: number
-	errorMessages: string[]
-}
-
-//Create Test
 export async function createTest(data: {
 	questionUZ: string
 	questionUZK: string
@@ -195,8 +191,6 @@ export async function createTest(data: {
 		})
 
 		const responseData = await response.json()
-		//console.log(responseData)
-
 		if (!response.ok) {
 			throw new Error(
 				responseData.errorMessages?.join(', ') || 'Failed to create test'
