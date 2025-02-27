@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { ArrowLeft, Pencil, Trash2, ImageIcon } from 'lucide-react'
 import Image from 'next/image'
-import { getTestById } from '@/lib/api'
+import { deleteTest, getTestById } from '@/lib/api'
 
 interface TestData {
 	id: string
@@ -37,6 +37,7 @@ export default function QuestionDetails() {
 	const params = useParams()
 
 	const testId = params.test_Id as string
+
 	const router = useRouter()
 	const [testData, setTestData] = useState<TestData | null>(null)
 	const [error, setError] = useState<string | null>(null)
@@ -66,7 +67,7 @@ export default function QuestionDetails() {
 	const handleDelete = async () => {
 		try {
 			// Add your delete logic here
-			//await deleteQuestion(testId)
+			await deleteTest(testId)
 			router.push('/admin/tests')
 		} catch (error) {
 			console.error('Error deleting question:', error)

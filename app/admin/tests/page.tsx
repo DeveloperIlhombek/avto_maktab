@@ -102,7 +102,7 @@ export default function QuestionsPage() {
 						Barcha test savollari ro&apos;yxati va boshqaruvi
 					</p>
 				</div>
-				<Link href='/admin/tests/new'>
+				<Link href='/admin/tests/newtest'>
 					<Button className='gap-2'>
 						<Plus className='h-4 w-4' />
 						Yangi savol

@@ -289,7 +289,7 @@ interface TestDetailsResponse {
 	statusCode: number
 	errorMessages: string[]
 }
-
+//Id orqali testlarni olish
 export async function getTestById(
 	testId: string
 ): Promise<TestDetailsResponse> {
@@ -311,11 +311,62 @@ export async function getTestById(
 				data.errorMessages?.join(', ') || 'Failed to fetch test data'
 			)
 		}
-		console.log(data.result)
-
 		return data
 	} catch (error) {
 		console.error('Error fetching test:', error)
+		throw error
+	}
+}
+
+// Update test
+export async function updateTest(
+	Id: string,
+	formData: FormData
+): Promise<TestDetailsResponse> {
+	try {
+		const response = await fetch(`${API_URL}/api/TestCase/Update?Id=${Id}`, {
+			method: 'PUT',
+			headers: { accept: '*/*' },
+			body: formData,
+		})
+
+		if (response.ok) {
+			throw new Error(`Error ${response.status} - ${response.statusText}`)
+		}
+
+		const responseData = await response.json()
+		console.log(responseData)
+
+		return responseData
+	} catch (error) {
+		console.error('Error updating test:', error)
+		throw error
+	}
+}
+
+// Delete test
+export async function deleteTest(id: string): Promise<any> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/Delete?testCaseId=${id}`,
+			{
+				method: 'DELETE',
+			}
+		)
+
+		const responseData = await response.json()
+
+		console.log(responseData)
+
+		if (!response.ok) {
+			throw new Error(
+				responseData.errorMessages?.join(', ') || 'Delete xatolik yuz berdi'
+			)
+		}
+
+		return responseData
+	} catch (error) {
+		console.error('Error deleting test:', error)
 		throw error
 	}
 }

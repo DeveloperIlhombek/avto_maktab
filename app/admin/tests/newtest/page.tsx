@@ -106,8 +106,8 @@ export default function NewTest() {
 				media: file1 || undefined,
 				answers: values.choices.map((choice, index) => ({
 					id: index.toString(),
-					testCaseId: 'testCaseId', // Replace with actual testCaseId if available
-					answerText: choice.textUZ, // Assuming answerText is the same as textUZ  / ikkalasi qo'shilgan
+					testCaseId: 'testCaseId',
+					answerText: choice.textUZ,
 					answerTextUZ: choice.textUZ,
 					answerTextUZK: choice.textUZK,
 					answerTextRU: choice.textRU,
