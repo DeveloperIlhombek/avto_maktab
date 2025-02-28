@@ -71,8 +71,6 @@ export const getAllTests = async ({
 		}
 
 		const data = await response.json() // JSON ma'lumotni olish
-		console.log(data)
-
 		return data
 	} catch (error) {
 		console.error('Error fetching tests:', error)
@@ -281,7 +279,13 @@ interface TestDetailsResponse {
 		id: string
 		name: string | null
 		question: string
+		questionUZ?: string
+		questionUZK?: string
+		questionRU?: string
 		explanation: string
+		explanationUZ?: string
+		explanationUZK?: string
+		explanationRU?: string
 		mediaUrl: string | null
 		testAnswers: TestAnswerResponse[]
 		testAnswersForUser: any[] | null
@@ -291,11 +295,12 @@ interface TestDetailsResponse {
 }
 //Id orqali testlarni olish
 export async function getTestById(
-	testId: string
+	testId: string,
+	language: string = 'uz'
 ): Promise<TestDetailsResponse> {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/TestCase/GetById?testCaseId=${testId}&language=uz`,
+			`${API_URL}/api/TestCase/GetById?testCaseId=${testId}&language=${language}`,
 			{
 				method: 'GET',
 				headers: {
@@ -330,13 +335,10 @@ export async function updateTest(
 			body: formData,
 		})
 
-		if (response.ok) {
+		if (!response.ok) {
 			throw new Error(`Error ${response.status} - ${response.statusText}`)
 		}
-
 		const responseData = await response.json()
-		console.log(responseData)
-
 		return responseData
 	} catch (error) {
 		console.error('Error updating test:', error)
@@ -355,8 +357,6 @@ export async function deleteTest(id: string): Promise<any> {
 		)
 
 		const responseData = await response.json()
-
-		console.log(responseData)
 
 		if (!response.ok) {
 			throw new Error(

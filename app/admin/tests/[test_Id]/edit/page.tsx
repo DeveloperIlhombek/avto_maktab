@@ -72,38 +72,38 @@ type FormValues = z.infer<typeof formSchema>
 export default function Page({
 	params,
 }: {
-	params: Promise<{ test_Id: string }>
+	params: Promise<{ test_Id: string; language: string }>
 }) {
 	const router = useRouter()
-	//const params = useParams()
-
-	//console.log(param)
 	const { test_Id } = use(params)
-	console.log(test_Id)
 
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [file, setFile] = useState<File | null>(null)
 	const [imageUrl, setImageUrl] = useState<string | null>(null)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const [originalAnswers, setOriginalAnswers] = useState<any[]>([])
+	const [originalValues, setOriginalValues] = useState<FormValues>({
+		questionUZ: '',
+		questionUZK: '',
+		questionRU: '',
+		explanationUZ: '',
+		explanationUZK: '',
+		explanationRU: '',
+		choices: [
+			{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+			{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+		],
+		media: {
+			exist: false,
+			file: null,
+		},
+	})
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			questionUZ: '',
-			questionUZK: '',
-			questionRU: '',
-			explanationUZ: '',
-			explanationUZK: '',
-			explanationRU: '',
-			choices: [
-				{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
-				{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
-			],
-			media: {
-				exist: false,
-				file: null,
-			},
-		},
+		defaultValues: originalValues,
 	})
 
 	useEffect(() => {
@@ -111,40 +111,54 @@ export default function Page({
 			try {
 				setIsLoading(true)
 				setError(null)
-				const response = await getTestById(test_Id)
-				console.log(response)
 
-				if (response.isSuccess && response.result) {
-					const test = response.result
+				// Fetch test data in all languages
+				const responseUZ = await getTestById(test_Id, 'uz')
+				const responseUZK = await getTestById(test_Id, 'uzk')
+				const responseRU = await getTestById(test_Id, 'ru')
 
-					// Set form values
-					form.setValue('questionUZ', test.question || '')
-					form.setValue('questionUZK', test.question || '')
-					form.setValue('questionRU', test.question || '')
-					form.setValue('explanationUZ', test.explanation || '')
-					form.setValue('explanationUZK', test.explanation || '')
-					form.setValue('explanationRU', test.explanation || '')
+				if (responseUZ.isSuccess && responseUZ.result) {
+					const testUZ = responseUZ.result
+					const testUZK = responseUZK.result || testUZ
+					const testRU = responseRU.result || testUZ
 
-					// Set image URL if exists
-					if (test.mediaUrl) {
-						setImageUrl(`http://213.230.109.74:8080/${test.mediaUrl}`)
-						form.setValue('media.exist', true)
+					// Store original answers for reference
+					setOriginalAnswers(testUZ.testAnswers || [])
+
+					const initialValues = {
+						questionUZ: testUZ.question || '',
+						questionUZK: testUZK.question || '',
+						questionRU: testRU.question || '',
+						explanationUZ: testUZ.explanation || '',
+						explanationUZK: testUZK.explanation || '',
+						explanationRU: testRU.explanation || '',
+						choices: testUZ.testAnswers
+							? testUZ.testAnswers.map((answer, index) => ({
+									id: answer.id,
+									textUZ: answer.answerText || '',
+									textUZK: testUZK?.testAnswers[index]?.answerText || '',
+									textRU: testRU?.testAnswers[index]?.answerText || '',
+									isCorrect: answer.isCorrect,
+							  }))
+							: [
+									{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+									{ textUZ: '', textUZK: '', textRU: '', isCorrect: false },
+							  ],
+						media: {
+							exist: !!testUZ.mediaUrl,
+							file: null,
+						},
 					}
 
-					// Set choices
-					if (test.testAnswers && test.testAnswers.length > 0) {
-						const formattedChoices = test.testAnswers.map(answer => ({
-							textUZ: answer.answerText || '',
-							textUZK: answer.answerText || '',
-							textRU: answer.answerText || '',
-							isCorrect: answer.isCorrect,
-						}))
+					form.reset(initialValues)
+					setOriginalValues(initialValues)
 
-						form.setValue('choices', formattedChoices)
+					if (testUZ.mediaUrl) {
+						setImageUrl(`http://213.230.109.74:8080/${testUZ.mediaUrl}`)
 					}
 				} else {
 					setError(
-						response.errorMessages?.join(', ') ||
+						responseUZ.errorMessages?.join(', ') ||
 							"Test ma'lumotlarini yuklashda xatolik"
 					)
 				}
@@ -155,34 +169,59 @@ export default function Page({
 				setIsLoading(false)
 			}
 		}
-
 		fetchTest()
 	}, [test_Id, form])
 
 	async function onSubmit(values: FormValues) {
 		try {
 			setIsSubmitting(true)
+
 			const formData = new FormData()
-			formData.append('questionUZ', values.questionUZ)
-			formData.append('questionUZK', values.questionUZK)
-			formData.append('questionRU', values.questionRU)
-			formData.append('explanationUZ', values.explanationUZ)
-			formData.append('explanationUZK', values.explanationUZK)
-			formData.append('explanationRU', values.explanationRU)
-			if (file) {
-				formData.append('media', file)
+
+			if (values.questionUZ !== originalValues.questionUZ) {
+				formData.append('questionUZ', values.questionUZ)
 			}
+			if (values.questionUZK !== originalValues.questionUZK) {
+				formData.append('questionUZK', values.questionUZK)
+			}
+			if (values.questionRU !== originalValues.questionRU) {
+				formData.append('questionRU', values.questionRU)
+			}
+			if (values.explanationUZ !== originalValues.explanationUZ) {
+				formData.append('explanationUZ', values.explanationUZ)
+			}
+			if (values.explanationUZK !== originalValues.explanationUZK) {
+				formData.append('explanationUZK', values.explanationUZK)
+			}
+			if (values.explanationRU !== originalValues.explanationRU) {
+				formData.append('explanationRU', values.explanationRU)
+			}
+
+			if (file) {
+				formData.append('media', file, file.name)
+			}
+
 			values.choices.forEach((choice, index) => {
-				formData.append(`answers[${index}].id`, index.toString())
-				formData.append(`answers[${index}].testCaseId`, test_Id)
-				formData.append(`answers[${index}].answerText`, choice.textUZ)
-				formData.append(`answers[${index}].answerTextUZ`, choice.textUZ)
-				formData.append(`answers[${index}].answerTextUZK`, choice.textUZK)
-				formData.append(`answers[${index}].answerTextRU`, choice.textRU)
-				formData.append(
-					`answers[${index}].isCorrect`,
-					choice.isCorrect.toString()
-				)
+				const originalChoice = originalValues.choices[index]
+				if (
+					!originalChoice ||
+					choice.textUZ !== originalChoice.textUZ ||
+					choice.textUZK !== originalChoice.textUZK ||
+					choice.textRU !== originalChoice.textRU ||
+					choice.isCorrect !== originalChoice.isCorrect
+				) {
+					const answerId = originalAnswers[index]?.id || `new-${index}`
+					formData.append(`answers[${index}].id`, answerId)
+					formData.append(`answers[${index}].testCaseId`, test_Id)
+					formData.append(`answers[${index}].answerText`, choice.textUZ)
+					formData.append(`answers[${index}].answerTextUZ`, choice.textUZ)
+					formData.append(`answers[${index}].answerTextUZK`, choice.textUZK)
+					formData.append(`answers[${index}].answerTextRU`, choice.textRU)
+					formData.append(
+						`answers[${index}].isCorrect`,
+						choice.isCorrect.toString()
+					)
+				}
 			})
 
 			const response = await updateTest(test_Id, formData)
@@ -206,7 +245,6 @@ export default function Page({
 			const selectedFile = e.target.files[0]
 			setFile(selectedFile)
 
-			// Create preview URL
 			const reader = new FileReader()
 			reader.onload = () => {
 				setImageUrl(reader.result as string)
@@ -234,10 +272,13 @@ export default function Page({
 	const removeChoice = (index: number) => {
 		const currentChoices = form.getValues('choices')
 		if (currentChoices.length > 2) {
-			form.setValue(
-				'choices',
-				currentChoices.filter((_, i) => i !== index)
-			)
+			const newChoices = currentChoices.filter((_, i) => i !== index)
+			if (currentChoices[index].isCorrect && newChoices.length > 0) {
+				newChoices[0].isCorrect = true
+			}
+			form.setValue('choices', newChoices)
+		} else {
+			toast.error("Kamida 2 ta javob varianti bo'lishi kerak")
 		}
 	}
 
@@ -676,8 +717,8 @@ export default function Page({
 											<Image
 												src={imageUrl}
 												alt='Test image'
-												width={500}
-												height={300}
+												width={600}
+												height={400}
 												className='rounded-lg max-h-[300px] w-auto object-contain'
 											/>
 										</div>
