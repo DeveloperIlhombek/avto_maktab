@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TabIcons } from './_components/tab-icons'
 import { OverviewTab } from './_components/overview-tab'
@@ -11,13 +11,44 @@ import { EducationTab } from './_components/education-tab'
 import { TestsTab } from './_components/tests-tab'
 import { PaymentsTab } from './_components/payments-tab'
 import { PracticeTab } from './_components/practice-tab'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { ProfileCard } from './_components/profile-card'
-
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
+import { deleteUser } from '@/lib/api'
 export default function StudentDetails() {
 	const params = useParams()
 	const [activeTab, setActiveTab] = useState('overview')
-	const id = params.students_id
+	const user_id = params.students_id
+	const router = useRouter()
+
+	const handleDelete = async () => {
+		try {
+			const response = await deleteUser(user_id as string)
+			if (response.isSuccess) {
+				toast.success("Foydalanuvchi muvaffaqiyatli o'chirildi")
+				router.push('/admin/students')
+			} else {
+				toast.error(
+					response.errorMessages?.join(', ') ||
+						"Foydalanuvchini o'chirishda xatolik yuz berdi"
+				)
+			}
+		} catch (error) {
+			toast.error("Foydalanuvchini o'chirishda xatolik yuz berdi")
+			console.error('Error deleting user:', error)
+		}
+	}
 
 	return (
 		<div className='space-y-6'>
@@ -32,11 +63,47 @@ export default function StudentDetails() {
 						O&apos;quvchi ma&apos;lumotlari
 					</h2>
 				</div>
-				<Button>Tahrirlash</Button>
+				<div className='flex gap-2'>
+					<Link href={`/admin/students/${user_id}/edit`}>
+						{/* =================== Link o'zgarishi kerak  */}
+						<Button variant='outline' className='gap-2'>
+							<Pencil className='h-4 w-4' />
+							Tahrirlash
+						</Button>
+					</Link>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant='destructive' className='gap-2'>
+								<Trash2 className='h-4 w-4' />
+								O&apos;chirish
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Foydalanuvchini o&apos;chirishni tasdiqlaysizmi?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									Bu amalni qaytarib bo&apos;lmaydi. Foydalanuvchi va unga
+									tegishli barcha ma&apos;lumotlar butunlay o&apos;chiriladi.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={handleDelete}
+									className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+								>
+									O&apos;chirish
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</div>
 			</div>
 
 			<div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-				<ProfileCard userId={id as string} />
+				<ProfileCard userId={user_id as string} />
 
 				<div className='md:col-span-3 space-y-6'>
 					<Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -54,7 +121,7 @@ export default function StudentDetails() {
 						</TabsList>
 
 						<TabsContent value='overview'>
-							<OverviewTab userId={id as string} />
+							<OverviewTab userId={user_id as string} />
 						</TabsContent>
 
 						<TabsContent value='education'>

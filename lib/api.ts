@@ -409,3 +409,28 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
 		)
 	}
 }
+
+//Delete User
+export async function deleteUser(userId: string): Promise<any> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/User/Delete?userId=${userId}`,
+			{
+				method: 'DELETE',
+			}
+		)
+
+		const responseData = await response.json()
+
+		if (!response.ok) {
+			throw new Error(
+				responseData.errorMessages?.join(', ') || 'Delete xatolik yuz berdi'
+			)
+		}
+
+		return responseData
+	} catch (error) {
+		console.error('Error deleting test:', error)
+		throw error
+	}
+}
