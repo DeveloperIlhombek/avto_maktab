@@ -65,7 +65,6 @@ export default function StudentDetails() {
 				</div>
 				<div className='flex gap-2'>
 					<Link href={`/admin/students/${user_id}/edit`}>
-						{/* =================== Link o'zgarishi kerak  */}
 						<Button variant='outline' className='gap-2'>
 							<Pencil className='h-4 w-4' />
 							Tahrirlash

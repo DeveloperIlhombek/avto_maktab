@@ -1,3 +1,5 @@
+//Code by:Ilhom Toshqulov
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
 interface UserData {
@@ -9,7 +11,7 @@ interface UserData {
 	phone: string
 	role: string
 }
-interface UserResponse {
+export interface UserResponse {
 	isSuccess: boolean
 	result: UserData
 	statusCode: number
@@ -400,7 +402,7 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
 		}
 
 		const result: LoginResponse = await response.json()
-		console.log(result)
+		//console.log(result)
 
 		return result
 	} catch (error) {
@@ -431,6 +433,37 @@ export async function deleteUser(userId: string): Promise<any> {
 		return responseData
 	} catch (error) {
 		console.error('Error deleting test:', error)
+		throw error
+	}
+}
+
+//Update User
+
+export const updateUser = async (
+	id: string,
+	formData: FormData
+): Promise<UserResponse> => {
+	try {
+		const response = await fetch(`${API_URL}/api/User/Update`, {
+			method: 'PUT',
+			headers: {
+				accept: '*/*',
+			},
+			body: formData,
+		})
+
+		if (!response.ok) {
+			const errorData = await response.json()
+			throw new Error(
+				errorData.message ||
+					"Foydalanuvchi ma'lumotlarini yangilashda xatolik yuz berdi"
+			)
+		}
+
+		const responseData = await response.json()
+		return responseData
+	} catch (error) {
+		console.error('Xato:', error)
 		throw error
 	}
 }

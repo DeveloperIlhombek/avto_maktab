@@ -30,8 +30,8 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { ArrowLeft } from 'lucide-react'
-import { createUser } from '@/lib/api'
-import { useState } from 'react'
+import { updateUser, getUserById, UserResponse } from '@/lib/api'
+import { useState, useEffect, use } from 'react'
 import { toast } from 'sonner'
 
 const formSchema = z.object({
@@ -50,17 +50,22 @@ const formSchema = z.object({
 	phone: z.string().min(9, {
 		message: "Telefon raqam kamida 9 ta raqamdan iborat bo'lishi kerak",
 	}),
-	password: z.string().min(6, {
-		message: "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
-	}),
 	role: z.string({
 		required_error: 'Rolni tanlang',
 	}),
 })
 
-export default function CreateStudent() {
+export default function UpdateStudent({
+	params,
+}: {
+	params: Promise<{ students_id: string }>
+}) {
 	const router = useRouter()
+	const { students_id } = use(params)
 	const [isLoading, setIsLoading] = useState(false)
+	const [initialValues, setInitialValues] = useState<z.infer<
+		typeof formSchema
+	> | null>(null)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -70,22 +75,65 @@ export default function CreateStudent() {
 			username: '',
 			email: '',
 			phone: '',
-			password: '',
 			role: 'student',
 		},
 	})
 
+	// Foydalanuvchi ma'lumotlarini olish
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				const userData: UserResponse = await getUserById(students_id)
+				console.log(userData)
+				setInitialValues(userData.result) // initialValues ni saqlash
+				form.reset(userData.result) // Formani avvalgi qiymatlar bilan to'ldirish
+			} catch (error) {
+				toast.error("Foydalanuvchi ma'lumotlarini yuklashda xatolik yuz berdi")
+				console.error('Error fetching user data:', error)
+			}
+		}
+
+		fetchUserData()
+	}, [students_id, form])
+
+	// Formani yuborish (faqat o'zgargan ma'lumotlar bilan)
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
 			setIsLoading(true)
-			await createUser(values)
-			toast.success("O'quvchi muvaffaqiyatli qo'shildi")
+
+			// FormData ni yaratish
+			const formData = new FormData()
+
+			// Faqat o'zgargan maydonlarni aniqlash
+			const dirtyFields = form.formState.dirtyFields
+
+			// O'zgargan maydonlarni FormData ga qo'shish
+			if (dirtyFields.name) formData.append('name', values.name)
+			if (dirtyFields.surname) formData.append('surname', values.surname)
+			if (dirtyFields.username) formData.append('username', values.username)
+			if (dirtyFields.email) formData.append('email', values.email)
+			if (dirtyFields.phone) formData.append('phone', values.phone)
+			if (dirtyFields.role) formData.append('role', values.role)
+
+			// ID ni har doim qo'shish
+			formData.append('id', students_id)
+
+			// updateUser funksiyasini chaqirish
+			await updateUser(students_id, formData)
+			toast.success("Foydalanuvchi ma'lumotlari muvaffaqiyatli yangilandi")
 			router.push('/admin/students')
 		} catch (error) {
-			toast.error("O'quvchini qo'shishda xatolik yuz berdi")
-			console.error('Error creating student:', error)
+			toast.error("Foydalanuvchi ma'lumotlarini yangilashda xatolik yuz berdi")
+			console.error('Error updating user:', error)
 		} finally {
 			setIsLoading(false)
+		}
+	}
+
+	// Formani qayta tiklash (reset) funksiyasi
+	const handleReset = () => {
+		if (initialValues) {
+			form.reset(initialValues)
 		}
 	}
 
@@ -99,7 +147,7 @@ export default function CreateStudent() {
 						</Button>
 					</Link>
 					<h2 className='text-3xl font-bold tracking-tight'>
-						Yangi o&apos;quvchi qo&apos;shish
+						Foydalanuvchi ma&apos;lumotlarini yangilash
 					</h2>
 				</div>
 			</div>
@@ -110,7 +158,7 @@ export default function CreateStudent() {
 						<CardHeader>
 							<CardTitle>Shaxsiy ma&apos;lumotlar</CardTitle>
 							<CardDescription>
-								O&apos;quvchining asosiy ma&apos;lumotlarini kiriting
+								Foydalanuvchining yangilangan ma&apos;lumotlarini kiriting
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-6'>
@@ -194,24 +242,6 @@ export default function CreateStudent() {
 
 								<FormField
 									control={form.control}
-									name='password'
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Parol</FormLabel>
-											<FormControl>
-												<Input
-													type='password'
-													placeholder='Parolni kiriting'
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
 									name='role'
 									render={({ field }) => (
 										<FormItem>
@@ -240,11 +270,14 @@ export default function CreateStudent() {
 					</Card>
 
 					<div className='flex justify-end gap-4'>
+						<Button type='button' variant='outline' onClick={handleReset}>
+							Formani qayta tiklash
+						</Button>
 						<Link href='/admin/students'>
 							<Button variant='outline'>Bekor qilish</Button>
 						</Link>
 						<Button type='submit' disabled={isLoading}>
-							{isLoading ? 'Saqlanmoqda...' : 'Saqlash'}
+							{isLoading ? 'Yangilanmoqda...' : 'Yangilash'}
 						</Button>
 					</div>
 				</form>
