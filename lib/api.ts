@@ -51,13 +51,15 @@ interface CreateTestResponse {
 export const getAllTests = async ({
 	pageSize,
 	pageNumber,
+	language,
 }: {
 	pageSize: number
 	pageNumber: number
+	language: string
 }) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/UserTest/GetQuestions?language=uz&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {
@@ -368,5 +370,42 @@ export async function deleteTest(id: string): Promise<any> {
 	} catch (error) {
 		console.error('Error deleting test:', error)
 		throw error
+	}
+}
+
+//Login User
+export interface LoginData {
+	login: string
+	password: string
+}
+
+export interface LoginResponse {
+	token: string
+	message: string
+}
+
+export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
+	try {
+		const response = await fetch(`${API_URL}/api/User/Login`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: '*/*',
+			},
+			body: JSON.stringify(data),
+		})
+
+		if (!response.ok) {
+			throw new Error('Login failed')
+		}
+
+		const result: LoginResponse = await response.json()
+		console.log(result)
+
+		return result
+	} catch (error) {
+		throw new Error(
+			error instanceof Error ? error.message : 'Login request failed'
+		)
 	}
 }

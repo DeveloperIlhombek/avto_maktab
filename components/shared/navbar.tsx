@@ -1,10 +1,39 @@
+'use client'
 import { ModeToggle } from '@/components/shared/mode-toggle'
 import { navLink } from '@/constanta'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog'
 import { Button } from '../ui/button'
-
+import { Input } from '../ui/input'
+import { Eye, EyeOff } from 'lucide-react'
+import { loginUser } from '@/lib/api'
 function Navbar() {
+	const [open, setOpen] = useState(false)
+	const [showPassword, setShowPassword] = useState(false)
+	const [login, setLogin] = useState('')
+	const [password, setPassword] = useState('')
+	const [error, setError] = useState<string | null>(null)
+
+	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		setError(null)
+		try {
+			const responce = await loginUser({ login, password })
+			alert('Muvaqqiyatli kirdingiz' + responce.token)
+			setOpen(false)
+		} catch (error) {
+			setError(`Login yoki parol xato: ${error}`)
+		}
+	}
+
 	return (
 		<div className='fixed inset-0 z-40 h-20 bg-background/70 backdrop-blur-xl '>
 			<div className='container mx-auto flex h-full max-w-7xl items-center justify-between border-b'>
@@ -26,12 +55,58 @@ function Navbar() {
 						<ModeToggle />
 					</div>
 					<div>Til tanlash</div>
-					<Button variant={'outline'}>
-						<Link href={'/admin'}>Admin</Link>
-					</Button>
-					<Button variant={'outline'}>
-						<Link href={'/student/123'}>Student</Link>
-					</Button>
+					<div className='flex  items-center justify-center gap-4'>
+						<Dialog open={open} onOpenChange={setOpen}>
+							<DialogTrigger asChild>
+								<Button className='px-4 py-2 bg-blue-500 text-white rounded-md'>
+									Kirish
+								</Button>
+							</DialogTrigger>
+							<DialogContent>
+								<DialogHeader>
+									<DialogTitle>Tizimga kirish</DialogTitle>
+									<DialogDescription>
+										Login va parolni kiriting
+									</DialogDescription>
+								</DialogHeader>
+								<form className='space-y-4' onSubmit={handleLogin}>
+									<Input
+										type='text'
+										placeholder='login'
+										className='w-full px-4 py-2 border rounded-md'
+										value={login}
+										onChange={e => setLogin(e.target.value)}
+										required
+									/>
+									<div className='relative'>
+										<Input
+											type={showPassword ? 'text' : 'password'}
+											placeholder='parol'
+											className='w-full px-4 py-2 border rounded-md pr-10'
+											value={password}
+											onChange={e => setPassword(e.target.value)}
+											required
+										/>
+										<Button
+											type='button'
+											variant={showPassword ? 'link' : 'secondary'}
+											className='absolute inset-y-0 right-2 flex items-center'
+											onClick={() => setShowPassword(prev => !prev)}
+										>
+											{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+										</Button>
+									</div>
+									{error && <p className='text-red-500'>{error}</p>}
+									<Button
+										type='submit'
+										className='w-full bg-blue-500 text-white py-2 rounded-md'
+									>
+										Kirish
+									</Button>
+								</form>
+							</DialogContent>
+						</Dialog>
+					</div>
 				</div>
 			</div>
 		</div>
