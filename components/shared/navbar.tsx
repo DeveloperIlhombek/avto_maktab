@@ -15,20 +15,34 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/api'
+import { useRouter } from 'next/navigation'
+
 function Navbar() {
 	const [open, setOpen] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
+	const [student_id, setStudent_id] = useState('')
 	const [error, setError] = useState<string | null>(null)
+	const router = useRouter()
 
 	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setError(null)
 		try {
-			const responce = await loginUser({ login, password })
-			alert('Muvaqqiyatli kirdingiz' + responce.token)
+			const response = await loginUser({ login, password, student_id })
+			localStorage.setItem('token', response.token)
+			localStorage.setItem('role', response.role) // Assuming the API returns a role
+
+			alert('Muvaqqiyatli kirdingiz: ' + response.token)
 			setOpen(false)
+
+			// Redirect based on role
+			if (response.role === 'admin') {
+				router.push('/admin')
+			} else if (response.role === 'student') {
+				router.push(`/student/${response.student_id}`)
+			}
 		} catch (error) {
 			setError(`Login yoki parol xato: ${error}`)
 		}

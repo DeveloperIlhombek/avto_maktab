@@ -386,7 +386,11 @@ export interface LoginResponse {
 	message: string
 }
 
-export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
+export const loginUser = async (data: {
+	login: string
+	password: string
+	student_id: string
+}): Promise<{ token: string; role: string; student_id: string }> => {
 	try {
 		const response = await fetch(`${API_URL}/api/User/Login`, {
 			method: 'POST',
@@ -401,8 +405,8 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
 			throw new Error('Login failed')
 		}
 
-		const result: LoginResponse = await response.json()
-		//console.log(result)
+		const result = await response.json()
+		console.log(result)
 
 		return result
 	} catch (error) {
