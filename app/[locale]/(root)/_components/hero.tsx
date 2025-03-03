@@ -2,8 +2,9 @@
 
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
-
+import { useTranslations } from 'next-intl'
 export default function Home() {
+	const t = useTranslations('Hero')
 	const container = {
 		hidden: { opacity: 0 },
 		show: {
@@ -41,13 +42,13 @@ export default function Home() {
 							variants={item}
 							className='text-4xl md:text-6xl font-bold tracking-tight'
 						>
-							E-AVTOMAKTAB
+							{t('emaktab')}
 						</motion.h1>
 						<motion.p
 							variants={item}
 							className='text-lg md:text-xl text-muted-foreground max-w-[600px]'
 						>
-							Onlayn masofaviy ta&apos;lim platformasi
+							{t('emaktabdescription')}
 						</motion.p>
 						<motion.div variants={item}>
 							<Button size='lg' className='text-lg px-8'>

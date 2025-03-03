@@ -7,8 +7,6 @@ interface PageParams {
 
 export default async function TestPage({ params }: { params: PageParams }) {
 	const { lang } = params
-	// console.log(lang)
-	// console.log(111111)
 
 	const data = await getAllTests({
 		pageSize: 728,

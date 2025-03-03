@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const testInfo = [
 	{
@@ -76,6 +77,12 @@ const item = {
 }
 
 export function Test() {
+	const pathname = usePathname()
+	const currentLang = pathname.split('/')[1]
+
+	// Check if the current path includes a valid language code
+	const isValidLang = ['uz', 'uzk', 'ru'].includes(currentLang)
+	const testUrl = isValidLang ? `/${currentLang}/test` : '/test'
 	return (
 		<section className='py-24 bg-muted/30' id='test-sinovi'>
 			<div className='container px-4 mx-auto'>
@@ -104,7 +111,7 @@ export function Test() {
 								className=' text-lg px-8 bg-primary hover:bg-primary/90'
 							>
 								<Link
-									href={'/test'}
+									href={testUrl}
 									className='flex items-center justify-center '
 								>
 									Testni boshlash

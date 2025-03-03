@@ -1,5 +1,6 @@
 'use client'
 import { ModeToggle } from '@/components/shared/mode-toggle'
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import { navLink } from '@/constanta'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -22,6 +23,7 @@ function Navbar() {
 	const [showPassword, setShowPassword] = useState(false)
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [student_id, setStudent_id] = useState('')
 	const [error, setError] = useState<string | null>(null)
 	const router = useRouter()
@@ -68,7 +70,7 @@ function Navbar() {
 					<div>
 						<ModeToggle />
 					</div>
-					<div>Til tanlash</div>
+					<LanguageSwitcher />
 					<div className='flex  items-center justify-center gap-4'>
 						<Dialog open={open} onOpenChange={setOpen}>
 							<DialogTrigger asChild>

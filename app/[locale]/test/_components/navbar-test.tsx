@@ -1,3 +1,4 @@
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import { ModeToggle } from '@/components/shared/mode-toggle'
 import { Button } from '@/components/ui/button'
 import React from 'react'
@@ -9,7 +10,7 @@ function NavbarTest() {
 				<div>Logo</div>
 				<div className='flex justify-start items-center gap-4'>
 					<ModeToggle />
-					Til tanlash
+					<LanguageSwitcher />
 					<Button>Kirish</Button>
 				</div>
 			</div>
