@@ -2,8 +2,8 @@
 
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/shared/mode-toggle'
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 
 export function Header() {
 	return (
@@ -18,9 +18,7 @@ export function Header() {
 							<Input placeholder='Qidirish...' className='pl-8' />
 						</div>
 						<ModeToggle />
-						<Button size='icon' variant='destructive'>
-							Til
-						</Button>
+						<LanguageSwitcher />
 
 						<div className='flex items-center space-x-4'>
 							<div className='text-sm'>
