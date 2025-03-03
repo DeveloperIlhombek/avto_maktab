@@ -84,7 +84,7 @@ export default function UpdateStudent({
 		const fetchUserData = async () => {
 			try {
 				const userData: UserResponse = await getUserById(students_id)
-				console.log(userData)
+				//console.log(userData)
 				setInitialValues(userData.result) // initialValues ni saqlash
 				form.reset(userData.result) // Formani avvalgi qiymatlar bilan to'ldirish
 			} catch (error) {

@@ -35,7 +35,6 @@ export default async function RootLayout({
 }) {
 	// `locale` ni tekshiramiz
 	const { locale } = await params
-	console.log(locale)
 
 	if (!routing.locales.includes(locale as Locale)) {
 		notFound()

@@ -1,22 +1,27 @@
 import { getAllTests } from '@/lib/api'
 import Test from './_components/test'
 
-interface PageParams {
-	lang: string
-}
+// interface PageParams {
+// 	lang: string
+// }
 
-export default async function TestPage({ params }: { params: PageParams }) {
-	const { lang } = params
+export default async function TestPage({
+	params,
+}: {
+	params: Promise<{ locale: string }>
+}) {
+	const { locale } = await params
+	console.log('Test' + '   ' + locale)
 
 	const data = await getAllTests({
-		pageSize: 728,
-		pageNumber: 0,
-		language: lang,
+		pageSize: 720,
+		pageNumber: 2,
+		language: locale,
 	})
 
 	if (!data) {
 		return <div>Error loading tests</div>
 	}
 
-	return <Test response={data.result} />
+	return <Test response={data.result} language={locale} />
 }

@@ -60,10 +60,11 @@ interface ITestResponse {
 
 interface Props {
 	response: ITestResponse
+	language?: string
 }
 
 const getImageUrl = (mediaUrl: string | null) => {
-	if (!mediaUrl) return '/testbox.svg'
+	if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
 
 	if (!mediaUrl.includes('\\')) {
 		return `http://213.230.109.74:8080/${mediaUrl}`
