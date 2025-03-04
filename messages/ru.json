@@ -6,5 +6,8 @@
 	"Hero": {
 		"emaktab": "E-АВТОМАКТАБ",
 		"emaktabdescription": "Онлайн платформа дистанционного обучения"
+	},
+	"Testadmin": {
+		"Savol malumotlari": "Информация о вопросе"
 	}
 }

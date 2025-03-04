@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -91,7 +91,16 @@ export default function NewTest() {
 			},
 		},
 	})
-
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
+	// Create base URL with language prefix if it exists
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 	async function onSubmit(values: FormValues) {
 		try {
 			setIsSubmitting(true)
@@ -119,7 +128,7 @@ export default function NewTest() {
 
 			if (response.isSuccess) {
 				toast.success('Test muvaffaqiyatli yaratildi')
-				router.push('/admin/tests')
+				router.push(`${getLanguagePrefix()}/admin/tests`)
 			} else {
 				toast.error(response.errorMessages?.join(', ') || 'Xatolik yuz berdi')
 			}
@@ -153,7 +162,7 @@ export default function NewTest() {
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/tests'>
+					<Link href={`${getLanguagePrefix()}/admin/tests`}>
 						<Button variant='ghost' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>

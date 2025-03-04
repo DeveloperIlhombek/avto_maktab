@@ -247,11 +247,12 @@ interface TestsResponse {
 
 export const getAllTestsAdmin = async (
 	pageNumber: number = 0,
-	pageSize: number = 10
+	pageSize: number = 10,
+	language: string = 'uz'
 ): Promise<TestsResponse> => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=uz&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {

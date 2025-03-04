@@ -6,5 +6,8 @@
 	"Hero": {
 		"emaktab": "E-AVTOMAKTAB",
 		"emaktabdescription": "Onlayn masofaviy ta'lim platformasi"
+	},
+	"Testadmin": {
+		"Savol malumotlari": "Savol ma'lumotlari"
 	}
 }

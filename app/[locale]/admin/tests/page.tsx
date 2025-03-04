@@ -29,18 +29,19 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '@/components/ui/pagination'
-import {
-	Search,
-	Plus,
-	Pencil,
-	Trash2,
-	Eye,
-	Image as ImageIcon,
-} from 'lucide-react'
+import { Search, Plus, Pencil, Eye, Image as ImageIcon } from 'lucide-react'
 import { getAllTestsAdmin } from '@/lib/api'
 import type { Test } from '@/lib/api'
+import { usePathname } from 'next/navigation'
 
 export default function QuestionsPage() {
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
+
 	const [searchTerm, setSearchTerm] = useState('')
 	const [tests, setTests] = useState<Test[]>([])
 	const [currentPage, setCurrentPage] = useState(0)
@@ -49,18 +50,17 @@ export default function QuestionsPage() {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({})
-
 	const pageSize = 10
 
 	useEffect(() => {
 		fetchTests()
-	}, [currentPage])
+	}, [currentPage, language])
 
 	const fetchTests = async () => {
 		try {
 			setLoading(true)
 			setError(null)
-			const data = await getAllTestsAdmin(currentPage, pageSize)
+			const data = await getAllTestsAdmin(currentPage, pageSize, language)
 
 			if (data.isSuccess) {
 				setTests(data.result.items)
@@ -93,6 +93,11 @@ export default function QuestionsPage() {
 		setImageErrors(prev => ({ ...prev, [testId]: true }))
 	}
 
+	// Create base URL with language prefix if it exists
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
+
 	return (
 		<div className='space-y-6'>
 			<div className='flex justify-between items-center'>
@@ -102,9 +107,9 @@ export default function QuestionsPage() {
 						Barcha test savollari ro&apos;yxati va boshqaruvi
 					</p>
 				</div>
-				<Link href='/admin/tests/newtest'>
-					<Button className='gap-2'>
-						<Plus className='h-4 w-4' />
+				<Link href={`${getLanguagePrefix()}/admin/tests/newtest`}>
+					<Button className='gap-2' variant={'custom'}>
+						<Plus className='h-4 w-4 font-bold' />
 						Yangi savol
 					</Button>
 				</Link>
@@ -177,7 +182,11 @@ export default function QuestionsPage() {
 											</TableCell>
 											<TableCell className='text-right'>
 												<div className='flex justify-end gap-2 opacity-100'>
-													<Link href={`/admin/tests/${test.id}`}>
+													<Link
+														href={`${getLanguagePrefix()}/admin/tests/${
+															test.id
+														}`}
+													>
 														<Button
 															variant='ghost'
 															size='icon'
@@ -186,7 +195,11 @@ export default function QuestionsPage() {
 															<Eye className='h-4 w-4' />
 														</Button>
 													</Link>
-													<Link href={`/admin/tests/${test.id}/edit`}>
+													<Link
+														href={`${getLanguagePrefix()}/admin/tests/${
+															test.id
+														}/edit`}
+													>
 														<Button
 															variant='ghost'
 															size='icon'
@@ -195,13 +208,6 @@ export default function QuestionsPage() {
 															<Pencil className='h-4 w-4' />
 														</Button>
 													</Link>
-													<Button
-														variant='ghost'
-														size='icon'
-														className='h-8 w-8 text-destructive'
-													>
-														<Trash2 className='h-4 w-4' />
-													</Button>
 												</div>
 											</TableCell>
 										</TableRow>

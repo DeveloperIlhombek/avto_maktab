@@ -24,6 +24,11 @@ export const navLink = [
 		name: 'Test sinovi',
 		url: '#test-sinovi',
 	},
+	{
+		id: 6,
+		name: 'Savollar',
+		url: '#savollar',
+	},
 ]
 
 export const studentData = {

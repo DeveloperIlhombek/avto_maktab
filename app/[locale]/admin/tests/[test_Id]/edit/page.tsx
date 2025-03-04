@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, use } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -29,6 +29,7 @@ import Image from 'next/image'
 import { getTestById, updateTest } from '@/lib/api'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 const formSchema = z.object({
 	questionUZ: z.string().min(10, {
@@ -74,8 +75,15 @@ export default function Page({
 }: {
 	params: Promise<{ test_Id: string; language: string }>
 }) {
+	const trans = useTranslations('Testadmin')
 	const router = useRouter()
 	const { test_Id } = use(params)
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
 
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isLoading, setIsLoading] = useState(true)
@@ -101,6 +109,9 @@ export default function Page({
 		},
 	})
 
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: originalValues,
@@ -228,7 +239,7 @@ export default function Page({
 
 			if (response.isSuccess) {
 				toast.success('Test muvaffaqiyatli yangilandi')
-				router.push('/admin/tests')
+				router.push(`${getLanguagePrefix()}/admin/tests`)
 			} else {
 				toast.error(response.errorMessages?.join(', ') || 'Xatolik yuz berdi')
 			}
@@ -306,7 +317,7 @@ export default function Page({
 					<Button
 						variant='outline'
 						className='mt-4'
-						onClick={() => router.push('/admin/tests')}
+						onClick={() => router.push(`${getLanguagePrefix()}/admin/tests`)}
 					>
 						Orqaga qaytish
 					</Button>
@@ -319,7 +330,7 @@ export default function Page({
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/tests'>
+					<Link href={`${getLanguagePrefix()}/admin/tests`}>
 						<Button variant='ghost' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
@@ -334,7 +345,7 @@ export default function Page({
 				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
 					<Card>
 						<CardHeader>
-							<CardTitle>Savol ma&apos;lumotlari</CardTitle>
+							<CardTitle>{trans('Savol malumotlari')}</CardTitle>
 							<CardDescription>
 								Savolning asosiy ma&apos;lumotlarini tahrirlang
 							</CardDescription>

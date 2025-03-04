@@ -65,7 +65,7 @@ function Navbar() {
 						</Link>
 					))}
 				</div>
-				{/* ModeToggle Lang Kisrish */}
+				{/* ModeToggle Lang Kirish */}
 				<div className='flex items-center justify-center gap-4'>
 					<div>
 						<ModeToggle />

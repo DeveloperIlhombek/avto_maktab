@@ -1,7 +1,7 @@
 'use client'
 
 import { use, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,7 +20,7 @@ import { ArrowLeft, Pencil, Trash2, ImageIcon } from 'lucide-react'
 import Image from 'next/image'
 import { getTestById, deleteTest } from '@/lib/api'
 import { toast } from 'sonner'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTranslations } from 'next-intl'
 interface TestData {
 	id: string
 	question: string
@@ -48,13 +48,21 @@ export default function QuestionDetails({
 }: {
 	params: Promise<{ test_Id: string; language: string }>
 }) {
+	const t = useTranslations('Testadmin')
+
 	const { test_Id } = use(params)
 	const router = useRouter()
+
 	const [testData, setTestData] = useState<TestData | null>(null)
 	const [error, setError] = useState<string | null>(null)
 	const [imageError, setImageError] = useState(false)
 	const [isLoading, setIsLoading] = useState(true)
-	const [language, setLanguage] = useState<'uz' | 'uzk' | 'ru'>('uz')
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
 
 	useEffect(() => {
 		const fetchTestData = async () => {
@@ -77,13 +85,15 @@ export default function QuestionDetails({
 			fetchTestData()
 		}
 	}, [test_Id, language])
-
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 	const handleDelete = async () => {
 		try {
 			const response = await deleteTest(test_Id)
 			if (response.isSuccess) {
 				toast.success("Test muvaffaqiyatli o'chirildi")
-				router.push('/admin/tests')
+				router.push(getLanguagePrefix() + '/admin/tests')
 			} else {
 				toast.error(
 					response.errorMessages?.join(', ') ||
@@ -117,7 +127,7 @@ export default function QuestionDetails({
 		return (
 			<div className='space-y-6'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/tests'>
+					<Link href={`${getLanguagePrefix()}/admin/tests`}>
 						<Button variant='ghost' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
@@ -139,7 +149,7 @@ export default function QuestionDetails({
 		return (
 			<div className='space-y-6'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/tests'>
+					<Link href={`${getLanguagePrefix()}/admin/tests`}>
 						<Button variant='ghost' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
@@ -170,17 +180,17 @@ export default function QuestionDetails({
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/tests'>
+					<Link href={`${getLanguagePrefix()}/admin/tests`}>
 						<Button variant='ghost' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
 					</Link>
 					<h2 className='text-3xl font-bold tracking-tight'>
-						Savol ma&apos;lumotlari
+						{t('Savol malumotlari')}
 					</h2>
 				</div>
 				<div className='flex gap-2'>
-					<Link href={`/admin/tests/${test_Id}/edit`}>
+					<Link href={`${getLanguagePrefix()}/admin/tests/${test_Id}/edit`}>
 						<Button variant='outline' className='gap-2'>
 							<Pencil className='h-4 w-4' />
 							Tahrirlash
@@ -217,22 +227,11 @@ export default function QuestionDetails({
 				</div>
 			</div>
 
-			<Tabs
-				value={language}
-				onValueChange={value => setLanguage(value as 'uz' | 'uzk' | 'ru')}
-			>
-				<TabsList className='mb-4'>
-					<TabsTrigger value='uz'>O&apos;zbekcha (Lotin)</TabsTrigger>
-					<TabsTrigger value='uzk'>Ўзбекча (Кирил)</TabsTrigger>
-					<TabsTrigger value='ru'>Русский</TabsTrigger>
-				</TabsList>
-			</Tabs>
-
 			<div className='grid grid-cols-1 gap-6'>
 				<Card>
 					<CardHeader>
 						<CardTitle>
-							Savol ma&apos;lumotlari - {getLanguageLabel(language)}
+							{t('Savol malumotlari')} - {getLanguageLabel(language)}
 						</CardTitle>
 					</CardHeader>
 					<CardContent className='space-y-6'>
