@@ -50,6 +50,7 @@ export default function StudentLayout({
 }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 	const pathname = usePathname()
+	console.log(pathname)
 
 	return (
 		<div className='min-h-screen bg-background'>

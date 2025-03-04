@@ -32,7 +32,7 @@ import { Timer } from './timer'
 import { ResultDialog } from './result-dialog'
 
 const SECONDS_PER_QUESTION = 25
-const QUESTIONS_PER_PAGE = 10
+const QUESTIONS_PER_PAGE = 30
 
 interface ITestAnswer {
 	id: string
@@ -244,7 +244,7 @@ export default function Test({ response }: Props) {
 								Avvalgi {QUESTIONS_PER_PAGE}
 							</Button>
 
-							<div className='flex items-center gap-2 flex-wrap max-w-3xl justify-center'>
+							<div className='flex items-center gap-1 flex-wrap max-w-3xl justify-center'>
 								{currentPageQuestions.map((_, idx) => {
 									const questionIndex = startIndex + idx
 									const answer = answers[questionIndex]

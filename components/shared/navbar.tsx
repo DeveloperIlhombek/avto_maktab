@@ -36,7 +36,7 @@ function Navbar() {
 			localStorage.setItem('token', response.token)
 			localStorage.setItem('role', response.role) // Assuming the API returns a role
 
-			alert('Muvaqqiyatli kirdingiz: ' + response.token)
+			alert('Muvaqqiyatli kirdingiz: Token' + response.token)
 			setOpen(false)
 
 			// Redirect based on role

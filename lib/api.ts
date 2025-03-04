@@ -75,7 +75,6 @@ export const getAllTests = async ({
 		}
 
 		const data = await response.json() // JSON ma'lumotni olish
-		console.log(data)
 
 		return data
 	} catch (error) {
@@ -387,7 +386,6 @@ export interface LoginResponse {
 	token: string
 	message: string
 }
-
 export const loginUser = async (data: {
 	login: string
 	password: string
@@ -408,6 +406,15 @@ export const loginUser = async (data: {
 		}
 
 		const result = await response.json()
+
+		// Foydalanuvchini kabinetiga yo'naltirish
+		if (result.token && result.role && result.student_id) {
+			// Foydalanuvchi ID-sini URLga qo'shish orqali yo'naltirish
+			if (result.role === 'student') {
+				window.location.href = `/uz/student/${result.student_id}`
+			}
+			window.location.href = `/admin`
+		}
 
 		return result
 	} catch (error) {
