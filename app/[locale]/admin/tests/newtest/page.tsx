@@ -163,7 +163,7 @@ export default function NewTest() {
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
 					<Link href={`${getLanguagePrefix()}/admin/tests`}>
-						<Button variant='ghost' size='icon'>
+						<Button variant='custom' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
 					</Link>

@@ -11,7 +11,7 @@ import { EducationTab } from './_components/education-tab'
 import { TestsTab } from './_components/tests-tab'
 import { PaymentsTab } from './_components/payments-tab'
 import { PracticeTab } from './_components/practice-tab'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { ProfileCard } from './_components/profile-card'
 import {
 	AlertDialog,
@@ -31,13 +31,23 @@ export default function StudentDetails() {
 	const [activeTab, setActiveTab] = useState('overview')
 	const user_id = params.students_id
 	const router = useRouter()
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
+
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 
 	const handleDelete = async () => {
 		try {
 			const response = await deleteUser(user_id as string)
 			if (response.isSuccess) {
 				toast.success("Foydalanuvchi muvaffaqiyatli o'chirildi")
-				router.push('/admin/students')
+				router.push(`${getLanguagePrefix()}/admin/students`)
 			} else {
 				toast.error(
 					response.errorMessages?.join(', ') ||
@@ -54,8 +64,8 @@ export default function StudentDetails() {
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/students'>
-						<Button variant='ghost' size='icon'>
+					<Link href={`${getLanguagePrefix()}/admin/students`}>
+						<Button variant='custom' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
 					</Link>
@@ -64,7 +74,7 @@ export default function StudentDetails() {
 					</h2>
 				</div>
 				<div className='flex gap-2'>
-					<Link href={`/admin/students/${user_id}/edit`}>
+					<Link href={`${getLanguagePrefix()}/admin/students/${user_id}/edit`}>
 						<Button variant='outline' className='gap-2'>
 							<Pencil className='h-4 w-4' />
 							Tahrirlash

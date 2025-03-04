@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -67,6 +67,18 @@ export default function UpdateStudent({
 		typeof formSchema
 	> | null>(null)
 
+	const pathname = usePathname()
+	const pathSegment = pathname.split('/')
+
+	const language =
+		pathSegment.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegment[1])
+			? (pathSegment[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
+
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -121,7 +133,7 @@ export default function UpdateStudent({
 			// updateUser funksiyasini chaqirish
 			await updateUser(students_id, formData)
 			toast.success("Foydalanuvchi ma'lumotlari muvaffaqiyatli yangilandi")
-			router.push('/admin/students')
+			router.push(`${getLanguagePrefix()}/admin/students`)
 		} catch (error) {
 			toast.error("Foydalanuvchi ma'lumotlarini yangilashda xatolik yuz berdi")
 			console.error('Error updating user:', error)
@@ -141,9 +153,9 @@ export default function UpdateStudent({
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/students'>
-						<Button variant='ghost' size='icon'>
-							<ArrowLeft className='h-4 w-4' />
+					<Link href={`${getLanguagePrefix()}/admin/students`}>
+						<Button variant='custom' size='icon'>
+							<ArrowLeft className='h-4 w-4 font-bold' />
 						</Button>
 					</Link>
 					<h2 className='text-3xl font-bold tracking-tight'>
@@ -273,7 +285,7 @@ export default function UpdateStudent({
 						<Button type='button' variant='outline' onClick={handleReset}>
 							Formani qayta tiklash
 						</Button>
-						<Link href='/admin/students'>
+						<Link href={`${getLanguagePrefix()}/admin/students`}>
 							<Button variant='outline'>Bekor qilish</Button>
 						</Link>
 						<Button type='submit' disabled={isLoading}>

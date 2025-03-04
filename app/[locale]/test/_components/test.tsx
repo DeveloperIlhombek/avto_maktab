@@ -235,7 +235,7 @@ export default function Test({ response }: Props) {
 					<div className='flex-1 px-8'>
 						<div className='flex items-center justify-center gap-4'>
 							<Button
-								variant='outline'
+								variant='custom'
 								onClick={() => handlePageChange(currentPage - 1)}
 								disabled={currentPage === 0}
 								className='hidden md:flex'

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Search, Plus } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 interface User {
 	id: string
@@ -51,7 +52,16 @@ interface Props {
 
 export default function AllUser({ data }: Props) {
 	const [searchTerm, setSearchTerm] = useState('')
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
 
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 	const filteredUsers = data.result.items.filter(
 		user =>
 			user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -87,7 +97,7 @@ export default function AllUser({ data }: Props) {
 				</div>
 
 				<Link
-					href={'/admin/students/create-student'}
+					href={`${getLanguagePrefix()}/admin/students/create-student`}
 					className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90'
 				>
 					<Plus className='h-4 w-4' />
@@ -134,7 +144,7 @@ export default function AllUser({ data }: Props) {
 								>
 									<TableCell>
 										<Link
-											href={`/admin/students/${user.id}`}
+											href={`${getLanguagePrefix()}/admin/students/${user.id}`}
 											className='flex items-center gap-3'
 										>
 											<Avatar className='h-9 w-9'>

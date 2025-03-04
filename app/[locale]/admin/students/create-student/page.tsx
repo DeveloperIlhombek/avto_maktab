@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -61,6 +61,16 @@ const formSchema = z.object({
 export default function CreateStudent() {
 	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
+	const pathname = usePathname()
+	const pathSegments = pathname.split('/')
+	const language =
+		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
+			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
+			: 'uz'
+
+	const getLanguagePrefix = () => {
+		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -80,7 +90,7 @@ export default function CreateStudent() {
 			setIsLoading(true)
 			await createUser(values)
 			toast.success("O'quvchi muvaffaqiyatli qo'shildi")
-			router.push('/admin/students')
+			router.push(`${getLanguagePrefix()}/admin/students`)
 		} catch (error) {
 			toast.error("O'quvchini qo'shishda xatolik yuz berdi")
 			console.error('Error creating student:', error)
@@ -93,8 +103,8 @@ export default function CreateStudent() {
 		<div className='space-y-6'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-4'>
-					<Link href='/admin/students'>
-						<Button variant='ghost' size='icon'>
+					<Link href={`${getLanguagePrefix()}/admin/students`}>
+						<Button variant='custom' size='icon'>
 							<ArrowLeft className='h-4 w-4' />
 						</Button>
 					</Link>
@@ -240,7 +250,7 @@ export default function CreateStudent() {
 					</Card>
 
 					<div className='flex justify-end gap-4'>
-						<Link href='/admin/students'>
+						<Link href={`${getLanguagePrefix()}/admin/students`}>
 							<Button variant='outline'>Bekor qilish</Button>
 						</Link>
 						<Button type='submit' disabled={isLoading}>
