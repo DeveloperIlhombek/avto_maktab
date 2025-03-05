@@ -20,33 +20,39 @@ import { useRouter } from 'next/navigation'
 
 function Navbar() {
 	const [open, setOpen] = useState(false)
+	const router = useRouter()
 	const [showPassword, setShowPassword] = useState(false)
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [student_id, setStudent_id] = useState('')
 	const [error, setError] = useState<string | null>(null)
-	const router = useRouter()
-
 	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setError(null)
 		try {
-			const response = await loginUser({ login, password, student_id })
-			localStorage.setItem('token', response.token)
-			localStorage.setItem('role', response.role) // Assuming the API returns a role
+			const response = await loginUser({ login, password })
+			const results = response.result
+			console.log(results.user.id)
 
-			alert('Muvaqqiyatli kirdingiz: Token' + response.token)
-			setOpen(false)
+			localStorage.setItem('token', results.accessToken)
+			localStorage.setItem('role', results.user.role.toString())
 
-			// Redirect based on role
-			if (response.role === 'admin') {
-				router.push('/admin')
-			} else if (response.role === 'student') {
-				router.push(`/student/${response.student_id}`)
+			// Foydalanuvchini kabinetiga yo'naltirish
+			if (results.accessToken && results.user.role && results.user.id) {
+				setOpen(false)
+				if (results.user.role === 2) {
+					router.push(`/uz/instructor/${results.user.id}`)
+				} else if (results.user.role === 1) {
+					router.push(`/uz/admin/${results.user.id}`)
+				} else {
+					router.push(`/uz/student/${results.user.id}`)
+				}
 			}
 		} catch (error) {
-			setError(`Login yoki parol xato: ${error}`)
+			setError(
+				`Login yoki parol xato: ${
+					error instanceof Error ? error.message : "Noma'lum xatolik"
+				}`
+			)
 		}
 	}
 

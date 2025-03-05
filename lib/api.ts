@@ -9,7 +9,7 @@ interface UserData {
 	username: string
 	email: string
 	phone: string
-	role: string
+	role: number
 }
 export interface UserResponse {
 	isSuccess: boolean
@@ -378,19 +378,29 @@ export async function deleteTest(id: string): Promise<any> {
 }
 
 //Login User
+
+interface UserDataLogin {
+	id: string
+	username: string
+	role: number
+}
 export interface LoginData {
 	login: string
 	password: string
 }
 
-export interface LoginResponse {
-	token: string
-	message: string
+export interface ResultData {
+	user: UserDataLogin
+	accessToken: string
 }
+export interface LoginResponse {
+	result: ResultData
+}
+
 export const loginUser = async (data: {
 	login: string
 	password: string
-}): Promise<{ token: string; role: string; student_id: string }> => {
+}): Promise<LoginResponse> => {
 	try {
 		const response = await fetch(`${API_URL}/api/User/Login`, {
 			method: 'POST',
@@ -406,15 +416,6 @@ export const loginUser = async (data: {
 		}
 
 		const result = await response.json()
-
-		// Foydalanuvchini kabinetiga yo'naltirish
-		if (result.token && result.role && result.student_id) {
-			// Foydalanuvchi ID-sini URLga qo'shish orqali yo'naltirish
-			if (result.role === 'student') {
-				window.location.href = `/uz/student/${result.student_id}`
-			}
-			window.location.href = `/admin`
-		}
 
 		return result
 	} catch (error) {
