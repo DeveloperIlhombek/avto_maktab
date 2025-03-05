@@ -13,7 +13,6 @@ import {
 	LogOut,
 	Menu,
 	User,
-	Wallet,
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
@@ -21,29 +20,23 @@ import { ModeToggle } from '@/components/shared/mode-toggle'
 const navigation = [
 	{
 		name: 'Dashboard',
-		href: '/student/123/dashboard',
+		href: '/uz/instructor/123/dashboard',
 		icon: Home,
 	},
 	{
 		name: "Shaxsiy ma'lumotlar",
-		href: '/student/123/profile',
+		href: '/uz/instructor/123/profile',
 		icon: User,
 	},
 
 	{
-		name: 'Testlar',
-		href: '/test',
+		name: 'Guruhlar',
+		href: '/uz/instructor/123/groups',
 		icon: ClipboardCheck,
-	},
-
-	{
-		name: "To'lovlar",
-		href: '/student/123/payments',
-		icon: Wallet,
 	},
 ]
 
-export default function StudentLayout({
+export default function LayoutInstructor({
 	children,
 }: {
 	children: React.ReactNode
@@ -58,7 +51,7 @@ export default function StudentLayout({
 				<div className='container flex h-14 items-center'>
 					<div className='mr-4 hidden md:flex'>
 						<Link
-							href='/student/123'
+							href='/uz/instructor/123'
 							className='mr-6 flex items-center space-x-2'
 						>
 							<GraduationCap className='h-6 w-6' />

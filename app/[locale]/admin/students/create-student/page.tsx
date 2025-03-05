@@ -53,7 +53,7 @@ const formSchema = z.object({
 	password: z.string().min(6, {
 		message: "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
 	}),
-	role: z.string({
+	role: z.number({
 		required_error: 'Rolni tanlang',
 	}),
 })
@@ -81,7 +81,7 @@ export default function CreateStudent() {
 			email: '',
 			phone: '',
 			password: '',
-			role: 'student',
+			role: 3,
 		},
 	})
 
@@ -227,8 +227,8 @@ export default function CreateStudent() {
 										<FormItem>
 											<FormLabel>Rol</FormLabel>
 											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
+												onValueChange={value => field.onChange(Number(value))}
+												defaultValue={field.value.toString()}
 											>
 												<FormControl>
 													<SelectTrigger>
@@ -236,9 +236,9 @@ export default function CreateStudent() {
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													<SelectItem value='admin'>Admin</SelectItem>
-													<SelectItem value='teacher'>Instruktor</SelectItem>
-													<SelectItem value='student'>student</SelectItem>
+													<SelectItem value={1}>Admin</SelectItem>
+													<SelectItem value={2}>Instruktor</SelectItem>
+													<SelectItem value={3}>student</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormMessage />

@@ -30,7 +30,7 @@ interface User {
 	username: string
 	email: string
 	phone: string
-	role: string
+	role: number
 }
 
 interface UserResponse {
@@ -71,16 +71,27 @@ export default function AllUser({ data }: Props) {
 			user.phone.toLowerCase().includes(searchTerm.toLowerCase())
 	)
 
-	const getRoleBadgeColor = (role: string) => {
-		switch (role.toLowerCase()) {
-			case 'admin':
+	const getRoleBadgeColor = (role: number) => {
+		switch (role) {
+			case 1:
 				return 'bg-purple-500/10 text-purple-500 hover:bg-purple-500/20'
-			case 'teacher':
+			case 2:
 				return 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20'
-			case 'student':
+			case 3:
 				return 'bg-green-500/10 text-green-500 hover:bg-green-500/20'
 			default:
 				return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20'
+		}
+	}
+
+	const setRole = (role: number) => {
+		switch (role) {
+			case 1:
+				return 'Admin'
+			case 2:
+				return 'Instructor'
+			default:
+				return 'Student'
 		}
 	}
 
@@ -158,7 +169,7 @@ export default function AllUser({ data }: Props) {
 													{user.name} {user.surname}
 												</div>
 												<div className='text-sm text-muted-foreground'>
-													@{user.username}
+													{user.username}
 												</div>
 											</div>
 										</Link>
@@ -167,7 +178,7 @@ export default function AllUser({ data }: Props) {
 									<TableCell>{user.phone}</TableCell>
 									<TableCell>
 										<Badge className={getRoleBadgeColor(user.role)}>
-											{user.role}
+											{setRole(user.role)}
 										</Badge>
 									</TableCell>
 								</TableRow>

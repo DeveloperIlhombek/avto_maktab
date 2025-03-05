@@ -24,7 +24,7 @@ interface CreateUserData {
 	email: string
 	phone: string
 	password: string
-	role: string
+	role: number
 }
 
 interface TestAnswer {
@@ -390,7 +390,6 @@ export interface LoginResponse {
 export const loginUser = async (data: {
 	login: string
 	password: string
-	student_id: string
 }): Promise<{ token: string; role: string; student_id: string }> => {
 	try {
 		const response = await fetch(`${API_URL}/api/User/Login`, {
