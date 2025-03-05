@@ -50,7 +50,7 @@ const formSchema = z.object({
 	phone: z.string().min(9, {
 		message: "Telefon raqam kamida 9 ta raqamdan iborat bo'lishi kerak",
 	}),
-	role: z.string({
+	role: z.number({
 		required_error: 'Rolni tanlang',
 	}),
 })
@@ -87,7 +87,7 @@ export default function UpdateStudent({
 			username: '',
 			email: '',
 			phone: '',
-			role: 'student',
+			role: 0,
 		},
 	})
 
@@ -125,7 +125,7 @@ export default function UpdateStudent({
 			if (dirtyFields.username) formData.append('username', values.username)
 			if (dirtyFields.email) formData.append('email', values.email)
 			if (dirtyFields.phone) formData.append('phone', values.phone)
-			if (dirtyFields.role) formData.append('role', values.role)
+			if (dirtyFields.role) formData.append('role', values.role.toString())
 
 			// ID ni har doim qo'shish
 			formData.append('id', students_id)
@@ -260,7 +260,7 @@ export default function UpdateStudent({
 											<FormLabel>Rol</FormLabel>
 											<Select
 												onValueChange={field.onChange}
-												defaultValue={field.value}
+												defaultValue={field.value.toString()}
 											>
 												<FormControl>
 													<SelectTrigger>
@@ -268,9 +268,9 @@ export default function UpdateStudent({
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													<SelectItem value='admin'>Admin</SelectItem>
-													<SelectItem value='teacher'>Instruktor</SelectItem>
-													<SelectItem value='student'>student</SelectItem>
+													<SelectItem value={1}>Admin</SelectItem>
+													<SelectItem value={2}>Instruktor</SelectItem>
+													<SelectItem value={3}>student</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormMessage />
