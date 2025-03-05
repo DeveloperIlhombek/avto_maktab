@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { usePathname } from 'next/navigation'
+import { getUserById } from '@/lib/api'
 
 // Mock student data
 const studentData = {
@@ -29,10 +31,84 @@ const studentData = {
 	instructor: 'Akmal Karimov',
 	status: 'Faol',
 }
-
+interface UserData {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	role: number
+}
 export default function StudentProfile() {
+	const [userData, setUserData] = useState<UserData | null>(null)
 	const [isEditing, setIsEditing] = useState(false)
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+	const pathname = usePathname()
+	const Id = pathname.split('/')[3]
 
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				setLoading(true)
+				setError(null)
+				const response = await getUserById(Id)
+
+				if (response.isSuccess && response.result) {
+					setUserData(response.result)
+				} else {
+					setError(
+						response.errorMessages?.join(', ') ||
+							"Ma'lumotlarni yuklashda xatolik yuz berdi"
+					)
+				}
+			} catch (error) {
+				setError("Foydalanuvchi ma'lumotlarini yuklashda xatolik yuz berdi")
+				console.error('Error fetching user:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		if (Id) {
+			fetchUser()
+		}
+	}, [Id])
+
+	if (loading) {
+		return (
+			<div className='space-y-4'>
+				<Card>
+					<CardHeader>
+						<CardTitle>Shaxsiy ma&apos;lumotlar</CardTitle>
+					</CardHeader>
+					<CardContent className='grid grid-cols-2 gap-4'>
+						{[1, 2, 3, 4].map(i => (
+							<div key={i}>
+								<div className='h-4 w-24 bg-muted animate-pulse mb-2'></div>
+								<div className='h-6 w-32 bg-muted animate-pulse'></div>
+							</div>
+						))}
+					</CardContent>
+				</Card>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div className='space-y-4'>
+				<Card>
+					<CardContent className='p-6'>
+						<div className='text-center text-destructive'>
+							<p>{error}</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		)
+	}
 	return (
 		<div className='space-y-6'>
 			<div className='flex justify-between items-center'>
@@ -64,8 +140,8 @@ export default function StudentProfile() {
 						<CardHeader>
 							<div className='flex items-center gap-4'>
 								<Avatar className='h-20 w-20'>
-									<AvatarFallback className='text-2xl'>
-										{studentData.name
+									<AvatarFallback className='text-2xl bg-green-300 shadow-md'>
+										{userData?.name
 											.split(' ')
 											.map(n => n[0])
 											.join('')}
@@ -73,20 +149,28 @@ export default function StudentProfile() {
 								</Avatar>
 								<div>
 									<CardTitle>{}</CardTitle>
-									<CardDescription>ID: {studentData.id}</CardDescription>
-									<Badge variant='secondary' className='mt-1'>
-										{studentData.category} toifa
-									</Badge>
+									<CardDescription>ID: {userData?.id}</CardDescription>
+									<CardDescription>
+										Foydalanuvchi: {userData?.name}
+									</CardDescription>
 								</div>
 							</div>
 						</CardHeader>
 						<CardContent className='space-y-4'>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 								<div className='space-y-2'>
-									<Label htmlFor='name'>To&apos;liq ism</Label>
+									<Label htmlFor='name'>Ism</Label>
 									<Input
 										id='name'
-										defaultValue={studentData.name}
+										defaultValue={userData?.name}
+										disabled={!isEditing}
+									/>
+								</div>
+								<div className='space-y-2'>
+									<Label htmlFor='surname'>Familiya</Label>
+									<Input
+										id='surname'
+										defaultValue={userData?.surname}
 										disabled={!isEditing}
 									/>
 								</div>
@@ -95,7 +179,7 @@ export default function StudentProfile() {
 									<Input
 										id='email'
 										type='email'
-										defaultValue={studentData.email}
+										defaultValue={userData?.email}
 										disabled={!isEditing}
 									/>
 								</div>
@@ -103,24 +187,7 @@ export default function StudentProfile() {
 									<Label htmlFor='phone'>Telefon</Label>
 									<Input
 										id='phone'
-										defaultValue={studentData.phone}
-										disabled={!isEditing}
-									/>
-								</div>
-								<div className='space-y-2'>
-									<Label htmlFor='address'>Manzil</Label>
-									<Input
-										id='address'
-										defaultValue={studentData.address}
-										disabled={!isEditing}
-									/>
-								</div>
-								<div className='space-y-2'>
-									<Label htmlFor='birthDate'>Tug&apos;ilgan sana</Label>
-									<Input
-										id='birthDate'
-										type='date'
-										defaultValue={studentData.birthDate}
+										defaultValue={userData?.phone}
 										disabled={!isEditing}
 									/>
 								</div>
@@ -204,20 +271,3 @@ export default function StudentProfile() {
 		</div>
 	)
 }
-
-// Response body
-// Download
-// {
-//   "isSuccess": true,
-//   "result": {
-//     "id": "08dd50b3-6767-48d7-87e9-5fa06850ab7a",
-//     "name": "Ilhom",
-//     "surname": "Toshqulov",
-//     "username": "talaba",
-//     "email": "ilxomdeveloper@gmail.com",
-//     "phone": "+998771232115",
-//     "role": "student"
-//   },
-//   "statusCode": 200,
-//   "errorMessages": []
-// }

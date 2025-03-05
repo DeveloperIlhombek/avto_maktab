@@ -31,7 +31,6 @@ function Navbar() {
 		try {
 			const response = await loginUser({ login, password })
 			const results = response.result
-			console.log(results.user.id)
 
 			localStorage.setItem('token', results.accessToken)
 			localStorage.setItem('role', results.user.role.toString())

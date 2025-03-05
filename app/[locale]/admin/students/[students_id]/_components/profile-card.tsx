@@ -5,17 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { getUserById } from '@/lib/api'
-
-interface ProfileCardProps {
-	userId: string
-}
-
-// interface UserResponse {
-// 	isSuccess: boolean
-// 	result: UserData
-// 	statusCode: number
-// 	errorMessages: string[]
-// }
+import { usePathname } from 'next/navigation'
 
 interface UserData {
 	id: string
@@ -24,23 +14,28 @@ interface UserData {
 	username: string
 	email: string
 	phone: string
-	role: string
+	role: number
 }
 
-export function ProfileCard({ userId }: ProfileCardProps) {
+export function ProfileCard() {
 	const [userData, setUserData] = useState<UserData | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
+	const pathname = usePathname()
+	const Id = pathname.split('/')[3]
+	console.log(Id)
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
 				setLoading(true)
 				setError(null)
-				const response = await getUserById(userId)
+				const response = await getUserById(Id)
+				console.log(response)
 
 				if (response && response.isSuccess) {
 					setUserData(response.result)
+					console.log(userData)
 				} else {
 					setError(
 						response?.errorMessages?.join(', ') || 'Failed to fetch user data'
@@ -54,10 +49,10 @@ export function ProfileCard({ userId }: ProfileCardProps) {
 			}
 		}
 
-		if (userId) {
+		if (Id) {
 			fetchUser()
 		}
-	}, [userId])
+	}, [Id])
 
 	if (loading) {
 		return (

@@ -15,7 +15,7 @@ interface UserData {
 	username: string
 	email: string
 	phone: string
-	role: string
+	role: number
 }
 
 export function OverviewTab({ userId }: OverviewTabProps) {

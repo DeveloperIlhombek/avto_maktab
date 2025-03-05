@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 //import { Progress } from "@/components/ui/progress";
 import { Clock, Trophy } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { getUserById } from '@/lib/api'
 
 // Mock data
 const studentData = {
@@ -41,8 +44,81 @@ const item = {
 		},
 	},
 }
-
+interface UserData {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	role: number
+}
 export default function StudentDashboard() {
+	const pathname = usePathname()
+	const [error, setError] = useState<string | null>(null)
+	const [loading, setLoading] = useState(true)
+	const Id = pathname.split('/')[3]
+	const [userData, setUserData] = useState<UserData | null>(null)
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				setLoading(true)
+				setError(null)
+				const response = await getUserById(Id)
+				if (response.isSuccess && response.result) {
+					setUserData(response.result)
+				} else {
+					setError(
+						response.errorMessages?.join(', ') ||
+							"Ma'lumotlarni yuklashda xatolik yuz berdi"
+					)
+				}
+			} catch (error) {
+				setError("Foydalanuvchi ma'lumotlarini yuklashda xatolik yuz berdi")
+				console.error('Error fetching user:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		if (Id) {
+			fetchUser()
+		}
+	}, [Id])
+
+	if (loading) {
+		return (
+			<div className='space-y-4'>
+				<Card>
+					<CardHeader>
+						<CardTitle>Shaxsiy kabinet</CardTitle>
+					</CardHeader>
+					<CardContent className='grid grid-cols-2 gap-4'>
+						{[1, 2, 3, 4].map(i => (
+							<div key={i}>
+								<div className='h-4 w-24 bg-muted animate-pulse mb-2'></div>
+								<div className='h-6 w-32 bg-muted animate-pulse'></div>
+							</div>
+						))}
+					</CardContent>
+				</Card>
+			</div>
+		)
+	}
+	if (error) {
+		return (
+			<div className='space-y-4'>
+				<Card>
+					<CardContent className='p-6'>
+						<div className='text-center text-destructive'>
+							<p>{error}</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		)
+	}
+
 	return (
 		<motion.div
 			variants={container}
@@ -57,11 +133,8 @@ export default function StudentDashboard() {
 			>
 				<div className='absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))] dark:bg-grid-black/5' />
 				<h1 className='text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
-					Xush kelibsiz, {studentData.name}!
+					Xush kelibsiz, {userData?.name}!
 				</h1>
-				<p className='text-muted-foreground text-lg'>
-					Bugungi yutuqlaringizni ko&apos;rib chiqing
-				</p>
 			</motion.div>
 
 			{/* Test Results */}
