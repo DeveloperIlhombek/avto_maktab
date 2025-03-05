@@ -27,7 +27,7 @@ export const navLink = [
 	{
 		id: 6,
 		name: 'Savollar',
-		url: '#savollar',
+		url: '/uzk/practice',
 	},
 ]
 

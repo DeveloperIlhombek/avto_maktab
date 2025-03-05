@@ -6,7 +6,6 @@ import { Functions } from './_components/functions'
 import { Statistics } from './_components/statistics'
 import { Contact } from './_components/contact'
 import { Test } from './_components/test'
-import Savollar from './_components/savollar'
 
 function Page() {
 	return (
@@ -17,7 +16,6 @@ function Page() {
 			<Functions />
 			<Statistics />
 			<Test />
-			<Savollar />
 			<Contact />
 		</>
 	)
