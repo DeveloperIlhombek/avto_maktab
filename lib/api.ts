@@ -451,28 +451,41 @@ export async function deleteUser(userId: string): Promise<any> {
 }
 
 //Update User
-
 export const updateUser = async (
 	id: string,
 	formData: FormData
 ): Promise<UserResponse> => {
 	try {
+		// ID ni tekshirish
+		if (!id) {
+			throw new Error('Foydalanuvchi ID si topilmadi')
+		}
+
+		// FormData ni JSON ga o'girish (agar kerak bo'lsa)
+		const jsonData = Object.fromEntries(formData.entries())
+
+		// API so'rovini yuborish
 		const response = await fetch(`${API_URL}/api/User/Update`, {
 			method: 'PUT',
 			headers: {
+				'Content-Type': 'application/json', // JSON formatida yuborish
 				accept: '*/*',
 			},
-			body: formData,
+			body: JSON.stringify(jsonData), // JSON formatida yuborish
 		})
 
+		// Xatolikni tekshirish
 		if (!response.ok) {
 			const errorData = await response.json()
 			throw new Error(
 				errorData.message ||
+					errorData.title ||
+					errorData.detail ||
 					"Foydalanuvchi ma'lumotlarini yangilashda xatolik yuz berdi"
 			)
 		}
 
+		// Ma'lumotlarni qaytarish
 		const responseData = await response.json()
 		return responseData
 	} catch (error) {

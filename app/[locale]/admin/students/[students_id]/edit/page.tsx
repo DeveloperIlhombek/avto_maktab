@@ -22,18 +22,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select'
+
 import { ArrowLeft } from 'lucide-react'
 import { updateUser, getUserById, UserResponse } from '@/lib/api'
 import { useState, useEffect, use } from 'react'
 import { toast } from 'sonner'
 
+// Forma validatsiya sxemasi
 const formSchema = z.object({
 	name: z.string().min(3, {
 		message: "Ism kamida 3 ta belgidan iborat bo'lishi kerak",
@@ -62,6 +57,8 @@ export default function UpdateStudent({
 }) {
 	const router = useRouter()
 	const { students_id } = use(params)
+	console.log(students_id)
+
 	const [isLoading, setIsLoading] = useState(false)
 	const [initialValues, setInitialValues] = useState<z.infer<
 		typeof formSchema
@@ -87,7 +84,7 @@ export default function UpdateStudent({
 			username: '',
 			email: '',
 			phone: '',
-			role: 0,
+			role: 3,
 		},
 	})
 
@@ -125,7 +122,7 @@ export default function UpdateStudent({
 			if (dirtyFields.username) formData.append('username', values.username)
 			if (dirtyFields.email) formData.append('email', values.email)
 			if (dirtyFields.phone) formData.append('phone', values.phone)
-			if (dirtyFields.role) formData.append('role', values.role.toString())
+			//if (dirtyFields.role) formData.append('role', JSON.stringify(values.role))
 
 			// ID ni har doim qo'shish
 			formData.append('id', students_id)
@@ -252,15 +249,15 @@ export default function UpdateStudent({
 									)}
 								/>
 
-								<FormField
+								{/* <FormField
 									control={form.control}
 									name='role'
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Rol</FormLabel>
 											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value.toString()}
+												onValueChange={value => field.onChange(Number(value))} // stringni numberga o'girish
+												defaultValue={field.value?.toString()} // numberni stringga o'girish
 											>
 												<FormControl>
 													<SelectTrigger>
@@ -268,15 +265,15 @@ export default function UpdateStudent({
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													<SelectItem value={1}>Admin</SelectItem>
-													<SelectItem value={2}>Instruktor</SelectItem>
-													<SelectItem value={3}>student</SelectItem>
+													<SelectItem value='1'>Admin</SelectItem>
+													<SelectItem value='2'>Instructor</SelectItem>
+													<SelectItem value='3'>Student</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormMessage />
 										</FormItem>
 									)}
-								/>
+								/> */}
 							</div>
 						</CardContent>
 					</Card>
