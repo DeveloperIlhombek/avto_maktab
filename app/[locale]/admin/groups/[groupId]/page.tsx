@@ -8,12 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
 import { getGroupById } from '@/lib/groups'
 import type { GroupItem } from '@/lib/groups'
+import { getAllInstructor, UserData } from '@/lib/users'
+import { toast } from 'sonner'
 
 export default function GroupDetails() {
 	const router = useRouter()
 	const [group, setGroup] = useState<GroupItem | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
+	const [instructor, setInstructor] = useState<UserData[]>([])
 	const pathname = usePathname()
 	const id = pathname.split('/')[4]
 
@@ -47,10 +50,28 @@ export default function GroupDetails() {
 			}
 		}
 
+		const fetchinstructors = async () => {
+			try {
+				const intructorresponse = await getAllInstructor({
+					pageNumber: 0,
+					pageSize: 30,
+				})
+				const intructoritems = intructorresponse.items
+				setInstructor(intructoritems)
+			} catch (error) {
+				toast.error(`Instructorlarni olishda  xatolik yuz berdi ${error}`)
+			}
+		}
+
 		if (id) {
 			fetchGroup()
+			fetchinstructors()
 		}
 	}, [id])
+
+	const filterInstructor = instructor.filter(
+		ins => group?.instructorId === ins.id
+	)
 
 	if (loading) {
 		return (
@@ -137,9 +158,14 @@ export default function GroupDetails() {
 						</div>
 						<div>
 							<h3 className='font-medium text-sm text-muted-foreground'>
-								O&apos;qituvchi ID
+								O&apos;qituvchi Ismi
 							</h3>
-							<p className='mt-1 text-lg'>{group.instructorId}</p>
+							<p className='mt-1 text-lg'>
+								{filterInstructor
+									.filter(ins => ins.id === group.instructorId)
+									.map(ins => ins.name)
+									.join(', ')}
+							</p>
 						</div>
 					</CardContent>
 				</Card>

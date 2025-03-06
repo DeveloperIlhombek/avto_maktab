@@ -29,6 +29,13 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog'
 import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select'
+import {
 	Form,
 	FormControl,
 	FormField,
@@ -63,6 +70,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { toast } from 'sonner'
+import { getAllInstructor, UserData } from '@/lib/users'
 
 const formSchema = z.object({
 	name: z.string().min(1, {
@@ -88,6 +96,7 @@ export default function GroupsPage() {
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 	const [selectedGroup, setSelectedGroup] = useState<GroupItem | null>(null)
+	const [instructor, setInstructor] = useState<UserData[]>([])
 	const pageSize = 10
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -109,6 +118,7 @@ export default function GroupsPage() {
 
 	useEffect(() => {
 		fetchGroups()
+		fetchinstructors()
 	}, [currentPage])
 
 	const fetchGroups = async () => {
@@ -136,6 +146,21 @@ export default function GroupsPage() {
 			setLoading(false)
 		}
 	}
+
+	const fetchinstructors = async () => {
+		try {
+			const intructorresponse = await getAllInstructor({
+				pageNumber: 0,
+				pageSize: 30,
+			})
+			const intructoritems = intructorresponse.items
+			setInstructor(intructoritems)
+			console.log(instructor)
+		} catch (error) {
+			toast.error(`Instructorlarni olishda  xatolik yuz berdi ${error}`)
+		}
+	}
+
 	//Successfully create function
 	const handleCreateGroup = async (values: z.infer<typeof formSchema>) => {
 		try {
@@ -192,6 +217,10 @@ export default function GroupsPage() {
 
 	const filteredGroups = groups.filter(group =>
 		group.name.toLowerCase().includes(searchTerm.toLowerCase())
+	)
+
+	const filterInstructor = instructor.filter(ins =>
+		groups.map(group => group.instructorId === ins.id)
 	)
 
 	return (
@@ -258,7 +287,21 @@ export default function GroupsPage() {
 										<FormItem>
 											<FormLabel>O&apos;qituvchi</FormLabel>
 											<FormControl>
-												<Input placeholder="O'qituvchini tanlang" {...field} />
+												<Select
+													onValueChange={field.onChange}
+													value={field.value}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder="O'qituvchini tanlang" />
+													</SelectTrigger>
+													<SelectContent>
+														{instructor.map(ins => (
+															<SelectItem key={ins.id} value={ins.id}>
+																{ins.name}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -322,7 +365,12 @@ export default function GroupsPage() {
 												{group.name}
 											</TableCell>
 											<TableCell>{group.description}</TableCell>
-											<TableCell>{group.instructorId}</TableCell>
+											<TableCell>
+												{filterInstructor
+													.filter(ins => ins.id === group.instructorId)
+													.map(ins => ins.name)
+													.join(', ')}
+											</TableCell>
 											<TableCell>
 												{new Date(group.createdDate).toLocaleDateString()}
 											</TableCell>
@@ -403,6 +451,7 @@ export default function GroupsPage() {
 																			</FormItem>
 																		)}
 																	/>
+
 																	<FormField
 																		control={form.control}
 																		name='instructorId'
@@ -410,10 +459,24 @@ export default function GroupsPage() {
 																			<FormItem>
 																				<FormLabel>O&apos;qituvchi</FormLabel>
 																				<FormControl>
-																					<Input
-																						placeholder="O'qituvchini tanlang"
-																						{...field}
-																					/>
+																					<Select
+																						onValueChange={field.onChange}
+																						value={field.value}
+																					>
+																						<SelectTrigger>
+																							<SelectValue placeholder="O'qituvchini tanlang" />
+																						</SelectTrigger>
+																						<SelectContent>
+																							{instructor.map(ins => (
+																								<SelectItem
+																									key={ins.id}
+																									value={ins.id}
+																								>
+																									{ins.name}
+																								</SelectItem>
+																							))}
+																						</SelectContent>
+																					</Select>
 																				</FormControl>
 																				<FormMessage />
 																			</FormItem>

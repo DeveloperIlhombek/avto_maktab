@@ -107,6 +107,7 @@ export const getAllUser = async () => {
 		return null
 	}
 }
+//Barcha instructorlarni olish.
 
 //ID orqali userni olish
 
