@@ -117,13 +117,12 @@ export async function getUserById(userId: string): Promise<UserResponse> {
 			{
 				method: 'GET',
 				headers: {
-					'Content-Type': 'application/json',
+					Accept: '*/*',
 				},
 			}
 		)
 
 		const data = await response.json()
-
 		if (!response.ok) {
 			throw new Error(
 				data.errorMessages?.join(', ') || 'Failed to fetch user data'

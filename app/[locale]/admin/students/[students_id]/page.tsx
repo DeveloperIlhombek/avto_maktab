@@ -11,7 +11,7 @@ import { EducationTab } from './_components/education-tab'
 import { TestsTab } from './_components/tests-tab'
 import { PaymentsTab } from './_components/payments-tab'
 import { PracticeTab } from './_components/practice-tab'
-import { useParams, usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ProfileCard } from './_components/profile-card'
 import {
 	AlertDialog,
@@ -26,10 +26,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
 import { deleteUser } from '@/lib/api'
+
 export default function StudentDetails() {
-	const params = useParams()
 	const [activeTab, setActiveTab] = useState('overview')
-	const user_id = params.students_id
 	const router = useRouter()
 	const pathname = usePathname()
 	const pathSegments = pathname.split('/')
@@ -37,7 +36,7 @@ export default function StudentDetails() {
 		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
 			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
 			: 'uz'
-
+	const user_id = pathname.split('/')[4]
 	const getLanguagePrefix = () => {
 		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
 	}
@@ -112,8 +111,7 @@ export default function StudentDetails() {
 			</div>
 
 			<div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-				<ProfileCard userId={user_id as string} />
-
+				<ProfileCard key={user_id} />
 				<div className='md:col-span-3 space-y-6'>
 					<Tabs value={activeTab} onValueChange={setActiveTab}>
 						<TabsList>

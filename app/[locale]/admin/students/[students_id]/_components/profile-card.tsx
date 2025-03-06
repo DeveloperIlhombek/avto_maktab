@@ -22,8 +22,7 @@ export function ProfileCard() {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const pathname = usePathname()
-	const Id = pathname.split('/')[3]
-	console.log(Id)
+	const Id = pathname.split('/')[4]
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -35,7 +34,6 @@ export function ProfileCard() {
 
 				if (response && response.isSuccess) {
 					setUserData(response.result)
-					console.log(userData)
 				} else {
 					setError(
 						response?.errorMessages?.join(', ') || 'Failed to fetch user data'
@@ -73,7 +71,7 @@ export function ProfileCard() {
 			<Card className='md:col-span-1'>
 				<CardContent className='pt-6'>
 					<div className='flex flex-col items-center text-center text-destructive'>
-						<p>Error: {error}</p>
+						<p>Xatolik: {error}</p>
 					</div>
 				</CardContent>
 			</Card>
