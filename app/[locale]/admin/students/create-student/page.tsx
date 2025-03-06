@@ -236,6 +236,7 @@ export default function CreateStudent() {
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
+													{/* Role da value da kamchilik bor */}
 													<SelectItem value={1}>Admin</SelectItem>
 													<SelectItem value={2}>Instruktor</SelectItem>
 													<SelectItem value={3}>student</SelectItem>
