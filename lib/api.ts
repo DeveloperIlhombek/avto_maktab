@@ -65,7 +65,7 @@ export const getAllTests = async ({
 			{
 				method: 'GET',
 				headers: {
-					'Content-Type': 'application/json',
+					Accept: '*/*',
 				},
 			}
 		)
@@ -74,7 +74,8 @@ export const getAllTests = async ({
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
 
-		const data = await response.json() // JSON ma'lumotni olish
+		const data = await response.json()
+		console.log(data)
 
 		return data
 	} catch (error) {

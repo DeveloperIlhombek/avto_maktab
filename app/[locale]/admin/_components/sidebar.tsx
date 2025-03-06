@@ -7,6 +7,7 @@ import {
 	Users,
 	GraduationCap,
 	ClipboardCheck,
+	GroupIcon,
 	Settings,
 	LogOut,
 } from 'lucide-react'
@@ -33,6 +34,11 @@ const menuItems = [
 		title: 'Testlar',
 		icon: ClipboardCheck,
 		href: '/admin/tests',
+	},
+	{
+		title: 'Guruhlar',
+		icon: GroupIcon,
+		href: '/admin/groups',
 	},
 	{
 		title: 'Sozlamalar',

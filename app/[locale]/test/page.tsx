@@ -8,8 +8,8 @@ export default async function TestPage({
 }) {
 	const { locale } = await params
 	const data = await getAllTests({
-		pageSize: 720,
-		pageNumber: 2,
+		pageSize: 700,
+		pageNumber: 0,
 		language: locale,
 	})
 

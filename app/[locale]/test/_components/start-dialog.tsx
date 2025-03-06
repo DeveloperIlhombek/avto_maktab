@@ -18,6 +18,15 @@ interface StartDialogProps {
 
 export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 	const [questionCount, setQuestionCount] = useState(20)
+
+	const handleStart = () => {
+		if (questionCount >= 10) {
+			onStart(questionCount)
+		} else {
+			alert('Iltimos, kamida 10 ta savol tanlang.')
+		}
+	}
+
 	return (
 		<Dialog open={isOpen}>
 			<DialogContent className='w-80 mx-6'>
@@ -41,7 +50,7 @@ export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 						</p>
 					</div>
 					<div className='flex justify-end'>
-						<Button onClick={() => onStart(questionCount)}>Boshlash</Button>
+						<Button onClick={handleStart}>Boshlash</Button>
 					</div>
 				</div>
 			</DialogContent>
