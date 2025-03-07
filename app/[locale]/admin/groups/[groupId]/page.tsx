@@ -54,7 +54,7 @@ export default function GroupDetails() {
 			try {
 				const intructorresponse = await getAllInstructor({
 					pageNumber: 0,
-					pageSize: 30,
+					pageSize: 1000,
 				})
 				const intructoritems = intructorresponse.items
 				setInstructor(intructoritems)

@@ -48,41 +48,6 @@ interface CreateTestResponse {
 	statusCode: number
 	errorMessages: string[]
 }
-//Barcha testlarni olish test uchun
-
-export const getAllTests = async ({
-	pageSize,
-	pageNumber,
-	language,
-}: {
-	pageSize: number
-	pageNumber: number
-	language: string
-}) => {
-	try {
-		const response = await fetch(
-			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-			{
-				method: 'GET',
-				headers: {
-					Accept: '*/*',
-				},
-			}
-		)
-
-		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
-		}
-
-		const data = await response.json()
-		console.log(data)
-
-		return data
-	} catch (error) {
-		console.error('Error fetching tests:', error)
-		return null
-	}
-}
 
 //Barcha userlarni olish.
 
@@ -214,66 +179,6 @@ export async function createTest(data: {
 	}
 }
 
-//barcha testlarni ko'rish admin uchun
-
-interface TestAnswer {
-	id: string
-	testCaseId: string
-	answerText: string
-	isCorrect: boolean
-}
-
-export interface Test {
-	id: string
-	name: string | null
-	question: string
-	explanation: string
-	mediaUrl: string | null
-	testAnswers: TestAnswer[]
-	testAnswersForUser: any[] | null
-}
-
-interface TestsResponse {
-	isSuccess: boolean
-	result: {
-		items: Test[]
-		pageNumber: number
-		pageSize: number
-		totalCount: number
-		totalPages: number
-	}
-	statusCode: number
-	errorMessages: string[]
-}
-
-export const getAllTestsAdmin = async (
-	pageNumber: number = 0,
-	pageSize: number = 10,
-	language: string = 'uz'
-): Promise<TestsResponse> => {
-	try {
-		const response = await fetch(
-			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		)
-
-		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
-		}
-
-		const data = await response.json()
-		return data
-	} catch (error) {
-		console.error('Error fetching tests:', error)
-		throw error
-	}
-}
-
 interface TestAnswerResponse {
 	id: string
 	testCaseId: string
@@ -332,15 +237,18 @@ export async function getTestById(
 
 // Update test
 export async function updateTest(
-	Id: string,
+	language: string,
 	formData: FormData
 ): Promise<TestDetailsResponse> {
 	try {
-		const response = await fetch(`${API_URL}/api/TestCase/Update?Id=${Id}`, {
-			method: 'PUT',
-			headers: { accept: '*/*' },
-			body: formData,
-		})
+		const response = await fetch(
+			`${API_URL}/api/TestCase/Update?language=${language}`,
+			{
+				method: 'PUT',
+				headers: { accept: '*/*' },
+				body: formData,
+			}
+		)
 
 		if (!response.ok) {
 			throw new Error(`Error ${response.status} - ${response.statusText}`)

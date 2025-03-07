@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
-import { getAllTestsAdmin } from '@/lib/api'
-import type { Test } from '@/lib/api'
+import { getAllTestsAdmin } from '@/lib/test'
+import type { Test } from '@/lib/test'
 
 export default function PracticePage() {
 	const [tests, setTests] = useState<Test[]>([])

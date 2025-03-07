@@ -30,8 +30,8 @@ import {
 	PaginationPrevious,
 } from '@/components/ui/pagination'
 import { Search, Plus, Pencil, Eye, Image as ImageIcon } from 'lucide-react'
-import { getAllTestsAdmin } from '@/lib/api'
-import type { Test } from '@/lib/api'
+import { getAllTestsAdmin } from '@/lib/test'
+import type { Test } from '@/lib/test'
 import { usePathname } from 'next/navigation'
 
 export default function QuestionsPage() {

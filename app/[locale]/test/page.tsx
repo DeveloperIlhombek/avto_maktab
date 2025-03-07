@@ -1,4 +1,4 @@
-import { getAllTests } from '@/lib/api'
+import { getAllTests } from '@/lib/test'
 import Test from './_components/test'
 
 export default async function TestPage({
