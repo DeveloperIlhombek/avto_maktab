@@ -116,7 +116,6 @@ export const createGroup = async (groupData: {
 		throw error
 	}
 }
-
 // Update group
 export const updateGroup = async (
 	id: string,
