@@ -8,6 +8,7 @@ interface UserData {
 	surname: string
 	username: string
 	email: string
+	password: string
 	phone: string
 	role: number
 }
@@ -377,7 +378,7 @@ export const updateUser = async (
 		const response = await fetch(`${API_URL}/api/User/Update`, {
 			method: 'PUT',
 			headers: {
-				'Content-Type': 'application/json', // JSON formatida yuborish
+				'Content-Type': 'application/json',
 				accept: '*/*',
 			},
 			body: JSON.stringify(jsonData), // JSON formatida yuborish

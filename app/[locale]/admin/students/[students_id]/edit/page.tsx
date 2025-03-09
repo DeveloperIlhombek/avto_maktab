@@ -57,7 +57,6 @@ export default function UpdateStudent({
 }) {
 	const router = useRouter()
 	const { students_id } = use(params)
-	console.log(students_id)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [initialValues, setInitialValues] = useState<z.infer<
@@ -122,7 +121,6 @@ export default function UpdateStudent({
 			if (dirtyFields.username) formData.append('username', values.username)
 			if (dirtyFields.email) formData.append('email', values.email)
 			if (dirtyFields.phone) formData.append('phone', values.phone)
-			//if (dirtyFields.role) formData.append('role', JSON.stringify(values.role))
 
 			// ID ni har doim qo'shish
 			formData.append('id', students_id)
@@ -248,32 +246,6 @@ export default function UpdateStudent({
 										</FormItem>
 									)}
 								/>
-
-								{/* <FormField
-									control={form.control}
-									name='role'
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Rol</FormLabel>
-											<Select
-												onValueChange={value => field.onChange(Number(value))} // stringni numberga o'girish
-												defaultValue={field.value?.toString()} // numberni stringga o'girish
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder='Rolni tanlang' />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													<SelectItem value='1'>Admin</SelectItem>
-													<SelectItem value='2'>Instructor</SelectItem>
-													<SelectItem value='3'>Student</SelectItem>
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/> */}
 							</div>
 						</CardContent>
 					</Card>

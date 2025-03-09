@@ -206,3 +206,47 @@ export const deleteStudentsFromGroup = async ({
 		return null
 	}
 }
+
+export const updateUserParol = async (
+	id: string,
+	formData: { currentPassword: string; newPassword: string }
+): Promise<UserResponse> => {
+	try {
+		// ID ni tekshirish
+		if (!id) {
+			throw new Error('Foydalanuvchi ID si topilmadi')
+		}
+
+		// API so'rovini yuborish
+		const response = await fetch(`${API_URL}/api/User/Update`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: '*/*',
+			},
+			body: JSON.stringify({
+				id, // Foydalanuvchi ID-si
+				currentPassword: formData.currentPassword, // Joriy parol
+				newPassword: formData.newPassword, // Yangi parol
+			}),
+		})
+
+		// Xatolikni tekshirish
+		if (!response.ok) {
+			const errorData = await response.json()
+			throw new Error(
+				errorData.message ||
+					errorData.title ||
+					errorData.detail ||
+					'Parolni yangilashda xatolik yuz berdi'
+			)
+		}
+
+		// Ma'lumotlarni qaytarish
+		const responseData = await response.json()
+		return responseData
+	} catch (error) {
+		console.error('Xato:', error)
+		throw error
+	}
+}
