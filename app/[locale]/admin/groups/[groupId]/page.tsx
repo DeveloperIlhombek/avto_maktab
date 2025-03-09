@@ -40,7 +40,6 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
-import { cn } from '@/lib/utils'
 
 export default function GroupDetails() {
 	const router = useRouter()
@@ -53,7 +52,6 @@ export default function GroupDetails() {
 	const [selectedStudents, setSelectedStudents] = useState<string[]>([]) //====
 	const [allGroupStudent, setAllGroupStudent] = useState<UserData[]>([]) //====
 	const [deletedStudent, setDeletedStudent] = useState<string[]>([])
-	const [ischecked, setIsChecked] = useState(false)
 	const pathname = usePathname()
 	const id = pathname.split('/')[4]
 
@@ -146,7 +144,6 @@ export default function GroupDetails() {
 				? prev.filter(id => id !== studentId)
 				: [...prev, studentId]
 		)
-		setIsChecked(true)
 	}
 
 	const handleAddStudents = async () => {
