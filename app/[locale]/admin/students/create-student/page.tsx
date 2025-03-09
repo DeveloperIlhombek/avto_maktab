@@ -88,6 +88,7 @@ export default function CreateStudent() {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
 			setIsLoading(true)
+			console.log('Submitting values:', values)
 			await createUser(values)
 			toast.success("O'quvchi muvaffaqiyatli qo'shildi")
 			router.push(`${getLanguagePrefix()}/admin/students`)
@@ -227,7 +228,11 @@ export default function CreateStudent() {
 										<FormItem>
 											<FormLabel>Rol</FormLabel>
 											<Select
-												onValueChange={value => field.onChange(Number(value))}
+												onValueChange={value => {
+													if (value) {
+														field.onChange(Number(value))
+													}
+												}}
 												defaultValue={field.value.toString()}
 											>
 												<FormControl>
@@ -236,9 +241,9 @@ export default function CreateStudent() {
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													<SelectItem value={1}>Admin</SelectItem>
-													<SelectItem value={2}>Instruktor</SelectItem>
-													<SelectItem value={3}>student</SelectItem>
+													<SelectItem value='1'>Admin</SelectItem>
+													<SelectItem value='2'>Instruktor</SelectItem>
+													<SelectItem value='3'>student</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormMessage />
