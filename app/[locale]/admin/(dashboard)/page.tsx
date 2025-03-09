@@ -1,37 +1,63 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Users, GraduationCap, ClipboardCheck } from 'lucide-react'
-import { RecentStudents } from '../_components/recent-students'
-
-const stats = [
-	{
-		title: "Jami O'quvchilar",
-		value: '2,350',
-		icon: Users,
-		description: "Faol o'quvchilar soni",
-		trend: '+12.5%',
-		trendUp: true,
-	},
-	{
-		title: 'Bitiruvchilar',
-		value: '1,205',
-		icon: GraduationCap,
-		description: 'Guvohnoma olganlar',
-		trend: '+8.2%',
-		trendUp: true,
-	},
-	{
-		title: 'Test Natijalari',
-		value: '85%',
-		icon: ClipboardCheck,
-		description: "O'rtacha ko'rsatkich",
-		trend: '+5.1%',
-		trendUp: true,
-	},
-]
+import { getAllTestsAdmin } from '@/lib/test'
+import {
+	getAllInstructor,
+	getAllStudent,
+	IUserResult,
+	UserData,
+} from '@/lib/users'
+import { Users, FileQuestion, UserRoundPen } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function AdminDashboard() {
+	const [instructors, setInstructors] = useState<UserData[]>([])
+	const [student, setStudent] = useState<UserData[]>([])
+	const [totalCount, setTotalCount] = useState(0)
+	useEffect(() => {
+		const fetchAllInstructor = async () => {
+			try {
+				const response: IUserResult = await getAllInstructor({
+					pageSize: 1000,
+					pageNumber: 0,
+				})
+				setInstructors(response.items)
+			} catch (error) {
+				console.log(`Maʼlumotlarni yuklashda xatolik yuz berdi.${error}`)
+			}
+		}
+		const fetchAllStudent = async () => {
+			try {
+				const resultStudent = await getAllStudent({
+					pageNumber: 0,
+					pageSize: 1000,
+				})
+				setStudent(resultStudent?.items)
+			} catch (error) {
+				toast.error(`Studentlarni olishda  xatolik yuz berdi ${error}`)
+			}
+		}
+
+		const fetchTests = async () => {
+			try {
+				const data = await getAllTestsAdmin(0, 10000, 'uz')
+
+				if (data.isSuccess) {
+					setTotalCount(data.result.totalCount)
+				} else {
+					console.log('Failed to fetch tests')
+				}
+			} catch (error) {
+				console.error('Error fetching tests:', error)
+			}
+		}
+		fetchAllInstructor()
+		fetchAllStudent()
+		fetchTests()
+	}, [])
+
 	return (
 		<div className='space-y-8'>
 			<div>
@@ -42,40 +68,39 @@ export default function AdminDashboard() {
 			</div>
 
 			<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-				{stats.map((stat, index) => (
-					<Card key={index}>
-						<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-							<CardTitle className='text-sm font-medium'>
-								{stat.title}
-							</CardTitle>
-							<stat.icon className='h-4 w-4 text-muted-foreground' />
-						</CardHeader>
-						<CardContent>
-							<div className='text-2xl font-bold'>{stat.value}</div>
-							<div className='flex items-center space-x-2'>
-								<span
-									className={`text-sm ${
-										stat.trendUp ? 'text-green-500' : 'text-red-500'
-									}`}
-								>
-									{stat.trend}
-								</span>
-								<span className='text-sm text-muted-foreground'>
-									{stat.description}
-								</span>
-							</div>
-						</CardContent>
-					</Card>
-				))}
-			</div>
-
-			<div className='grid gap-4 md:grid-cols-1 lg:grid-cols-7'>
-				<Card className='col-span-7'>
-					<CardHeader>
-						<CardTitle>So&apos;nggi O&apos;quvchilar</CardTitle>
+				<Card>
+					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+						<CardTitle className='text-sm font-medium'>
+							Jami o&apos;quvchilar
+							<Users />
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<RecentStudents />
+						<div className='text-2xl font-bold'>{student.length} nafar </div>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+						<CardTitle className='text-sm font-medium'>
+							Jami Instructor
+							<UserRoundPen />
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className='text-2xl font-bold'>
+							{instructors.length} nafar{' '}
+						</div>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+						<CardTitle className='text-sm font-medium'>
+							Jami o&apos;quvchilar
+							<FileQuestion />
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className='text-2xl font-bold'>{totalCount} nafar </div>
 					</CardContent>
 				</Card>
 			</div>

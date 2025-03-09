@@ -46,11 +46,11 @@ export default function GroupDetails() {
 	const [group, setGroup] = useState<GroupItem | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
-	const [instructor, setInstructor] = useState<UserData>() //=====
-	const [student, setStudent] = useState<UserData[]>([]) //=====
-	const [isOpen, setIsOpen] = useState(false) //=====
-	const [selectedStudents, setSelectedStudents] = useState<string[]>([]) //====
-	const [allGroupStudent, setAllGroupStudent] = useState<UserData[]>([]) //====
+	const [instructor, setInstructor] = useState<UserData>()
+	const [student, setStudent] = useState<UserData[]>([])
+	const [isOpen, setIsOpen] = useState(false)
+	const [selectedStudents, setSelectedStudents] = useState<string[]>([])
+	const [allGroupStudent, setAllGroupStudent] = useState<UserData[]>([])
 	const [deletedStudent, setDeletedStudent] = useState<string[]>([])
 	const pathname = usePathname()
 	const id = pathname.split('/')[4]

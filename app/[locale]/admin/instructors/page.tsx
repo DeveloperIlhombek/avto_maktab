@@ -76,7 +76,7 @@ function Page() {
 			{instructors.map(item => (
 				<Link
 					key={item.id}
-					href={`${getLanguagePrefix()}/admin/instructors/${item.id}`}
+					href={`${getLanguagePrefix}/admin/instructors/${item.id}`}
 				>
 					<Card className='hover:shadow-lg transition-shadow duration-200'>
 						<CardHeader>
