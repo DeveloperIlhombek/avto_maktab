@@ -180,6 +180,8 @@ export const deleteStudentsFromGroup = async ({
 	studentIds: string[]
 }) => {
 	try {
+		// studentIds ni Guid tipiga o'tkazish
+		const userIds = studentIds.map(id => id)
 		const response = await fetch(
 			`${API_URL}/api/UserTest/RemoveStudentsFromGroup?groupId=${groupId}`,
 			{
@@ -187,7 +189,7 @@ export const deleteStudentsFromGroup = async ({
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ groupId, studentIds }),
+				body: JSON.stringify(userIds),
 			}
 		)
 

@@ -40,6 +40,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
+import { cn } from '@/lib/utils'
 
 export default function GroupDetails() {
 	const router = useRouter()
@@ -52,6 +53,7 @@ export default function GroupDetails() {
 	const [selectedStudents, setSelectedStudents] = useState<string[]>([]) //====
 	const [allGroupStudent, setAllGroupStudent] = useState<UserData[]>([]) //====
 	const [deletedStudent, setDeletedStudent] = useState<string[]>([])
+	const [ischecked, setIsChecked] = useState(false)
 	const pathname = usePathname()
 	const id = pathname.split('/')[4]
 
@@ -144,6 +146,7 @@ export default function GroupDetails() {
 				? prev.filter(id => id !== studentId)
 				: [...prev, studentId]
 		)
+		setIsChecked(true)
 	}
 
 	const handleAddStudents = async () => {
@@ -379,14 +382,16 @@ export default function GroupDetails() {
 											<ArrowRightIcon className='cursor-pointer' />
 										</Link>
 									</TableCell>
-									<TableCell className='text-right flex items-center justify-center gap-1'>
+									<TableCell className='text-right flex items-center justify-end gap-1'>
 										<Checkbox
 											checked={deletedStudent.includes(item.id)}
 											onCheckedChange={() =>
 												handleDeleteCheckboxChange(item.id)
 											}
 										/>
-										<Trash2Icon color='red' />
+										<Trash2Icon
+											color={deletedStudent.includes(item.id) ? 'red' : 'green'}
+										/>
 									</TableCell>
 								</TableRow>
 							))}
