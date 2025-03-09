@@ -33,7 +33,7 @@ const navigation = [
 
 	{
 		name: 'Testlar',
-		href: '/test',
+		href: '/tests',
 		icon: ClipboardCheck,
 	},
 
@@ -186,11 +186,7 @@ export default function StudentLayout({
 						{navigation.map(item => (
 							<Link
 								key={item.href}
-								href={
-									item.href.includes('test')
-										? `${getLanguagePrefix()}${item.href}`
-										: `${getLanguagePrefix()}/student/${Id}${item.href}`
-								}
+								href={`${getLanguagePrefix()}/student/${Id}${item.href}`}
 							>
 								<Button
 									variant={pathname === item.href ? 'secondary' : 'ghost'}

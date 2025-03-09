@@ -53,40 +53,6 @@ export interface TestAnswerCreate {
 	answerTextRU: string
 	isCorrect: boolean
 }
-//Barcha testlarni olish test uchun user test ishlash uchun
-export const getAllTests = async ({
-	pageSize,
-	pageNumber,
-	language,
-}: {
-	pageSize: number
-	pageNumber: number
-	language: string
-}) => {
-	try {
-		const response = await fetch(
-			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-			{
-				method: 'GET',
-				headers: {
-					Accept: '*/*',
-				},
-			}
-		)
-
-		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
-		}
-
-		const data = await response.json()
-		console.log(data)
-
-		return data
-	} catch (error) {
-		console.error('Error fetching tests:', error)
-		return null
-	}
-}
 
 //barcha testlarni ko'rish admin uchun
 export const getAllTestsAdmin = async (
@@ -167,5 +133,40 @@ export async function createTest(data: {
 	} catch (error) {
 		console.error('Error creating test:', error)
 		throw error
+	}
+}
+
+//Barcha testlarni olish test uchun user test ishlash uchun
+export const getAllTests = async ({
+	pageSize,
+	pageNumber,
+	language,
+}: {
+	pageSize: number
+	pageNumber: number
+	language: string
+}) => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+				},
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+
+		const data = await response.json()
+		//console.log(data)
+
+		return data
+	} catch (error) {
+		console.error('Error fetching tests:', error)
+		return null
 	}
 }

@@ -20,10 +20,10 @@ export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 	const [questionCount, setQuestionCount] = useState(20)
 
 	const handleStart = () => {
-		if (questionCount >= 10) {
+		if (questionCount >= 20) {
 			onStart(questionCount)
 		} else {
-			alert('Iltimos, kamida 10 ta savol tanlang.')
+			alert('Iltimos, kamida 20 ta savol tanlang.')
 		}
 	}
 
@@ -40,13 +40,13 @@ export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 					<div className='space-y-2'>
 						<Input
 							type='number'
-							min={10}
+							min={20}
 							value={questionCount}
 							onChange={e => setQuestionCount(Number(e.target.value))}
 							className='text-center text-lg'
 						/>
 						<p className='text-sm text-muted-foreground text-center'>
-							10 tadan ortiq savol tanlang
+							20 tadan ortiq savol tanlang
 						</p>
 					</div>
 					<div className='flex justify-end'>
