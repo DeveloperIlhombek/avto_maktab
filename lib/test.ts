@@ -21,7 +21,6 @@ export interface Test {
 	explanation: string
 	mediaUrl: string | null
 	testAnswers: TestAnswer[]
-
 	testAnswersForUser: any[] | null
 }
 
@@ -164,9 +163,124 @@ export const getAllTests = async ({
 		const data = await response.json()
 		//console.log(data)
 
-		return data
+		return data.result
 	} catch (error) {
 		console.error('Error fetching tests:', error)
 		return null
+	}
+}
+
+//test ishlatdi =>post =>check exam
+//POST test answer
+
+interface ExamTestCase {
+	testCaseId: string
+	selectedAnswerId: string
+}
+
+interface SubmitAnswersResponse {
+	isSuccess: boolean
+	errorMessages?: string[]
+	statusCode: number
+	result?: SubmitAnswerResult
+}
+interface SubmitAnswerResult {
+	id: string
+	userId: string
+	name: string | null
+	createAt: Date
+	examTestCases: ExamTestCases[]
+	user: UserData
+	correctAnswers: number
+}
+interface ExamTestCases {
+	id: string
+	examId: string
+	testCaseId: string
+	selectedAnswerId: string
+	testCase: Test
+}
+interface UserData {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	role: number
+}
+
+export const submitAnswer = async ({
+	language,
+	userId,
+	examTestCases,
+}: {
+	language: string
+	userId: string
+	examTestCases: ExamTestCase[]
+}): Promise<SubmitAnswersResponse> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/UserTest/SubmitAnswers?language=${language}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: '*/*',
+				},
+				body: JSON.stringify({
+					userId,
+					examTestCases: examTestCases,
+				}),
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+
+		const result = await response.json()
+		console.log('Submission successful:', result)
+		return result
+	} catch (error) {
+		console.error('Error submitting answers:', error)
+		return {
+			isSuccess: false,
+			statusCode: 500,
+			errorMessages: [(error as Error).message],
+		}
+	}
+}
+
+//CheckExam =>Javoblarni olish
+export const checkExam = async ({
+	examId,
+	language,
+}: {
+	examId: string
+	language: string
+}): Promise<SubmitAnswersResponse> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/Dashboard/CheckExam?examId=${examId}&language=${language}`,
+			{
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json', Accept: '*/*' },
+			}
+		)
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+		const result = await response.json()
+		console.log('Submission successful:', result)
+		const responseData: SubmitAnswersResponse = await response.json()
+		return responseData
+	} catch (error) {
+		console.error(`Xatolik mavjud: ${error}`)
+		return {
+			isSuccess: false,
+			statusCode: 500,
+			errorMessages: [(error as Error).message],
+		}
 	}
 }
