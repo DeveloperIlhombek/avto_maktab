@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-//import { Progress } from "@/components/ui/progress";
 import { Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -16,6 +15,7 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import { ExemItem, getExemsUser } from '@/lib/users'
+
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 
