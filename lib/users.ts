@@ -141,8 +141,6 @@ export const getAllGroupStudent = async ({
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
 		const data = await response.json()
-		console.log('Api det alll')
-		console.log(data)
 
 		return data.result
 	} catch (error) {
@@ -170,7 +168,6 @@ export const getGroupInstructor = async ({ groupId }: { groupId: string }) => {
 		return null
 	}
 }
-
 //Delete student from Group
 export const deleteStudentsFromGroup = async ({
 	groupId,
@@ -248,5 +245,59 @@ export const updateUserParol = async (
 	} catch (error) {
 		console.error('Xato:', error)
 		throw error
+	}
+}
+
+export interface ExemItem {
+	id: string
+	userId: string
+	name: null
+	createAt: Date
+	examTestCases: null
+	user: UserData
+	corrertAnswers: number
+	questionCount?: number
+}
+export interface GetExemResult {
+	items: ExemItem[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+
+export interface GetExemResponse {
+	isSuccess: boolean
+	result: GetExemResult
+	statusCode: number
+	errorMessages: string[]
+}
+
+export const getExemsUser = async ({
+	UserID,
+	pageSize,
+	pageNumber,
+}: {
+	pageNumber: number
+	pageSize: number
+	UserID: string
+}) => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/Dashboard/GetExams?UserID=${UserID}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+				},
+			}
+		)
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+		const data = await response.json()
+		return data.result
+	} catch (error) {
+		console.error('Error fetching users:', error)
 	}
 }
