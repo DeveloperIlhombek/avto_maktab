@@ -2,7 +2,7 @@ import AllUser from './_components/all-users'
 import { getAllUser } from '@/lib/api'
 
 export default async function Page() {
-	const data = await getAllUser()
+	const data = await getAllUser({ pageSize: 20, pageNumber: 0 })
 
 	if (!data) {
 		return (
@@ -19,5 +19,5 @@ export default async function Page() {
 		)
 	}
 
-	return <AllUser data={data} />
+	return <AllUser initialData={data} />
 }

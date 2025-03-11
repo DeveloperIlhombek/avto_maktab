@@ -52,10 +52,16 @@ interface CreateTestResponse {
 
 //Barcha userlarni olish.
 
-export const getAllUser = async () => {
+export const getAllUser = async ({
+	pageNumber,
+	pageSize,
+}: {
+	pageSize: number
+	pageNumber: number
+}) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/User/GetAll?pageNumber=0&pageSize=10`,
+			`${API_URL}/api/User/GetAll?role=3&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
 				headers: { 'Content-Type': 'application/json' },
