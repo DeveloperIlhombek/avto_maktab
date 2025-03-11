@@ -14,13 +14,17 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import { usePathname } from 'next/navigation'
-import { Trophy } from 'lucide-react'
+import { LucideEye, Trophy } from 'lucide-react'
+import Link from 'next/link'
 function Page() {
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
 	const pathname = usePathname()
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
 	const Id = pathname.split('/')[6]
+	const InstrucId = pathname.split('/')[3]
+	const groupId = pathname.split('/')[5]
+	const examId = pathname.split('/')[7]
 	useEffect(() => {
 		const fetchExemResult = async () => {
 			try {
@@ -52,6 +56,15 @@ function Page() {
 			)
 		}
 		return <Badge variant={'destructive'}>O&apos;tmadi</Badge>
+	}
+
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
 	}
 
 	if (loading) {
@@ -133,6 +146,7 @@ function Page() {
 										<TableHead>Sana</TableHead>
 										<TableHead>To&apos;g&apos;ri javoblar</TableHead>
 										<TableHead>Status</TableHead>
+										<TableHead className='text-right'>Javoblar</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -144,6 +158,16 @@ function Page() {
 											<TableCell>{test.corrertAnswers} / 20</TableCell>
 											<TableCell>
 												{setStatus(test.corrertAnswers, 20)}
+											</TableCell>
+											<TableCell className='text-right'>
+												<Link
+													href={`${getLanguagePrefix()}/instructor/${InstrucId}/groups/${groupId}/${Id}/${
+														test.id
+													}`}
+													className='inline-flex items-center justify-center p-2 rounded-md hover:bg-primary/10 transition-colors'
+												>
+													<LucideEye className='w-5 h-5 text-primary' />
+												</Link>
 											</TableCell>
 										</TableRow>
 									))}
