@@ -22,7 +22,7 @@ import { LanguageSwitcher } from '@/components/shared/language-switcher'
 const navigation = [
 	{
 		name: 'Dashboard',
-		href: '/dashboard',
+		href: '/',
 		icon: Home,
 	},
 	{
@@ -182,7 +182,7 @@ export default function StudentLayout({
 			{/* Desktop Sidebar */}
 			<div className='hidden border-r bg-background md:fixed md:inset-y-0 md:flex md:w-56 md:flex-col'>
 				<div className='flex flex-col space-y-4 py-4'>
-					<nav className='grid gap-1 px-2'>
+					<nav className='grid mt-12 gap-1 px-2'>
 						{navigation.map(item => (
 							<Link
 								key={item.href}

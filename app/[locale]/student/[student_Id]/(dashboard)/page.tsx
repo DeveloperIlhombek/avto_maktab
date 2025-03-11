@@ -3,25 +3,21 @@
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 //import { Progress } from "@/components/ui/progress";
-import { Clock, Trophy } from 'lucide-react'
+import { Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { getUserById } from '@/lib/api'
-
-// Mock data
-const studentData = {
-	name: 'Aziz Rahimov',
-	testResults: {
-		total: 100,
-		correct: 85,
-	},
-	nextLesson: {
-		type: 'Amaliy',
-		date: '2024-03-20',
-		time: '14:00',
-		instructor: 'Akmal Karimov',
-	},
-}
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/components/ui/table'
+import { ExemItem, getExemsUser } from '@/lib/users'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
 
 const container = {
 	hidden: { opacity: 0 },
@@ -59,6 +55,7 @@ export default function StudentDashboard() {
 	const [loading, setLoading] = useState(true)
 	const Id = pathname.split('/')[3]
 	const [userData, setUserData] = useState<UserData | null>(null)
+	const [exemItem, setExemItem] = useState<ExemItem[]>([])
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
@@ -81,11 +78,34 @@ export default function StudentDashboard() {
 			}
 		}
 
+		const fetchExemResult = async () => {
+			try {
+				const exemResponse = await getExemsUser({
+					UserID: Id,
+					pageSize: 20,
+					pageNumber: 0,
+				})
+				setExemItem(exemResponse.items)
+			} catch (error) {
+				toast(`imtixon natijalarnini yuklashda xatolik bor: ${error}`)
+			}
+		}
+
 		if (Id) {
 			fetchUser()
+			fetchExemResult()
 		}
 	}, [Id])
-
+	const setStatus = (correctanswer: number, totolQuestion: number) => {
+		if ((correctanswer / totolQuestion) * 100 >= 90) {
+			return (
+				<Badge variant={'secondary'} className='bg-green-300 dark:text-black'>
+					O&apos;tdi
+				</Badge>
+			)
+		}
+		return <Badge variant={'destructive'}>O&apos;tmadi</Badge>
+	}
 	if (loading) {
 		return (
 			<div className='space-y-4'>
@@ -126,15 +146,15 @@ export default function StudentDashboard() {
 			animate='show'
 			className='space-y-8'
 		>
-			{/* Welcome Section */}
 			<motion.div
 				variants={item}
-				className='relative overflow-hidden rounded-lg bg-gradient-to-r from-yellow-100 via-green-200 to-green-100 p-8 border shadow-lg'
+				className='relative overflow-hidden rounded-lg bg-gradient-to-r from-green-400 via-green-400 to-green-100 p-8 border shadow-lg'
 			>
 				<div className='absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))] dark:bg-grid-black/5' />
 				<h1 className='text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
-					Xush kelibsiz, {userData?.name}!
+					{userData?.name} {userData?.surname}
 				</h1>
+				<p>Shaxsiy kabinet</p>
 			</motion.div>
 
 			{/* Test Results */}
@@ -148,56 +168,26 @@ export default function StudentDashboard() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent className='pt-4'>
-						<div className='space-y-4'>
-							<div className='flex items-center justify-between mb-1'>
-								<span className='text-sm font-medium'>
-									To&apos;g&apos;ri javoblar
-								</span>
-								<span className='text-sm font-medium text-primary'>
-									{studentData.testResults.correct}%
-								</span>
-							</div>
-							<div className='relative h-4 w-full overflow-hidden rounded-full bg-primary/10'>
-								<motion.div
-									initial={{ width: 0 }}
-									animate={{ width: `${studentData.testResults.correct}%` }}
-									transition={{ duration: 1, ease: 'easeOut' }}
-									className='h-full bg-primary rounded-full'
-								/>
-								<div className='absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent animate-pulse' />
-							</div>
-						</div>
-					</CardContent>
-				</Card>
-			</motion.div>
-
-			{/* Next Lesson Card */}
-			<motion.div variants={item}>
-				<Card className='relative overflow-hidden border-2 transition-colors hover:border-primary/50 group'>
-					<div className='absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
-					<CardHeader>
-						<CardTitle className='text-xl font-bold flex items-center gap-2'>
-							<Clock className='w-5 h-5 text-primary' />
-							Keyingi mashg&apos;ulot
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className='flex items-center space-x-4'>
-							<div className='p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors'>
-								<Clock className='h-6 w-6 text-primary animate-pulse' />
-							</div>
-							<div className='space-y-1'>
-								<p className='font-medium text-lg'>
-									{studentData.nextLesson.type} mashg&apos;ulot
-								</p>
-								<p className='text-muted-foreground'>
-									{studentData.nextLesson.date} - {studentData.nextLesson.time}
-								</p>
-								<p className='text-muted-foreground'>
-									Instruktor: {studentData.nextLesson.instructor}
-								</p>
-							</div>
-						</div>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Sana</TableHead>
+									<TableHead>To&apos;g&apos;ri javoblar</TableHead>
+									<TableHead>Status</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{exemItem.map((test, index) => (
+									<TableRow key={index}>
+										<TableCell>
+											{new Date(test.createAt).toLocaleDateString('uz-UZ')}
+										</TableCell>
+										<TableCell>{test.corrertAnswers} / 20</TableCell>
+										<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
 					</CardContent>
 				</Card>
 			</motion.div>

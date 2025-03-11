@@ -68,7 +68,7 @@ export function TestsTab() {
 					<TableHeader>
 						<TableRow>
 							<TableHead>Sana</TableHead>
-							<TableHead>Ball</TableHead>
+							<TableHead>To&apos;g&apos;ri javoblar</TableHead>
 							<TableHead>Status</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -79,7 +79,7 @@ export function TestsTab() {
 									{new Date(test.createAt).toLocaleDateString('uz-UZ')}
 								</TableCell>
 								<TableCell>{test.corrertAnswers} / 20</TableCell>
-								<TableCell>{setStatus(19, 20)}</TableCell>
+								<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
