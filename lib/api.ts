@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
-interface UserData {
+export interface UserData {
 	id: string
 	name: string
 	surname: string

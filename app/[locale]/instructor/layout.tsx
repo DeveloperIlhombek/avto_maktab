@@ -12,7 +12,6 @@ import {
 	Home,
 	LogOut,
 	Menu,
-	User,
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
@@ -20,18 +19,12 @@ import { ModeToggle } from '@/components/shared/mode-toggle'
 const navigation = [
 	{
 		name: 'Dashboard',
-		href: '/uz/instructor/123/dashboard',
+		href: '/',
 		icon: Home,
 	},
 	{
-		name: "Shaxsiy ma'lumotlar",
-		href: '/uz/instructor/123/profile',
-		icon: User,
-	},
-
-	{
 		name: 'Guruhlar',
-		href: '/uz/instructor/123/groups',
+		href: '/groups',
 		icon: ClipboardCheck,
 	},
 ]
@@ -43,7 +36,15 @@ export default function LayoutInstructor({
 }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 	const pathname = usePathname()
-
+	const Id = pathname.split('/')[3]
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
 	return (
 		<div className='min-h-screen bg-background'>
 			{/* Navbar */}
@@ -51,7 +52,7 @@ export default function LayoutInstructor({
 				<div className='container flex h-14 items-center'>
 					<div className='mr-4 hidden md:flex'>
 						<Link
-							href='/uz/instructor/123'
+							href={`${getLanguagePrefix()}/instructor/${Id}`}
 							className='mr-6 flex items-center space-x-2'
 						>
 							<GraduationCap className='h-6 w-6' />
@@ -94,7 +95,7 @@ export default function LayoutInstructor({
 				<div className='fixed inset-y-0 left-0 w-full max-w-xs border-r bg-background p-6 shadow-lg'>
 					<div className='flex items-center justify-between'>
 						<Link
-							href='/student/dashboard'
+							href={`${getLanguagePrefix()}/instructor/${Id}`}
 							className='flex items-center space-x-2'
 						>
 							<GraduationCap className='h-6 w-6' />
@@ -110,7 +111,10 @@ export default function LayoutInstructor({
 					</div>
 					<nav className='mt-8 flex flex-col space-y-2'>
 						{navigation.map(item => (
-							<Link key={item.href} href={item.href}>
+							<Link
+								key={item.href}
+								href={`${getLanguagePrefix()}/instructor/${Id}/${item.href}`}
+							>
 								<Button
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
 									className='w-full justify-start'
@@ -134,9 +138,12 @@ export default function LayoutInstructor({
 			{/* Desktop Sidebar */}
 			<div className='hidden border-r bg-background md:fixed md:inset-y-0 md:flex md:w-56 md:flex-col'>
 				<div className='flex flex-col space-y-4 py-4'>
-					<nav className='grid gap-1 px-2'>
+					<nav className='grid mt-12 gap-1 px-2'>
 						{navigation.map(item => (
-							<Link key={item.href} href={item.href}>
+							<Link
+								key={item.href}
+								href={`${getLanguagePrefix()}/instructor/${Id}/${item.href}`}
+							>
 								<Button
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
 									className='w-full justify-start'
