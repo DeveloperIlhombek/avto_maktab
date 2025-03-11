@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Trophy } from 'lucide-react'
+import { LucideEye, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { getUserById } from '@/lib/api'
@@ -18,6 +18,7 @@ import { ExemItem, getExemsUser } from '@/lib/users'
 
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
 
 const container = {
 	hidden: { opacity: 0 },
@@ -56,6 +57,14 @@ export default function StudentDashboard() {
 	const Id = pathname.split('/')[3]
 	const [userData, setUserData] = useState<UserData | null>(null)
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
@@ -97,7 +106,7 @@ export default function StudentDashboard() {
 		}
 	}, [Id])
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
-		if ((correctanswer / totolQuestion) * 100 >= 90) {
+		if ((correctanswer / totolQuestion) * 100 >= 20) {
 			return (
 				<Badge variant={'secondary'} className='bg-green-300 dark:text-black'>
 					O&apos;tdi
@@ -174,16 +183,29 @@ export default function StudentDashboard() {
 									<TableHead>Sana</TableHead>
 									<TableHead>To&apos;g&apos;ri javoblar</TableHead>
 									<TableHead>Status</TableHead>
+									<TableHead className='text-right'>Tekshirish</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
 								{exemItem.map((test, index) => (
-									<TableRow key={index}>
+									<TableRow
+										key={index}
+										className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+									>
 										<TableCell>
 											{new Date(test.createAt).toLocaleDateString('uz-UZ')}
 										</TableCell>
 										<TableCell>{test.corrertAnswers} / 20</TableCell>
 										<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
+										<TableCell className='text-right'>
+											<Link
+												href={`${getLanguagePrefix()}/student/${Id}/${test.id}`}
+												className='inline-flex items-center justify-center p-2 rounded-md hover:bg-primary/10 transition-colors'
+											>
+												<LucideEye className='w-5 h-5 text-primary' />
+												<span className='sr-only'>Tekshirish</span>
+											</Link>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>

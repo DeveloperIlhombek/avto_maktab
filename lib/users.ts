@@ -301,3 +301,64 @@ export const getExemsUser = async ({
 		console.error('Error fetching users:', error)
 	}
 }
+
+export interface IExamResult {
+	id: string
+	userId: string
+	name: null | string
+	createAt: Date
+	examTestCases: ITestCase[]
+	user: UserData
+	corrertAnswers: number
+}
+
+export interface ITestCase {
+	id: string
+	examId: string
+	testCaseId: string
+	selectedAnswerId: string
+	testCase: ITestCase
+	testAnswer: null
+}
+export interface ITestCase {
+	id: string
+	name: null | string
+	question: string
+	explanation: string
+	mediaUrl: string
+	testAnswers: ITestAnswer[]
+	testAnswersForUser: null
+}
+export interface ITestAnswer {
+	id: string
+	testCaseId: string
+	answerText: string
+	isCorrect: boolean
+}
+export const getCheckExem = async ({
+	examId,
+	language,
+}: {
+	examId: string
+	language: string
+}) => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/Dashboard/CheckExam?examId=${examId}&language=${language}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+				},
+			}
+		)
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+
+		const data = await response.json()
+		return data.result
+	} catch (error) {
+		console.error('Error fetching users:', error)
+	}
+}
