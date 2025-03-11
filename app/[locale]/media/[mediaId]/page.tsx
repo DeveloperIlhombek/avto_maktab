@@ -123,7 +123,7 @@ function Page() {
 													preload='metadata'
 												>
 													<source
-														src={`http://213.230.109.74:8080/api/media/stream/${media.id}`}
+														src={`http://213.230.109.74:8080/${media.filePath}`}
 														type='video/mp4'
 													/>
 													Your browser does not support the video tag.
