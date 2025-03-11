@@ -24,7 +24,7 @@ import Image from 'next/image'
 
 function Page() {
 	const pathname = usePathname()
-	const examId = pathname.split('/')[4]
+	const examId = pathname.split('/')[5]
 	const lang = pathname.split('/')[1]
 	const [examResult, setExamResult] = useState<IExamResult>()
 	const [loading, setLoading] = useState(true)
@@ -35,10 +35,7 @@ function Page() {
 		const fetchCheckExam = async () => {
 			try {
 				setLoading(true)
-				const response = await getCheckExem({
-					examId: examId,
-					language: lang,
-				})
+				const response = await getCheckExem({ examId: examId, language: lang })
 				setExamResult(response)
 			} catch (error) {
 				toast.error(`Imtixon natijalarini yuklashda xatolik: ${error}`)

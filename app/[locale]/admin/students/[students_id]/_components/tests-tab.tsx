@@ -20,18 +20,29 @@ import { useEffect, useState } from 'react'
 import { ExemItem, getExemsUser } from '@/lib/users'
 import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
+import Link from 'next/link'
+import { LucideEye } from 'lucide-react'
 
 export function TestsTab() {
 	const pathname = usePathname()
 	const userId = pathname.split('/')[4]
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
 	//const [pageNumber, setPageNumber] = useState(0)
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
+
 	useEffect(() => {
 		const fetchStudentExem = async () => {
 			try {
 				const resultExem = await getExemsUser({
 					UserID: userId,
-					pageSize: 100,
+					pageSize: 1000,
 					pageNumber: 0,
 				})
 
@@ -70,6 +81,7 @@ export function TestsTab() {
 							<TableHead>Sana</TableHead>
 							<TableHead>To&apos;g&apos;ri javoblar</TableHead>
 							<TableHead>Status</TableHead>
+							<TableHead className='text-right'>Natijalar</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -80,6 +92,17 @@ export function TestsTab() {
 								</TableCell>
 								<TableCell>{test.corrertAnswers} / 20</TableCell>
 								<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
+								<TableCell className='text-right'>
+									<Link
+										href={`${getLanguagePrefix()}/admin/students/${userId}/${
+											test.id
+										}`}
+										className='inline-flex items-center justify-center p-2 rounded-md hover:bg-primary/10 transition-colors'
+									>
+										<LucideEye className='w-5 h-5 text-primary' />
+										<span className='sr-only'>Tekshirish</span>
+									</Link>
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>

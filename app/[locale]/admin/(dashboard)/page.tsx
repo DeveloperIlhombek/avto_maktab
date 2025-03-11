@@ -95,12 +95,12 @@ export default function AdminDashboard() {
 				<Card>
 					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 						<CardTitle className='text-sm font-medium'>
-							Jami o&apos;quvchilar
+							Jami testlar
 							<FileQuestion />
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className='text-2xl font-bold'>{totalCount} nafar </div>
+						<div className='text-2xl font-bold'>{totalCount} ta </div>
 					</CardContent>
 				</Card>
 			</div>
