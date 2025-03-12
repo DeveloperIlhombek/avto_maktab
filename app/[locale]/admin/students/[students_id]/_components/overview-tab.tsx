@@ -128,7 +128,7 @@ export function OverviewTab({ userId }: OverviewTabProps) {
 					</div>
 					<div>
 						<p className='text-sm text-muted-foreground'>Role</p>
-						<p className='font-medium capitalize'>{userData.role}</p>
+						<p className='font-medium capitalize'>Student</p>
 					</div>
 				</CardContent>
 			</Card>

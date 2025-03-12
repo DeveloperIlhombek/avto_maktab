@@ -30,7 +30,6 @@ export function ProfileCard() {
 				setLoading(true)
 				setError(null)
 				const response = await getUserById(Id)
-				console.log(response)
 
 				if (response && response.isSuccess) {
 					setUserData(response.result)
@@ -95,14 +94,14 @@ export function ProfileCard() {
 			<CardContent className='pt-6'>
 				<div className='flex flex-col items-center text-center'>
 					<Avatar className='h-24 w-24 mb-4'>
-						<AvatarFallback className='text-2xl'>
+						<AvatarFallback className='text-2xl bg-green-400 shadow-green-200'>
 							{`${userData.name[0]}${userData.surname[0]}`}
 						</AvatarFallback>
 					</Avatar>
 					<h3 className='text-xl font-semibold'>{`${userData.name} ${userData.surname}`}</h3>
 					<p className='text-sm text-muted-foreground mb-4'>{userData.email}</p>
-					<Badge variant='secondary' className='mb-6'>
-						{userData.role}
+					<Badge variant='secondary' className='mb-6 bg-green-400'>
+						Student
 					</Badge>
 					<div className='w-full space-y-2'>
 						<div className='flex justify-between text-sm'>
