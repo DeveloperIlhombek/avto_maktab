@@ -1,5 +1,3 @@
-//Code by:Ilhom Toshqulov
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
 export interface UserData {
@@ -28,27 +26,27 @@ interface CreateUserData {
 	role: number
 }
 
-interface TestAnswer {
-	answerTextUZ: string
-	answerTextUZK: string
-	answerTextRU: string
-	isCorrect: boolean
-}
+// interface TestAnswer {
+// 	answerTextUZ: string
+// 	answerTextUZK: string
+// 	answerTextRU: string
+// 	isCorrect: boolean
+// }
 
-interface CreateTestResponse {
-	isSuccess: boolean
-	result: {
-		id: string
-		name: string | null
-		question: string | null
-		explanation: string | null
-		mediaUrl: FormData | null
-		testAnswers: TestAnswer[]
-		testAnswersForUser: any[]
-	}
-	statusCode: number
-	errorMessages: string[]
-}
+// interface CreateTestResponse {
+// 	isSuccess: boolean
+// 	result: {
+// 		id: string
+// 		name: string | null
+// 		question: string | null
+// 		explanation: string | null
+// 		mediaUrl: FormData | null
+// 		testAnswers: TestAnswer[]
+// 		testAnswersForUser: any[]
+// 	}
+// 	statusCode: number
+// 	errorMessages: string[]
+// }
 
 //Barcha userlarni olish.
 
@@ -79,7 +77,6 @@ export const getAllUser = async ({
 		return null
 	}
 }
-//Barcha instructorlarni olish.
 
 //ID orqali userni olish
 
@@ -132,60 +129,6 @@ export const createUser = async (
 		throw error
 	}
 }
-
-//Create Test
-export async function createTest(data: {
-	questionUZ: string
-	questionUZK: string
-	questionRU: string
-	explanationUZ: string
-	explanationUZK: string
-	explanationRU: string
-	media?: File
-	answers: TestAnswer[]
-}): Promise<CreateTestResponse> {
-	try {
-		const params = new URLSearchParams({
-			questionUZ: data.questionUZ,
-			questionUZK: data.questionUZK,
-			questionRU: data.questionRU,
-			explanationUZ: data.explanationUZ,
-			explanationUZK: data.explanationUZK,
-			explanationRU: data.explanationRU,
-			answers: encodeURIComponent(
-				JSON.stringify(
-					data.answers.map(answer => ({
-						answerTextUZ: answer.answerTextUZ,
-						answerTextUZK: answer.answerTextUZK,
-						answerTextRU: answer.answerTextRU,
-						isCorrect: answer.isCorrect,
-					}))
-				)
-			),
-		})
-		const formdata = new FormData()
-		if (data.media) {
-			formdata.append('media', data.media)
-		}
-		const response = await fetch(`${API_URL}/api/TestCase/Create?${params}`, {
-			method: 'POST',
-			body: formdata,
-		})
-
-		const responseData = await response.json()
-		if (!response.ok) {
-			throw new Error(
-				responseData.errorMessages?.join(', ') || 'Failed to create test'
-			)
-		}
-
-		return responseData
-	} catch (error) {
-		console.error('Error creating test:', error)
-		throw error
-	}
-}
-
 interface TestAnswerResponse {
 	id: string
 	testCaseId: string

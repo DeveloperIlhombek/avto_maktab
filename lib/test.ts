@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
 
+const API_Temp = 'https://9284dgg8-5000.euw.devtunnels.ms'
+
 export interface TestsResponse {
 	isSuccess: boolean
 	result: {
@@ -27,108 +29,71 @@ export interface Test {
 export interface TestAnswer {
 	id: string
 	testCaseId: string
-	answerText: string
-	isCorrect: boolean
-}
-
-interface CreateTestResponse {
-	isSuccess: boolean
-	result: {
-		id: string
-		name: string | null
-		question: string | null
-		explanation: string | null
-		mediaUrl: FormData | null
-		testAnswers: TestAnswerCreate[]
-		testAnswersForUser: any[]
-	}
-	statusCode: number
-	errorMessages: string[]
-}
-
-export interface TestAnswerCreate {
 	answerTextUZ: string
 	answerTextUZK: string
 	answerTextRU: string
 	isCorrect: boolean
 }
 
-//barcha testlarni ko'rish admin uchun
-export const getAllTestsAdmin = async (
-	pageNumber: number = 0,
-	pageSize: number = 10,
-	language: string = 'uz'
-): Promise<TestsResponse> => {
+interface TestAnswerCreate {
+	answerTextUZ: string
+	answerTextUZK: string
+	answerTextRU: string
+	isCorrect: boolean
+}
+
+interface CreateTestData {
+	QuestionUZ: string
+	QuestionUZK: string
+	QuestionRU: string
+	ExplanationUZ: string
+	ExplanationUZK: string
+	ExplanationRU: string
+	Media?: File
+	Answers: TestAnswerCreate[]
+}
+
+interface ApiResponse {
+	isSuccess: boolean
+	errorMessages?: string[]
+	result?: any
+}
+
+export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 	try {
+		const formData = new FormData()
+		formData.append('QuestionUZ', data.QuestionUZ)
+		formData.append('QuestionUZK', data.QuestionUZK)
+		formData.append('QuestionRU', data.QuestionRU)
+		formData.append('ExplanationUZ', data.ExplanationUZ)
+		formData.append('ExplanationUZK', data.ExplanationUZK)
+		formData.append('ExplanationRU', data.ExplanationRU)
+		formData.append('answersJson', JSON.stringify(data.Answers))
+
+		if (data.Media) {
+			formData.append('Media', data.Media)
+		}
+
 		const response = await fetch(
-			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_Temp}/api/TestCase/Create?language=uz`,
 			{
-				method: 'GET',
+				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
 				},
+				body: formData,
 			}
 		)
 
 		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
-		}
-
-		const data = await response.json()
-		return data
-	} catch (error) {
-		console.error('Error fetching tests:', error)
-		throw error
-	}
-}
-
-//Create Test
-export async function createTest(data: {
-	questionUZ: string
-	questionUZK: string
-	questionRU: string
-	explanationUZ: string
-	explanationUZK: string
-	explanationRU: string
-	media?: File
-	answers: TestAnswer[]
-}): Promise<CreateTestResponse> {
-	try {
-		const params = new URLSearchParams({
-			questionUZ: data.questionUZ,
-			questionUZK: data.questionUZK,
-			questionRU: data.questionRU,
-			explanationUZ: data.explanationUZ,
-			explanationUZK: data.explanationUZK,
-			explanationRU: data.explanationRU,
-			answers: encodeURIComponent(
-				JSON.stringify(
-					data.answers.map(answer => ({
-						answerTextUZ: answer.answerTextUZ,
-						answerTextUZK: answer.answerTextUZK,
-						answerTextRU: answer.answerTextRU,
-						isCorrect: answer.isCorrect,
-					}))
-				)
-			),
-		})
-		const formdata = new FormData()
-		if (data.media) {
-			formdata.append('media', data.media)
-		}
-		const response = await fetch(`${API_URL}/api/TestCase/Create?${params}`, {
-			method: 'POST',
-			body: formdata,
-		})
-
-		const responseData = await response.json()
-		if (!response.ok) {
+			const errorData = await response.json()
 			throw new Error(
-				responseData.errorMessages?.join(', ') || 'Failed to create test'
+				errorData.errorMessages?.join(', ') || 'Failed to create test'
 			)
 		}
 
-		return responseData
+		return await response.json()
 	} catch (error) {
 		console.error('Error creating test:', error)
 		throw error
@@ -170,9 +135,35 @@ export const getAllTests = async ({
 	}
 }
 
-//test ishlatdi =>post =>check exam
-//POST test answer
+//barcha testlarni ko'rish admin uchun
+export const getAllTestsAdmin = async (
+	pageNumber: number = 0,
+	pageSize: number = 10,
+	language: string = 'uz'
+): Promise<TestsResponse> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		)
 
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error('Error fetching tests:', error)
+		throw error
+	}
+}
+//POST test answer
 interface ExamTestCase {
 	testCaseId: string
 	selectedAnswerId: string
@@ -251,7 +242,6 @@ export const submitAnswer = async ({
 		}
 	}
 }
-
 //CheckExam =>Javoblarni olish
 export const checkExam = async ({
 	examId,
