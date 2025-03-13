@@ -59,7 +59,7 @@ interface Props {
 export default function AllUser({ initialData }: Props) {
 	const [searchTerm, setSearchTerm] = useState('')
 	const [currentPage, setCurrentPage] = useState(0)
-	const [data, setData] = useState(initialData)
+	const [data, setData] = useState<UserResponse>(initialData)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 

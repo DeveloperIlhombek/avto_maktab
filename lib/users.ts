@@ -1,3 +1,5 @@
+import { customFetch } from './api'
+
 const API_URL = 'http://213.230.109.74:8080'
 //const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
@@ -42,14 +44,12 @@ export const getAllInstructor = async ({
 	pageNumber: number
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/User/GetAll?role=2&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -74,14 +74,12 @@ export const getAllStudent = async ({
 	pageNumber: number
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/User/GetAll?role=3&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -117,14 +115,12 @@ export interface UserResponseById {
 //Id orqwali studentlarni olish
 export async function getUserById(userId: string): Promise<UserResponseById> {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/User/GetById?userId=${userId}`,
 			{
 				method: 'GET',
 				headers: {
 					Accept: '*/*',
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -157,13 +153,8 @@ export const createUser = async (
 	userData: CreateUserData
 ): Promise<UserResponse> => {
 	try {
-		const response = await fetch(`${API_URL}/api/User/Create`, {
+		const response = await customFetch(`${API_URL}/api/User/Create`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization:
-					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
-			},
 			body: JSON.stringify(userData),
 		})
 
@@ -195,13 +186,11 @@ export const updateUser = async (
 		const jsonData = Object.fromEntries(formData.entries())
 
 		// API so'rovini yuborish
-		const response = await fetch(`${API_URL}/api/User/Update`, {
+		const response = await customFetch(`${API_URL}/api/User/Update`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
 				accept: '*/*',
-				Authorization:
-					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 			},
 			body: JSON.stringify(jsonData), // JSON formatida yuborish
 		})
@@ -229,14 +218,11 @@ export const updateUser = async (
 //Delete User
 export async function deleteUser(userId: string) {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/User/Delete?userId=${userId}`,
 			{
 				method: 'DELETE',
-				headers: {
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
-				},
+				headers: {},
 			}
 		)
 
@@ -264,7 +250,7 @@ export const addStudentsToGroup = async ({
 	studentIds: string[]
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/AddStudentsToGroup?groupId=${groupId}`,
 			{
 				method: 'POST',
@@ -296,7 +282,7 @@ export const getAllGroupStudent = async ({
 	pageSize: number
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/GetGroupStudents?groupId=${groupId}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
@@ -317,7 +303,7 @@ export const getAllGroupStudent = async ({
 
 export const getGroupInstructor = async ({ groupId }: { groupId: string }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/GetGroupInstiructor?groupId=${groupId}`,
 			{
 				method: 'GET',
@@ -345,7 +331,7 @@ export const deleteStudentsFromGroup = async ({
 	try {
 		// studentIds ni Guid tipiga o'tkazish
 		const userIds = studentIds.map(id => id)
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/RemoveStudentsFromGroup?groupId=${groupId}`,
 			{
 				method: 'DELETE',
@@ -381,7 +367,7 @@ export const updateUserParol = async (
 		}
 
 		// API so'rovini yuborish
-		const response = await fetch(`${API_URL}/api/User/Update`, {
+		const response = await customFetch(`${API_URL}/api/User/Update`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -422,6 +408,7 @@ export interface IExamResult {
 	examTestCases: ITestCase[]
 	user: UserData
 	corrertAnswers: number
+	questionCount: number
 }
 
 export interface ITestCase {
@@ -455,7 +442,7 @@ export const getCheckExem = async ({
 	language: string
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Dashboard/CheckExam?examId=${examId}&language=${language}`,
 			{
 				method: 'GET',

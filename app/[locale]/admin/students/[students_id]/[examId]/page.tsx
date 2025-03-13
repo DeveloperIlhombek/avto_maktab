@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import {
 	CheckCircle,
 	XCircle,
-	Clock,
 	Calendar,
 	Brain,
 	Award,
@@ -106,23 +105,21 @@ function Page() {
 
 	if (!examResult) return null
 
-	const isPassed = (examResult.corrertAnswers / 20) * 100 >= 30
+	const isPassed =
+		(examResult.corrertAnswers / examResult.questionCount) * 100 >= 20
 	const currentQuestion = examResult.examTestCases[currentQuestionIndex]
 
 	return (
-		<div className='min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4 md:p-8'>
-			<div className='max-w-6xl mx-auto space-y-8'>
+		<div className='min-h-screen bg-gradient-to-b from-background to-secondary/20 px-4 md:p-4'>
+			<div className='max-w-6xl mx-auto space-y-5'>
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					className='text-center space-y-2'
 				>
-					<h1 className='text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60'>
+					<h1 className='text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60'>
 						Imtixon natijalari
 					</h1>
-					<p className='text-muted-foreground'>
-						Imtixon natijalaringiz bilan tanishing
-					</p>
 				</motion.div>
 
 				<motion.div
@@ -134,14 +131,24 @@ function Page() {
 						<CardHeader>
 							<CardTitle className='flex items-center justify-between'>
 								<span className='text-2xl'>Natija</span>
-								<Badge variant={isPassed ? 'default' : 'destructive'}>
-									{isPassed ? "O'tdi" : "O'tmadi"}
-								</Badge>
+								<div className='flex items-center gap-4'>
+									<div className='flex items-center gap-2'>
+										<Calendar className='h-3 w-3  text-sm' />
+										<span className='text-sm'>
+											{new Date(examResult.createAt).toLocaleDateString(
+												'uz-UZ'
+											)}
+										</span>
+									</div>
+									<Badge variant={isPassed ? 'custom' : 'destructive'}>
+										{isPassed ? "O'tdi" : "O'tmadi"}
+									</Badge>
+								</div>
 							</CardTitle>
 						</CardHeader>
 						<CardContent className='space-y-8'>
 							{/* Stats Grid */}
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
 								<motion.div
 									initial={{ opacity: 0, x: -20 }}
 									animate={{ opacity: 1, x: 0 }}
@@ -175,7 +182,7 @@ function Page() {
 											Noto&apos;g&apos;ri javoblar
 										</p>
 										<p className='text-2xl font-bold text-red-500'>
-											{20 - examResult.corrertAnswers}
+											{examResult.questionCount - examResult.corrertAnswers}
 										</p>
 									</div>
 								</motion.div>
@@ -193,7 +200,9 @@ function Page() {
 										<p className='text-sm text-muted-foreground'>
 											Jami savollar
 										</p>
-										<p className='text-2xl font-bold text-blue-500'>50</p>
+										<p className='text-2xl font-bold text-blue-500'>
+											{examResult.questionCount}
+										</p>
 									</div>
 								</motion.div>
 
@@ -209,28 +218,14 @@ function Page() {
 									<div>
 										<p className='text-sm text-muted-foreground'>Foiz</p>
 										<p className='text-2xl font-bold text-yellow-500'>
-											{((examResult.corrertAnswers / 20) * 100).toFixed(1)}%
+											{(
+												(examResult.corrertAnswers / examResult.questionCount) *
+												100
+											).toFixed(1)}
+											%
 										</p>
 									</div>
 								</motion.div>
-							</div>
-
-							{/* Time Info */}
-							<div className='flex flex-col md:flex-row gap-4 justify-between items-center p-4 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50'>
-								<div className='flex items-center gap-2'>
-									<Calendar className='h-5 w-5 text-primary' />
-									<span>
-										Sana:{' '}
-										{new Date(examResult.createAt).toLocaleDateString('uz-UZ')}
-									</span>
-								</div>
-								<div className='flex items-center gap-2'>
-									<Clock className='h-5 w-5 text-primary' />
-									<span>
-										Vaqt:{' '}
-										{new Date(examResult.createAt).toLocaleTimeString('uz-UZ')}
-									</span>
-								</div>
 							</div>
 
 							{/* Question Navigation */}
@@ -245,7 +240,7 @@ function Page() {
 								</Button>
 
 								{showQuestions && (
-									<div className='grid grid-cols-5 gap-2'>
+									<div className='grid grid-cols-5 md:grid-cols-10 gap-2'>
 										{examResult.examTestCases.map((testCase, index) => (
 											<Button
 												key={testCase.id}
@@ -298,46 +293,51 @@ function Page() {
 													{currentQuestion.testCase.question}
 												</p>
 
-												{currentQuestion.testCase.mediaUrl && (
-													<div className='rounded-lg overflow-hidden border'>
-														<Image
-															src={getImageUrl(
-																currentQuestion.testCase.mediaUrl
-															)}
-															alt='Question'
-															width={600}
-															height={400}
-															className='w-full h-auto object-contain max-h-[300px]'
-														/>
-													</div>
-												)}
-
-												<div className='space-y-3'>
-													{currentQuestion.testCase.testAnswers.map(answer => (
-														<div
-															key={answer.id}
-															className={`p-4 rounded-lg border ${
-																answer.id === currentQuestion.selectedAnswerId
-																	? answer.isCorrect
-																		? 'bg-green-500/20 border-green-500'
-																		: 'bg-red-500/20 border-red-500'
-																	: answer.isCorrect
-																	? 'bg-green-500/20 border-green-500'
-																	: ''
-															}`}
-														>
-															<div className='flex items-center gap-2'>
-																{answer.id ===
-																	currentQuestion.selectedAnswerId &&
-																	(answer.isCorrect ? (
-																		<CheckCircle className='h-5 w-5 text-green-500' />
-																	) : (
-																		<XCircle className='h-5 w-5 text-red-500' />
-																	))}
-																<span>{answer.answerText}</span>
-															</div>
+												<div className='w-full flex flex-col md:flex-row items-start justify-between gap-4'>
+													{currentQuestion.testCase.mediaUrl && (
+														<div className='w-full md:w-1/2 rounded-lg overflow-hidden border'>
+															<Image
+																src={getImageUrl(
+																	currentQuestion.testCase.mediaUrl
+																)}
+																alt='Question'
+																width={600}
+																height={400}
+																className='w-full h-auto object-contain max-h-[300px]'
+															/>
 														</div>
-													))}
+													)}
+
+													<div className='w-full md:w-1/2 space-y-3'>
+														{currentQuestion.testCase.testAnswers.map(
+															answer => (
+																<div
+																	key={answer.id}
+																	className={`p-4 rounded-lg border ${
+																		answer.id ===
+																		currentQuestion.selectedAnswerId
+																			? answer.isCorrect
+																				? 'bg-green-500/20 border-green-500'
+																				: 'bg-red-500/20 border-red-500'
+																			: answer.isCorrect
+																			? 'bg-green-500/20 border-green-500'
+																			: ''
+																	}`}
+																>
+																	<div className='flex items-center gap-2'>
+																		{answer.id ===
+																			currentQuestion.selectedAnswerId &&
+																			(answer.isCorrect ? (
+																				<CheckCircle className='h-5 w-5 text-green-500' />
+																			) : (
+																				<XCircle className='h-5 w-5 text-red-500' />
+																			))}
+																		<span>{answer.answerText}</span>
+																	</div>
+																</div>
+															)
+														)}
+													</div>
 												</div>
 
 												<p className='text-sm text-muted-foreground mt-4'>

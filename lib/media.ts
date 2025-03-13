@@ -1,3 +1,5 @@
+import { customFetch } from './api'
+
 const API_URL = 'http://213.230.109.74:8080'
 
 export interface IFolderResponse {
@@ -37,7 +39,7 @@ export const getFolder = async ({
 	pageNumber: number
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Folder/GetFolders?pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
@@ -72,7 +74,7 @@ export const getMediaFiles = async ({
 	folderId: string
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Folder/GetMediaFiles?folderId=${folderId}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',

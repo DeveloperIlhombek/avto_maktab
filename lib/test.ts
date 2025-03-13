@@ -1,6 +1,7 @@
+import { customFetch } from './api'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
-//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 export interface TestsResponse {
 	isSuccess: boolean
@@ -73,14 +74,13 @@ export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 			formData.append('Media', data.Media)
 		}
 
-		const response = await fetch(`${API_URL}/api/TestCase/Create?language=uz`, {
-			method: 'POST',
-			headers: {
-				Authorization:
-					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
-			},
-			body: formData,
-		})
+		const response = await customFetch(
+			`${API_URL}/api/TestCase/Create?language=uz`,
+			{
+				method: 'POST',
+				body: formData,
+			}
+		)
 
 		if (!response.ok) {
 			const errorData = await response.json()
@@ -96,6 +96,31 @@ export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 	}
 }
 
+// Delete test
+export async function deleteTest(id: string) {
+	try {
+		const response = await customFetch(
+			`${API_URL}/api/TestCase/Delete?testCaseId=${id}`,
+			{
+				method: 'DELETE',
+			}
+		)
+
+		const responseData = await response.json()
+
+		if (!response.ok) {
+			throw new Error(
+				responseData.errorMessages?.join(', ') || 'Delete xatolik yuz berdi'
+			)
+		}
+
+		return responseData
+	} catch (error) {
+		console.error('Error deleting test:', error)
+		throw error
+	}
+}
+
 //Barcha testlarni olish test uchun user test ishlash uchun
 export const getAllTests = async ({
 	pageSize,
@@ -107,7 +132,7 @@ export const getAllTests = async ({
 	language: string
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
@@ -138,14 +163,12 @@ export const getAllTestsAdmin = async (
 	language: string = 'uz'
 ): Promise<TestsResponse> => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -194,7 +217,7 @@ export async function getTestById(
 	language: string = 'uz'
 ): Promise<TestDetailsResponse> {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/TestCase/GetById?testCaseId=${testId}&language=${language}`,
 			{
 				method: 'GET',
@@ -224,7 +247,7 @@ export async function updateTest(
 	formData: FormData
 ): Promise<TestDetailsResponse> {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/TestCase/Update?language=${language}`,
 			{
 				method: 'PUT',
@@ -294,7 +317,7 @@ export const submitAnswer = async ({
 	examTestCases: ExamTestCase[]
 }): Promise<SubmitAnswersResponse> => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/UserTest/SubmitAnswers?language=${language}`,
 			{
 				method: 'POST',
@@ -314,7 +337,6 @@ export const submitAnswer = async ({
 		}
 
 		const result = await response.json()
-		console.log('Submission successful:', result)
 		return result
 	} catch (error) {
 		console.error('Error submitting answers:', error)
@@ -334,7 +356,7 @@ export const checkExam = async ({
 	language: string
 }): Promise<SubmitAnswersResponse> => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Dashboard/CheckExam?examId=${examId}&language=${language}`,
 			{
 				method: 'GET',
@@ -348,8 +370,7 @@ export const checkExam = async ({
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
 		const result = await response.json()
-		console.log('Submission successful:', result)
-		const responseData: SubmitAnswersResponse = await response.json()
+		const responseData: SubmitAnswersResponse = result
 		return responseData
 	} catch (error) {
 		console.error(`Xatolik mavjud: ${error}`)
@@ -395,14 +416,12 @@ export const getExemsUser = async ({
 	UserID: string
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Dashboard/GetExams?UserID=${UserID}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {
 					Accept: '*/*',
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjRmZGIzM2IyLTk3MjktNDc1MS04ZGRlLThlNWRjZjllMDNjNCIsImlhdCI6IjE3NDE3NzY1MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODYyOTAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.UY6bW04xnkyvHHbtveNqbFCguE6fkth5qMK5qiOEb18',
 				},
 			}
 		)

@@ -346,7 +346,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 							{testResults ? (
 								<div className='space-y-2'>
 									<div>Togri javoblar: {testResults.corrertAnswers}</div>
-									<div>Jami savollar: {totalQuestions}</div>
+									<div>Jami savollar: {testResults.totalQuestions}</div>
 									<div>
 										Foiz:{' '}
 										{(

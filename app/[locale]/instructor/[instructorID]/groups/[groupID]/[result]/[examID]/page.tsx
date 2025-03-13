@@ -196,7 +196,9 @@ function Page() {
 										<p className='text-sm text-muted-foreground'>
 											Jami savollar
 										</p>
-										<p className='text-2xl font-bold text-blue-500'>50</p>
+										<p className='text-2xl font-bold text-blue-500'>
+											{examResult.questionCount}
+										</p>
 									</div>
 								</motion.div>
 

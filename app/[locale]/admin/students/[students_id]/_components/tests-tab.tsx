@@ -90,7 +90,9 @@ export function TestsTab() {
 								<TableCell>
 									{new Date(test.createAt).toLocaleDateString('uz-UZ')}
 								</TableCell>
-								<TableCell>{test.corrertAnswers} / 20</TableCell>
+								<TableCell>
+									{test.corrertAnswers} / {test.questionCount}
+								</TableCell>
 								<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
 								<TableCell className='text-right'>
 									<Link

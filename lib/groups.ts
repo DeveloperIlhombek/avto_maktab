@@ -1,5 +1,6 @@
+import { customFetch } from './api'
+
 const API_URL = 'http://213.230.109.74:8080'
-//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 // Groups API interfaces
 export interface GroupItem {
@@ -45,7 +46,7 @@ export const getGroups = async ({
 	isDeleted: boolean
 }) => {
 	try {
-		const response = await fetch(
+		const response = await customFetch(
 			`${API_URL}/api/Group/GetGroups?isActive=${isActive}&isDeleted=${isDeleted}&pageNumber=${pageNumber}&pageSize=${pageSize}
 `,
 			{
@@ -72,12 +73,15 @@ export const getGroups = async ({
 // Get group by ID
 export const getGroupById = async (id: string) => {
 	try {
-		const response = await fetch(`${API_URL}/api/Group/GetGroupById?id=${id}`, {
-			method: 'GET',
-			headers: {
-				Accept: '*/*',
-			},
-		})
+		const response = await customFetch(
+			`${API_URL}/api/Group/GetGroupById?id=${id}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+				},
+			}
+		)
 
 		if (!response.ok) {
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
@@ -98,7 +102,7 @@ export const createGroup = async (groupData: {
 	instructorId: string
 }) => {
 	try {
-		const response = await fetch(`${API_URL}/api/Group/CreateGroup`, {
+		const response = await customFetch(`${API_URL}/api/Group/CreateGroup`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -132,7 +136,7 @@ export const updateGroup = async (
 			...groupData,
 		}
 
-		const response = await fetch(`${API_URL}/api/Group/UpdateGroup`, {
+		const response = await customFetch(`${API_URL}/api/Group/UpdateGroup`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -155,12 +159,15 @@ export const updateGroup = async (
 // Delete group
 export const deleteGroup = async (id: string) => {
 	try {
-		const response = await fetch(`${API_URL}/api/Group/DeleteGroup?id=${id}`, {
-			method: 'DELETE',
-			headers: {
-				Accept: '*/*',
-			},
-		})
+		const response = await customFetch(
+			`${API_URL}/api/Group/DeleteGroup?id=${id}`,
+			{
+				method: 'DELETE',
+				headers: {
+					Accept: '*/*',
+				},
+			}
+		)
 
 		if (!response.ok) {
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)

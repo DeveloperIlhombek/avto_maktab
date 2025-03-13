@@ -1,30 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
-
-// Delete test
-export async function deleteTest(id: string): Promise<any> {
-	try {
-		const response = await fetch(
-			`${API_URL}/api/TestCase/Delete?testCaseId=${id}`,
-			{
-				method: 'DELETE',
-			}
-		)
-
-		const responseData = await response.json()
-
-		if (!response.ok) {
-			throw new Error(
-				responseData.errorMessages?.join(', ') || 'Delete xatolik yuz berdi'
-			)
-		}
-
-		return responseData
-	} catch (error) {
-		console.error('Error deleting test:', error)
-		throw error
-	}
-}
 
 //Login User
 
@@ -63,8 +37,11 @@ export const loginUser = async (data: {
 		if (!response.ok) {
 			throw new Error('Login failed')
 		}
-
 		const result = await response.json()
+
+		if (result.token) {
+			localStorage.setItem('token', result.token)
+		}
 
 		return result
 	} catch (error) {
@@ -72,4 +49,31 @@ export const loginUser = async (data: {
 			error instanceof Error ? error.message : 'Login request failed'
 		)
 	}
+}
+//==================== ========================
+
+export const customFetch = async (
+	url: string,
+	options: RequestInit = {}
+): Promise<Response> => {
+	const token = localStorage.getItem('token')
+
+	// Headersni `Record<string, string>` sifatida aniqlaymiz
+	const headers: Record<string, string> = {
+		...(options.headers as Record<string, string>),
+		Authorization: `Bearer ${token}`,
+	}
+
+	// Agar body `FormData` bo'lmasa, faqat `Content-Type: application/json` qo'shamiz
+	if (!(options.body instanceof FormData)) {
+		headers['Content-Type'] = 'application/json'
+	}
+
+	const res = await fetch(url, { ...options, headers })
+
+	if (!res.ok) {
+		throw new Error(`API Error: ${res.statusText}`)
+	}
+
+	return res
 }
