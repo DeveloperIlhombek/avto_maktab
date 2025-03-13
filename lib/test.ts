@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
-
-const API_Temp = 'https://9284dgg8-5000.euw.devtunnels.ms'
+//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 export interface TestsResponse {
 	isSuccess: boolean
@@ -74,17 +73,14 @@ export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 			formData.append('Media', data.Media)
 		}
 
-		const response = await fetch(
-			`${API_Temp}/api/TestCase/Create?language=uz`,
-			{
-				method: 'POST',
-				headers: {
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
-				},
-				body: formData,
-			}
-		)
+		const response = await fetch(`${API_URL}/api/TestCase/Create?language=uz`, {
+			method: 'POST',
+			headers: {
+				Authorization:
+					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+			},
+			body: formData,
+		})
 
 		if (!response.ok) {
 			const errorData = await response.json()
@@ -148,6 +144,8 @@ export const getAllTestsAdmin = async (
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
 				},
 			}
 		)
@@ -163,6 +161,91 @@ export const getAllTestsAdmin = async (
 		throw error
 	}
 }
+
+interface TestAnswerResponse {
+	id: string
+	testCaseId: string
+	answerText: string
+	isCorrect: boolean
+}
+interface TestDetailsResponse {
+	isSuccess: boolean
+	result: {
+		id: string
+		name: string | null
+		question: string
+		questionUZ?: string
+		questionUZK?: string
+		questionRU?: string
+		explanation: string
+		explanationUZ?: string
+		explanationUZK?: string
+		explanationRU?: string
+		mediaUrl: string | null
+		testAnswers: TestAnswerResponse[]
+		testAnswersForUser: any[] | null
+	}
+	statusCode: number
+	errorMessages: string[]
+}
+//Id orqali testlarni olish
+export async function getTestById(
+	testId: string,
+	language: string = 'uz'
+): Promise<TestDetailsResponse> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/GetById?testCaseId=${testId}&language=${language}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+
+		const data = await response.json()
+
+		if (!response.ok) {
+			throw new Error(
+				data.errorMessages?.join(', ') || 'Failed to fetch test data'
+			)
+		}
+		return data
+	} catch (error) {
+		console.error('Error fetching test:', error)
+		throw error
+	}
+}
+
+// Update test
+export async function updateTest(
+	language: string,
+	formData: FormData
+): Promise<TestDetailsResponse> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/TestCase/Update?language=${language}`,
+			{
+				method: 'PUT',
+				headers: {
+					accept: '*/*',
+				},
+				body: formData,
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error(`Error ${response.status} - ${response.statusText}`)
+		}
+		const responseData = await response.json()
+		return responseData
+	} catch (error) {
+		console.error('Error updating test:', error)
+		throw error
+	}
+}
+
 //POST test answer
 interface ExamTestCase {
 	testCaseId: string
@@ -242,7 +325,7 @@ export const submitAnswer = async ({
 		}
 	}
 }
-//CheckExam =>Javoblarni olish
+
 export const checkExam = async ({
 	examId,
 	language,
@@ -255,7 +338,10 @@ export const checkExam = async ({
 			`${API_URL}/api/Dashboard/CheckExam?examId=${examId}&language=${language}`,
 			{
 				method: 'GET',
-				headers: { 'Content-Type': 'application/json', Accept: '*/*' },
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: '*/*',
+				},
 			}
 		)
 		if (!response.ok) {
@@ -272,5 +358,60 @@ export const checkExam = async ({
 			statusCode: 500,
 			errorMessages: [(error as Error).message],
 		}
+	}
+}
+
+export interface ExemItem {
+	id: string
+	userId: string
+	name: null
+	createAt: Date
+	examTestCases: null
+	user: UserData
+	corrertAnswers: number
+	questionCount?: number
+}
+export interface GetExemResult {
+	items: ExemItem[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+
+export interface GetExemResponse {
+	isSuccess: boolean
+	result: GetExemResult
+	statusCode: number
+	errorMessages: string[]
+}
+export const getExemsUser = async ({
+	UserID,
+	pageSize,
+	pageNumber,
+}: {
+	pageNumber: number
+	pageSize: number
+	UserID: string
+}) => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/Dashboard/GetExams?UserID=${UserID}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjRmZGIzM2IyLTk3MjktNDc1MS04ZGRlLThlNWRjZjllMDNjNCIsImlhdCI6IjE3NDE3NzY1MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODYyOTAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.UY6bW04xnkyvHHbtveNqbFCguE6fkth5qMK5qiOEb18',
+				},
+			}
+		)
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+		const data = await response.json()
+		return data.result
+	} catch (error) {
+		console.error('Error fetching users:', error)
 	}
 }

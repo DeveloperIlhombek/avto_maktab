@@ -32,7 +32,7 @@ import {
 import { Search, Plus, Loader2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getAllUser } from '@/lib/api'
+import { getAllStudent } from '@/lib/users'
 
 interface User {
 	id: string
@@ -82,7 +82,7 @@ export default function AllUser({ initialData }: Props) {
 			try {
 				setLoading(true)
 				setError(null)
-				const response = await getAllUser({
+				const response = await getAllStudent({
 					pageSize: 20,
 					pageNumber: currentPage,
 				})

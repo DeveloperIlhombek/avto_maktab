@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/alert-dialog'
 import { ArrowLeft, Pencil, Trash2, ImageIcon } from 'lucide-react'
 import Image from 'next/image'
-import { getTestById, deleteTest } from '@/lib/api'
+import { deleteTest } from '@/lib/api'
+import { getTestById } from '@/lib/test'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 interface TestData {

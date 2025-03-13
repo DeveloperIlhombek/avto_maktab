@@ -17,7 +17,7 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import { useEffect, useState } from 'react'
-import { ExemItem, getExemsUser } from '@/lib/users'
+import { ExemItem, getExemsUser } from '@/lib/test'
 import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 import Link from 'next/link'

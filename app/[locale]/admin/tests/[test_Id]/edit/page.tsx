@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/card'
 import { ArrowLeft, Plus, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
-import { getTestById, updateTest } from '@/lib/api'
+import { getTestById, updateTest } from '@/lib/test'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'

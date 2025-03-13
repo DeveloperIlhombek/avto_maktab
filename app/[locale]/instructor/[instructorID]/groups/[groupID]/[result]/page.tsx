@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { ExemItem, getExemsUser } from '@/lib/users'
+import { ExemItem, getExemsUser } from '@/lib/test'
 import { Badge } from '@/components/ui/badge'
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

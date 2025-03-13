@@ -14,7 +14,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
-import { ExemItem, getExemsUser } from '@/lib/users'
+import { ExemItem, getExemsUser } from '@/lib/test'
 
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'

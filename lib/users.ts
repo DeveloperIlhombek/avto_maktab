@@ -1,4 +1,5 @@
 const API_URL = 'http://213.230.109.74:8080'
+//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 export interface UserData {
 	id: string
@@ -62,8 +63,8 @@ export const getAllInstructor = async ({
 }
 
 export const getAllStudent = async ({
-	pageSize,
 	pageNumber,
+	pageSize,
 }: {
 	pageSize: number
 	pageNumber: number
@@ -73,7 +74,11 @@ export const getAllStudent = async ({
 			`${API_URL}/api/User/GetAll?role=3&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+				},
 			}
 		)
 
@@ -245,60 +250,6 @@ export const updateUserParol = async (
 	} catch (error) {
 		console.error('Xato:', error)
 		throw error
-	}
-}
-
-export interface ExemItem {
-	id: string
-	userId: string
-	name: null
-	createAt: Date
-	examTestCases: null
-	user: UserData
-	corrertAnswers: number
-	questionCount?: number
-}
-export interface GetExemResult {
-	items: ExemItem[]
-	pageNumber: number
-	pageSize: number
-	totalCount: number
-	totalPages: number
-}
-
-export interface GetExemResponse {
-	isSuccess: boolean
-	result: GetExemResult
-	statusCode: number
-	errorMessages: string[]
-}
-
-export const getExemsUser = async ({
-	UserID,
-	pageSize,
-	pageNumber,
-}: {
-	pageNumber: number
-	pageSize: number
-	UserID: string
-}) => {
-	try {
-		const response = await fetch(
-			`${API_URL}/api/Dashboard/GetExams?UserID=${UserID}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-			{
-				method: 'GET',
-				headers: {
-					Accept: '*/*',
-				},
-			}
-		)
-		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
-		}
-		const data = await response.json()
-		return data.result
-	} catch (error) {
-		console.error('Error fetching users:', error)
 	}
 }
 
