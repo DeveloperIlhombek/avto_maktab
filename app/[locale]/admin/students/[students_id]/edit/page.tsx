@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/card'
 
 import { ArrowLeft } from 'lucide-react'
-import { updateUser, getUserById, UserResponse } from '@/lib/api'
+import { updateUser, getUserById, UserResponseById } from '@/lib/users'
 import { useState, useEffect, use } from 'react'
 import { toast } from 'sonner'
 
@@ -57,6 +57,7 @@ export default function UpdateStudent({
 }) {
 	const router = useRouter()
 	const { students_id } = use(params)
+	console.log(students_id)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [initialValues, setInitialValues] = useState<z.infer<
@@ -91,7 +92,7 @@ export default function UpdateStudent({
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const userData: UserResponse = await getUserById(students_id)
+				const userData: UserResponseById = await getUserById(students_id)
 
 				setInitialValues(userData.result) // initialValues ni saqlash
 				form.reset(userData.result) // Formani avvalgi qiymatlar bilan to'ldirish

@@ -1,6 +1,6 @@
 'use client'
 
-import { getUserById, UserData } from '@/lib/api'
+import { getUserById, UserData } from '@/lib/users'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'

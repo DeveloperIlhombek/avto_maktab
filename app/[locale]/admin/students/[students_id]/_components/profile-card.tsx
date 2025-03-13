@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { getUserById } from '@/lib/api'
+import { getUserById } from '@/lib/users'
 import { usePathname } from 'next/navigation'
 
 interface UserData {

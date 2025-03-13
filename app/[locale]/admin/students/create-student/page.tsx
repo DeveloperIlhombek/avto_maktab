@@ -30,7 +30,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { ArrowLeft } from 'lucide-react'
-import { createUser } from '@/lib/api'
+import { createUser } from '@/lib/users'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

@@ -16,7 +16,7 @@ import {
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
-import { getUserById } from '@/lib/api'
+import { getUserById } from '@/lib/users'
 import { LanguageSwitcher } from '@/components/shared/language-switcher'
 
 const navigation = [

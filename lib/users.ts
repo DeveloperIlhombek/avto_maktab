@@ -49,7 +49,7 @@ export const getAllInstructor = async ({
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -81,7 +81,7 @@ export const getAllStudent = async ({
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
 				},
 			}
 		)
@@ -91,13 +91,170 @@ export const getAllStudent = async ({
 		}
 
 		const data = await response.json()
-
 		return data.result
 	} catch (error) {
 		console.error('Error fetching users:', error)
 		return null
 	}
 }
+
+interface UserDataById {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	password: string
+	phone: string
+	role: number
+}
+export interface UserResponseById {
+	isSuccess: boolean
+	result: UserDataById
+	statusCode: number
+	errorMessages: string[]
+}
+//Id orqwali studentlarni olish
+export async function getUserById(userId: string): Promise<UserResponseById> {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/User/GetById?userId=${userId}`,
+			{
+				method: 'GET',
+				headers: {
+					Accept: '*/*',
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
+				},
+			}
+		)
+
+		const data = await response.json()
+		if (!response.ok) {
+			throw new Error(
+				data.errorMessages?.join(', ') || 'Failed to fetch user data'
+			)
+		}
+
+		return data
+	} catch (error) {
+		console.error('Error fetching user:', error)
+		throw error
+	}
+}
+
+interface CreateUserData {
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	password: string
+	role: number
+}
+//Create User
+export const createUser = async (
+	userData: CreateUserData
+): Promise<UserResponse> => {
+	try {
+		const response = await fetch(`${API_URL}/api/User/Create`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization:
+					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+			},
+			body: JSON.stringify(userData),
+		})
+
+		const data = await response.json()
+
+		if (!response.ok) {
+			throw new Error(data.errorMessages?.join(', ') || 'Failed to create user')
+		}
+
+		return data
+	} catch (error) {
+		console.error('Error creating user:', error)
+		throw error
+	}
+}
+
+//Update User
+export const updateUser = async (
+	id: string,
+	formData: FormData
+): Promise<UserResponseById> => {
+	try {
+		// ID ni tekshirish
+		if (!id) {
+			throw new Error('Foydalanuvchi ID si topilmadi')
+		}
+
+		// FormData ni JSON ga o'girish (agar kerak bo'lsa)
+		const jsonData = Object.fromEntries(formData.entries())
+
+		// API so'rovini yuborish
+		const response = await fetch(`${API_URL}/api/User/Update`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				accept: '*/*',
+				Authorization:
+					'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjBhNjBjMDViLTZlYTYtNDkxYS1iZThkLWUzYjA5Yzk2NTMxMiIsImlhdCI6IjE3NDE4NDc2NDkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmYWIxODJmLWVkYTUtNDBiYi1hNTZjLTljMGM2ZWNlNzdiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxOTM0MDQ5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.3BcmjJMSkZx4mnfxoupYXEsVUmEl0BUXnY896diHzp8',
+			},
+			body: JSON.stringify(jsonData), // JSON formatida yuborish
+		})
+
+		// Xatolikni tekshirish
+		if (!response.ok) {
+			const errorData = await response.json()
+			throw new Error(
+				errorData.message ||
+					errorData.title ||
+					errorData.detail ||
+					"Foydalanuvchi ma'lumotlarini yangilashda xatolik yuz berdi"
+			)
+		}
+
+		// Ma'lumotlarni qaytarish
+		const responseData = await response.json()
+		return responseData
+	} catch (error) {
+		console.error('Xato:', error)
+		throw error
+	}
+}
+
+//Delete User
+export async function deleteUser(userId: string) {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/User/Delete?userId=${userId}`,
+			{
+				method: 'DELETE',
+				headers: {
+					Authorization:
+						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNDVoZXZnZXR5cnRyMDk4YmI4cmViZXJid3I0dnZiODk0NSIsImp0aSI6IjYxY2U0ZmJmLWQyMGItNGVkZC05NTNmLWQxYTdlY2YwNzJjMiIsImlhdCI6IjE3NDE3NjA5MDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMwZmQ0YmJmLTQzZGUtNDRmMi1hZWMzLTE5ODE1YTE5MzdlYyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQxODQ3MzAxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvIn0.b94wuoRKYtviS09ka94piqSpTSCEGqTpYI4z96MScuA',
+				},
+			}
+		)
+
+		const responseData = await response.json()
+
+		if (!response.ok) {
+			throw new Error(
+				responseData.errorMessages?.join(', ') || 'Delete xatolik yuz berdi'
+			)
+		}
+
+		return responseData
+	} catch (error) {
+		console.error('Error deleting test:', error)
+		throw error
+	}
+}
+
 //Add student to Group
 export const addStudentsToGroup = async ({
 	groupId,

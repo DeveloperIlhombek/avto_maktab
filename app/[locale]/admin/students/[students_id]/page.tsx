@@ -25,7 +25,7 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
-import { deleteUser } from '@/lib/api'
+import { deleteUser } from '@/lib/users'
 
 export default function StudentDetails() {
 	const [activeTab, setActiveTab] = useState('overview')

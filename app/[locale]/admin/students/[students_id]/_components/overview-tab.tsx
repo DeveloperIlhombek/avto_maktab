@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getUserById } from '@/lib/api'
+import { getUserById } from '@/lib/users'
 
 interface OverviewTabProps {
 	userId: string

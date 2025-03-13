@@ -45,16 +45,11 @@ interface User {
 }
 
 interface UserResponse {
-	isSuccess: boolean
-	result: {
-		items: User[]
-		pageNumber: number
-		pageSize: number
-		totalCount: number
-		totalPages: number
-	}
-	statusCode: number
-	errorMessages: string[]
+	items: User[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
 }
 
 interface Props {
@@ -105,7 +100,7 @@ export default function AllUser({ initialData }: Props) {
 		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
 	}
 
-	const filteredUsers = data.result.items.filter(
+	const filteredUsers = data.items.filter(
 		user =>
 			user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			user.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -191,7 +186,7 @@ export default function AllUser({ initialData }: Props) {
 					<CardHeader>
 						<CardTitle>Foydalanuvchilar ro&apos;yxati</CardTitle>
 						<CardDescription>
-							Jami {data.result.totalCount} ta foydalanuvchi
+							Jami {data.totalCount} ta foydalanuvchi
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-4'>
@@ -292,10 +287,10 @@ export default function AllUser({ initialData }: Props) {
 											/>
 										</PaginationItem>
 
-										{[...Array(data.result.totalPages)].map((_, index) => {
+										{[...Array(data.totalPages)].map((_, index) => {
 											if (
 												index === 0 ||
-												index === data.result.totalPages - 1 ||
+												index === data.totalPages - 1 ||
 												(index >= currentPage - 1 && index <= currentPage + 1)
 											) {
 												return (
@@ -310,7 +305,7 @@ export default function AllUser({ initialData }: Props) {
 													</PaginationItem>
 												)
 											}
-											if (index === 1 || index === data.result.totalPages - 2) {
+											if (index === 1 || index === data.totalPages - 2) {
 												return (
 													<PaginationItem key={index}>
 														<PaginationEllipsis />
@@ -325,11 +320,11 @@ export default function AllUser({ initialData }: Props) {
 												href='#'
 												onClick={() =>
 													setCurrentPage(prev =>
-														Math.min(data.result.totalPages, prev + 1)
+														Math.min(data.totalPages, prev + 1)
 													)
 												}
 												className={
-													currentPage === data.result.totalPages - 1
+													currentPage === data.totalPages - 1
 														? 'pointer-events-none opacity-50'
 														: ''
 												}

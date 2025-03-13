@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { usePathname } from 'next/navigation'
-import { getUserById } from '@/lib/api'
+import { getUserById } from '@/lib/users'
 import {
 	Calendar,
 	Mail,

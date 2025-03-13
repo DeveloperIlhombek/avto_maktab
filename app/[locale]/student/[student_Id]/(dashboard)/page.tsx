@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LucideEye, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { getUserById } from '@/lib/api'
+import { getUserById } from '@/lib/users'
 import {
 	Table,
 	TableBody,
