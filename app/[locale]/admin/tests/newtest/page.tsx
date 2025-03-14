@@ -21,7 +21,7 @@ import { createTest } from '@/lib/test'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
-import { LanguageTab } from '../../_components/language-tab'
+import { LanguageTab } from '../_components/language-tab'
 import Image from 'next/image'
 
 const formSchema = z.object({
@@ -103,8 +103,8 @@ export default function CreateTest() {
 	const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (file) {
-			if (file.size > 5 * 1024 * 1024) {
-				toast.error('Fayl hajmi 5MB dan oshmasligi kerak')
+			if (file.size > 10 * 1024 * 1024) {
+				toast.error('Fayl hajmi 10MB dan oshmasligi kerak')
 				return
 			}
 

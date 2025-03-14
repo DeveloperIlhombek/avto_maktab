@@ -185,7 +185,7 @@ export const getAllTestsAdmin = async (
 	}
 }
 
-interface TestAnswerResponse {
+export interface TestAnswerResponse {
 	id: string
 	testCaseId: string
 	answerText: string
@@ -197,14 +197,9 @@ interface TestDetailsResponse {
 		id: string
 		name: string | null
 		question: string
-		questionUZ?: string
-		questionUZK?: string
-		questionRU?: string
 		explanation: string
-		explanationUZ?: string
-		explanationUZK?: string
-		explanationRU?: string
 		mediaUrl: string | null
+		answersJson?: string
 		testAnswers: TestAnswerResponse[]
 		testAnswersForUser: any[] | null
 	}
@@ -251,9 +246,6 @@ export async function updateTest(
 			`${API_URL}/api/TestCase/Update?language=${language}`,
 			{
 				method: 'PUT',
-				headers: {
-					accept: '*/*',
-				},
 				body: formData,
 			}
 		)
