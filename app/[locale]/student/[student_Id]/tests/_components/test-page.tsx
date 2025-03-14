@@ -6,13 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StartDialog } from './start-dialog'
 import { getAllTests, submitAnswer } from '@/lib/test'
 import Image from 'next/image'
-import {
-	Timer,
-	ChevronLeft,
-	ChevronRight,
-	ArrowLeft,
-	ArrowRight,
-} from 'lucide-react'
+import { Timer, ChevronLeft, ChevronRight } from 'lucide-react'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -41,7 +35,7 @@ interface TestPageProps {
 }
 
 const SECONDS_PER_QUESTION = 20
-const QUESTIONS_PER_PAGE = 20
+const QUESTIONS_PER_PAGE = 50
 
 export function TestPage({ language, userId }: TestPageProps) {
 	const [isStartDialogOpen, setIsStartDialogOpen] = useState(true)
@@ -52,7 +46,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 		Record<string, string>
 	>({})
 	const [timeLeft, setTimeLeft] = useState(0)
-	const [isLoading, setIsLoading] = useState(false)
+	//const [isLoading, setIsLoading] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,7 +70,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 	}, [timeLeft])
 
 	const fetchQuestions = async (pageNumber: number) => {
-		setIsLoading(true)
 		try {
 			const response = await getAllTests({
 				pageSize: QUESTIONS_PER_PAGE,
@@ -85,13 +78,11 @@ export function TestPage({ language, userId }: TestPageProps) {
 			})
 
 			if (response?.items) {
+				// Faqat yangi sahifadagi savollarni o'rnatamiz, eski savollarni saqlamaymiz
 				setQuestions(response.items)
-				setCurrentQuestionIndex(0)
 			}
 		} catch (error) {
 			console.error('Error fetching questions:', error)
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
@@ -99,7 +90,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 		setTotalQuestions(questionCount)
 		setTimeLeft(questionCount * SECONDS_PER_QUESTION)
 		setIsStartDialogOpen(false)
-		await fetchQuestions(0)
+		await fetchQuestions(0) // Dastlabki 20 ta savolni yuklash
 	}
 
 	const handleAnswerSelect = (questionId: string, answerId: string) => {
@@ -116,26 +107,28 @@ export function TestPage({ language, userId }: TestPageProps) {
 	}
 
 	const handleNextQuestion = () => {
-		if (currentQuestionIndex < questions.length - 1) {
+		if (currentQuestionIndex < QUESTIONS_PER_PAGE - 1) {
 			setCurrentQuestionIndex(currentQuestionIndex + 1)
 		}
 	}
 
-	const handlePreviousPage = async () => {
-		if (currentPage > 0) {
-			const newPage = currentPage - 1
-			setCurrentPage(newPage)
-			await fetchQuestions(newPage)
-		}
-	}
+	// const handlePreviousPage = async () => {
+	// 	if (currentPage > 0) {
+	// 		const newPage = currentPage - 1
+	// 		setCurrentPage(newPage)
+	// 		setCurrentQuestionIndex(0) // Sahifa o'zgarganda birinchi savolga qaytamiz
+	// 		await fetchQuestions(newPage) // Oldingi sahifadagi savollarni yuklaymiz
+	// 	}
+	// }
 
-	const handleNextPage = async () => {
-		const newPage = currentPage + 1
-		if (newPage * QUESTIONS_PER_PAGE < totalQuestions) {
-			setCurrentPage(newPage)
-			await fetchQuestions(newPage)
-		}
-	}
+	// const handleNextPage = async () => {
+	// 	const newPage = currentPage + 1
+	// 	if (newPage * QUESTIONS_PER_PAGE < totalQuestions) {
+	// 		setCurrentPage(newPage)
+	// 		setCurrentQuestionIndex(0) // Sahifa o'zgarganda birinchi savolga qaytamiz
+	// 		await fetchQuestions(newPage) // Keyingi sahifadagi savollarni yuklaymiz
+	// 	}
+	// }
 
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
@@ -193,7 +186,8 @@ export function TestPage({ language, userId }: TestPageProps) {
 			<StartDialog
 				isOpen={isStartDialogOpen}
 				onStart={handleStart}
-				maxQuestions={700}
+				//minQuestions={20}
+				maxQuestions={50}
 			/>
 		)
 	}
@@ -204,15 +198,15 @@ export function TestPage({ language, userId }: TestPageProps) {
 		return <div>Savollar yuklanmoqda...</div>
 	}
 
-	const startQuestionNumber = currentPage * QUESTIONS_PER_PAGE + 1
-	const endQuestionNumber = Math.min(
-		(currentPage + 1) * QUESTIONS_PER_PAGE,
-		totalQuestions
-	)
+	// const startQuestionNumber = currentPage * QUESTIONS_PER_PAGE + 1
+	// const endQuestionNumber = Math.min(
+	// 	(currentPage + 1) * QUESTIONS_PER_PAGE,
+	// 	totalQuestions
+	// )
 
 	return (
-		<div className='space-y-6 max-w-4xl mx-auto p-4'>
-			<div className='flex justify-between items-center'>
+		<div className='w-full p-4'>
+			<div className='flex justify-between items-center mb-6'>
 				<div className='flex items-center gap-4'>
 					<div className='flex items-center gap-2 text-lg font-medium'>
 						<Timer className='h-5 w-5' />
@@ -227,7 +221,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 				</Button>
 			</div>
 
-			<div className='flex items-center justify-between mb-4'>
+			{/* <div className='flex items-center justify-between mb-4'>
 				<Button
 					variant='outline'
 					onClick={handlePreviousPage}
@@ -250,35 +244,49 @@ export function TestPage({ language, userId }: TestPageProps) {
 					Keyingi {QUESTIONS_PER_PAGE} ta
 					<ArrowRight className='ml-2 h-4 w-4' />
 				</Button>
+			</div> */}
+
+			<div className='flex flex-wrap gap-2 justify-center mb-6'>
+				{Array.from({ length: totalQuestions }).map((_, index) => {
+					const page = Math.floor(index / QUESTIONS_PER_PAGE)
+					const isCurrentPage = page === currentPage
+					const isCurrentQuestion =
+						index === currentPage * QUESTIONS_PER_PAGE + currentQuestionIndex
+
+					return (
+						<Button
+							key={index}
+							variant={isCurrentQuestion ? 'default' : 'outline'}
+							className={`w-10 h-10 ${
+								selectedAnswers[questions[index % QUESTIONS_PER_PAGE]?.id]
+									? 'bg-primary/20'
+									: ''
+							}`}
+							onClick={() => {
+								if (page !== currentPage) {
+									setCurrentPage(page)
+									fetchQuestions(page)
+								}
+								setCurrentQuestionIndex(index % QUESTIONS_PER_PAGE)
+							}}
+							disabled={!isCurrentPage}
+						>
+							{index + 1}
+						</Button>
+					)
+				})}
 			</div>
 
-			<div className='flex flex-wrap gap-2 justify-center'>
-				{questions.map((_, index) => (
-					<Button
-						key={index}
-						variant={index === currentQuestionIndex ? 'default' : 'outline'}
-						className={`w-10 h-10 ${
-							selectedAnswers[questions[index].id] ? 'bg-primary/20' : ''
-						}`}
-						onClick={() => setCurrentQuestionIndex(index)}
-					>
-						{currentPage * QUESTIONS_PER_PAGE + index + 1}
-					</Button>
-				))}
-			</div>
-
-			<Card>
+			<Card className='w-full'>
 				<CardHeader>
 					<CardTitle>
 						Savol {currentPage * QUESTIONS_PER_PAGE + currentQuestionIndex + 1}{' '}
 						/ {totalQuestions}
 					</CardTitle>
 				</CardHeader>
-				<CardContent className='space-y-6'>
-					<div className='text-lg'>{currentQuestion.question}</div>
-
+				<CardContent className='flex gap-6'>
 					{currentQuestion.mediaUrl && (
-						<div className='relative h-[300px] w-full'>
+						<div className='relative h-[300px] w-[50%]'>
 							<Image
 								src={getImageUrl(currentQuestion.mediaUrl)}
 								alt='Question illustration'
@@ -291,8 +299,8 @@ export function TestPage({ language, userId }: TestPageProps) {
 							/>
 						</div>
 					)}
-
-					<div className='space-y-4'>
+					<div className='w-[50%] space-y-4'>
+						<div className='text-lg'>{currentQuestion.question}</div>
 						{currentQuestion.testAnswersForUser.map(answer => (
 							<div
 								key={answer.id}
@@ -313,7 +321,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 				</CardContent>
 			</Card>
 
-			<div className='flex justify-between'>
+			<div className='flex justify-between mt-6'>
 				<Button
 					onClick={handlePreviousQuestion}
 					disabled={currentQuestionIndex === 0}
@@ -324,7 +332,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 				</Button>
 				<Button
 					onClick={handleNextQuestion}
-					disabled={currentQuestionIndex === questions.length - 1}
+					disabled={currentQuestionIndex === QUESTIONS_PER_PAGE - 1}
 				>
 					Keyingi savol
 					<ChevronRight className='ml-2 h-4 w-4' />

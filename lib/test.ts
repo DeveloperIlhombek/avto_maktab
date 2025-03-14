@@ -267,7 +267,7 @@ interface ExamTestCase {
 	selectedAnswerId: string
 }
 
-interface SubmitAnswersResponse {
+export interface SubmitAnswersResponse {
 	isSuccess: boolean
 	errorMessages?: string[]
 	statusCode: number

@@ -45,12 +45,12 @@ export function StartDialog({
 						<Input
 							type='number'
 							min={1}
-							max={maxQuestions}
+							max={50}
 							value={questionCount}
 							onChange={e => setQuestionCount(parseInt(e.target.value, 10))}
 						/>
 						<p className='text-sm text-muted-foreground'>
-							Maksimal savollar soni: {maxQuestions}
+							Maksimal savollar soni: 50
 						</p>
 					</div>
 				</div>
