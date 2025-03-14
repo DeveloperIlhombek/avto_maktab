@@ -222,7 +222,6 @@ export async function deleteUser(userId: string) {
 			`${API_URL}/api/User/Delete?userId=${userId}`,
 			{
 				method: 'DELETE',
-				headers: {},
 			}
 		)
 

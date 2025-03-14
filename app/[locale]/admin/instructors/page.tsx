@@ -4,11 +4,12 @@ import { getAllInstructor, IUserResult, UserData } from '@/lib/users'
 import React, { useEffect, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle, PlusCircle } from 'lucide-react'
+import { AlertCircle, PlusCircle, User } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 function Page() {
 	const [instructors, setInstructors] = useState<UserData[]>([])
@@ -17,11 +18,8 @@ function Page() {
 	const [error, setError] = useState<string | null>(null)
 
 	const pathname = usePathname()
-
-	// Extract the language prefix from the pathname
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
-		// Check if the first segment after the initial slash is a language code
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
 			return `/${segments[1]}`
 		}
@@ -108,27 +106,44 @@ function Page() {
 
 	return (
 		<main>
-			<div className='flex justify-end gap-4'>
-				<Button variant={'custom'}>Instructor qo&apos;shish</Button>
+			<div className='flex justify-end gap-4 p-6'>
+				<Button variant={'custom'}>
+					<Link href={`${getLanguagePrefix()}/admin/instructors/create`}>
+						Instructor qo&apos;shish
+					</Link>{' '}
+				</Button>
 			</div>
-			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
+			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6'>
 				{instructors.map(item => (
-					<Link
+					<motion.div
 						key={item.id}
-						href={`${getLanguagePrefix()}/admin/instructors/${item.id}`}
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						className='w-full'
 					>
-						<Card className='hover:shadow-lg transition-shadow duration-200'>
-							<CardHeader>
-								<CardTitle className='text-xl'>
-									{item.name} {item.surname}
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className='text-gray-600'>{item.phone}</p>
-								<p className='text-sm text-gray-500'>{item.email}</p>
-							</CardContent>
-						</Card>
-					</Link>
+						<Link href={`${getLanguagePrefix()}/admin/instructors/${item.id}`}>
+							<Card className='overflow-hidden rounded-xl shadow-md transition duration-300 ease-in-out hover:shadow-2xl bg-white dark:bg-gray-800'>
+								<CardHeader className='p-4 flex flex-col items-center'>
+									<div className='relative w-24 h-24 rounded-full overflow-hidden border-4 border-green-300 dark:border-green-600'>
+										<div className='w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700'>
+											<User className='w-12 h-12 text-gray-400 dark:text-gray-500' />
+										</div>
+									</div>
+									<CardTitle className='text-xl font-semibold mt-4 text-gray-800 dark:text-white'>
+										{item.name} {item.surname}
+									</CardTitle>
+								</CardHeader>
+								<CardContent className='p-4 text-center'>
+									<p className='text-gray-700 dark:text-gray-300 font-medium'>
+										{item.phone}
+									</p>
+									<p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+										{item.email}
+									</p>
+								</CardContent>
+							</Card>
+						</Link>
+					</motion.div>
 				))}
 			</div>
 		</main>

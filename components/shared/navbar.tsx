@@ -16,7 +16,7 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/api'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 function Navbar() {
 	const [open, setOpen] = useState(false)
@@ -25,6 +25,18 @@ function Navbar() {
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState<string | null>(null)
+	const pathname = usePathname()
+
+	// Extract the language prefix from the pathname
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
+
 	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setError(null)
@@ -39,11 +51,11 @@ function Navbar() {
 			if (results.accessToken && results.user.role && results.user.id) {
 				setOpen(false)
 				if (results.user.role === 2) {
-					router.push(`/uz/instructor/${results.user.id}`)
+					router.push(`${getLanguagePrefix()}/instructor/${results.user.id}`)
 				} else if (results.user.role === 1) {
-					router.push(`/uz/admin/${results.user.id}`)
+					router.push(`${getLanguagePrefix()}/admin`)
 				} else {
-					router.push(`/uz/student/${results.user.id}`)
+					router.push(`${getLanguagePrefix()}/student/${results.user.id}`)
 				}
 			}
 		} catch (error) {
