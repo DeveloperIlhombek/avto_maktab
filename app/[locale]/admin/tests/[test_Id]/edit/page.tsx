@@ -120,6 +120,7 @@ export default function EditTest() {
 						ExplanationUZ: testUZ.explanation || '',
 						ExplanationUZK: testUZK?.explanation || testUZ.explanation || '',
 						ExplanationRU: testRU?.explanation || testUZ.explanation || '',
+						mediaUrl: testUZ.mediaUrl || '',
 						Answers: testUZ.testAnswers.map((answer, index) => ({
 							id: answer.id,
 							answerTextUZ: answer.answerText || '',
@@ -168,6 +169,8 @@ export default function EditTest() {
 
 	const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
+		console.log(file)
+
 		if (file) {
 			if (file.size > 10 * 1024 * 1024) {
 				toast.error('Fayl hajmi 10MB dan oshmasligi kerak')
