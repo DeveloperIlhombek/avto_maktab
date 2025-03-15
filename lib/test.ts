@@ -29,6 +29,7 @@ export interface Test {
 export interface TestAnswer {
 	id: string
 	testCaseId: string
+	answerText: string
 	answerTextUZ: string
 	answerTextUZK: string
 	answerTextRU: string

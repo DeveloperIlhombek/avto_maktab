@@ -1,21 +1,25 @@
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
+'use client'
 import { ModeToggle } from '@/components/shared/mode-toggle'
-import { Button } from '@/components/ui/button'
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import React from 'react'
 
-function NavbarTest() {
+function PracticeNavbar() {
 	return (
-		<>
-			<div className='flex items-center justify-between w-full h-16 border-b'>
-				<div>Logo</div>
-				<div className='flex justify-start items-center gap-4'>
-					<ModeToggle />
+		<div className='fixed inset-0 z-40 h-20 bg-background/70 backdrop-blur-xl '>
+			<div className='container mx-auto flex h-full max-w-7xl items-center justify-between border-b'>
+				{/* Logo section */}
+				<h1 className='text-4xl text-blue-500 font-extrabold font-roboto'>
+					Avto Maktab
+				</h1>
+				<div className='flex items-center justify-center gap-4'>
+					<div>
+						<ModeToggle />
+					</div>
 					<LanguageSwitcher />
-					<Button>Kirish</Button>
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }
 
-export default NavbarTest
+export default PracticeNavbar
