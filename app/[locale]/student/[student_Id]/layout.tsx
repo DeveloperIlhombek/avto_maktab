@@ -127,9 +127,13 @@ export default function StudentLayout({
 						<nav className='flex items-center space-x-2'>
 							<ModeToggle />
 							<LanguageSwitcher />
+							<div className='flex p-0 m-0 text-sm font-bold items-center justify-center gap-0 flex-col'>
+								<span>{userData?.name}</span>
+								<span>{userData?.surname}</span>
+							</div>
 							<Avatar>
 								<AvatarFallback className='bg-green-400'>
-									{userData?.name[0] || 'CN'}
+									{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
 								</AvatarFallback>
 							</Avatar>
 						</nav>
