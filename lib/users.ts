@@ -1,7 +1,6 @@
 import { customFetch } from './api'
 
 const API_URL = 'http://213.230.109.74:8080'
-//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 export interface UserData {
 	id: string
@@ -357,25 +356,20 @@ export const deleteStudentsFromGroup = async ({
 
 export const updateUserParol = async (
 	id: string,
-	formData: { currentPassword: string; newPassword: string }
+	formData: { password: string }
 ): Promise<UserResponse> => {
 	try {
-		// ID ni tekshirish
 		if (!id) {
 			throw new Error('Foydalanuvchi ID si topilmadi')
 		}
-
-		// API so'rovini yuborish
 		const response = await customFetch(`${API_URL}/api/User/Update`, {
 			method: 'PUT',
 			headers: {
-				'Content-Type': 'application/json',
 				Accept: '*/*',
 			},
 			body: JSON.stringify({
-				id, // Foydalanuvchi ID-si
-				currentPassword: formData.currentPassword, // Joriy parol
-				newPassword: formData.newPassword, // Yangi parol
+				id,
+				password: formData.password,
 			}),
 		})
 

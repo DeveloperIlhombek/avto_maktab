@@ -2,7 +2,7 @@ const API_URL = 'http://213.230.109.74:8080'
 
 //Login User
 
-interface UserDataLogin {
+export interface UserDataLogin {
 	id: string
 	username: string
 	role: number
@@ -18,6 +18,7 @@ export interface ResultData {
 }
 export interface LoginResponse {
 	result: ResultData
+	isSuccess?: boolean
 }
 
 export const loginUser = async (data: {

@@ -42,6 +42,11 @@ const navigation = [
 		href: '/payments',
 		icon: Wallet,
 	},
+	{
+		name: 'Sozlamalar',
+		href: '/settings',
+		icon: Wallet,
+	},
 ]
 interface UserData {
 	id: string
