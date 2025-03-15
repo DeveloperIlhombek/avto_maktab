@@ -11,6 +11,7 @@ import {
 	Home,
 	LogOut,
 	Menu,
+	Settings,
 	User,
 	Wallet,
 	X,
@@ -45,7 +46,7 @@ const navigation = [
 	{
 		name: 'Sozlamalar',
 		href: '/settings',
-		icon: Wallet,
+		icon: Settings,
 	},
 ]
 interface UserData {

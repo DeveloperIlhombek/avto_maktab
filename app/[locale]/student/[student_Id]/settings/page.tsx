@@ -1,5 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+
+import React from 'react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -12,12 +13,11 @@ import {
 } from '@/components/ui/card'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { updateUserParol, UserData } from '@/lib/users'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { usePathname } from 'next/navigation'
-import { loginUser, UserDataLogin } from '@/lib/api'
+import { UpdateOwnPassword } from '@/lib/users'
 
+// Parol validatsiyasi uchun schema
 const passwordSchema = z
 	.object({
 		currentPassword: z.string().min(3, {
@@ -36,34 +36,7 @@ const passwordSchema = z
 	})
 
 function Settings() {
-	const [userData, setUserData] = useState<UserDataLogin | null>(null)
-	const [login, setLogin] = useState('')
-	const [password, setPassword] = useState('')
-	const pathname = usePathname()
-	const Id = pathname.split('/')[3]
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const response = await loginUser({ login, password })
-				if (response.isSuccess) {
-					if (response.result && response.result.user) {
-						setUserData({
-							id: response.result.user.id,
-							username: response.result.user.username,
-							role: response.result.user.role,
-						})
-					}
-				}
-			} catch (error) {
-				console.error('Error fetching user:', error)
-			}
-		}
-
-		if (Id) {
-			fetchUser()
-		}
-	}, [Id, login, password])
+	const token = localStorage.getItem('token')
 
 	const {
 		register,
@@ -74,49 +47,41 @@ function Settings() {
 		resolver: zodResolver(passwordSchema),
 	})
 
-	const onSubmit = async (data: z.infer<typeof passwordSchema>) => {
+	// Parolni o'zgartirish funksiyasi
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const onSubmit = async (data: any) => {
 		try {
-			// Joriy parolni tekshirish
-			const checkResponse = await loginUser({
-				login,
-				password: data.currentPassword,
-			})
-			if (!checkResponse.isSuccess) {
-				toast.error('Joriy parol notoʻgʻri')
+			if (!token) {
+				toast.error('Avval tizimga kiring')
 				return
 			}
 
-			// Yangi parolni yangilash
-			if (userData?.id) {
-				const updateResponse = await updateUserParol(userData.id, {
-					password: data.newPassword,
-				})
+			const response = await UpdateOwnPassword(
+				data.currentPassword,
+				data.newPassword,
+				token
+			)
+			console.log(response)
 
-				if (updateResponse.isSuccess) {
-					toast.success('Parol muvaffaqiyatli oʻzgartirildi')
-					reset()
-				} else {
-					toast.error('Parolni oʻzgartirishda xatolik yuz berdi')
-				}
-			} else {
-				toast.error('Foydalanuvchi ID topilmadi')
-			}
+			toast.success('Parol muvaffaqiyatli o‘zgartirildi')
+			reset()
 		} catch (error) {
-			toast.error('Parolni oʻzgartirishda xatolik yuz berdi')
-			console.error('Error updating password:', error)
+			toast.error('Parolni yangilashda xatolik yuz berdi')
+			console.error(error)
 		}
 	}
 
 	return (
-		<div>
-			<Card className='md:w-1/2'>
+		<div className='flex justify-center items-center h-screen'>
+			<Card className='w-full max-w-md'>
 				<CardHeader>
 					<CardTitle>Xavfsizlik</CardTitle>
 					<CardDescription>Parolingizni o&apos;zgartirish</CardDescription>
 				</CardHeader>
-				<CardContent className='space-y-4'>
+				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-						<div className='space-y-2'>
+						{/* Joriy parol */}
+						<div>
 							<Label htmlFor='currentPassword'>Joriy parol</Label>
 							<Input
 								id='currentPassword'
@@ -124,12 +89,14 @@ function Settings() {
 								{...register('currentPassword')}
 							/>
 							{errors.currentPassword && (
-								<p className='text-sm text-destructive'>
+								<p className='text-sm text-red-500'>
 									{errors.currentPassword.message}
 								</p>
 							)}
 						</div>
-						<div className='space-y-2'>
+
+						{/* Yangi parol */}
+						<div>
 							<Label htmlFor='newPassword'>Yangi parol</Label>
 							<Input
 								id='newPassword'
@@ -137,12 +104,14 @@ function Settings() {
 								{...register('newPassword')}
 							/>
 							{errors.newPassword && (
-								<p className='text-sm text-destructive'>
+								<p className='text-sm text-red-500'>
 									{errors.newPassword.message}
 								</p>
 							)}
 						</div>
-						<div className='space-y-2'>
+
+						{/* Yangi parolni tasdiqlash */}
+						<div>
 							<Label htmlFor='confirmPassword'>Yangi parolni tasdiqlang</Label>
 							<Input
 								id='confirmPassword'
@@ -150,12 +119,15 @@ function Settings() {
 								{...register('confirmPassword')}
 							/>
 							{errors.confirmPassword && (
-								<p className='text-sm text-destructive'>
+								<p className='text-sm text-red-500'>
 									{errors.confirmPassword.message}
 								</p>
 							)}
 						</div>
-						<Button type='submit'>Parolni o&apos;zgartirish</Button>
+
+						<Button type='submit' className='w-full'>
+							Parolni o&apos;zgartirish
+						</Button>
 					</form>
 				</CardContent>
 			</Card>

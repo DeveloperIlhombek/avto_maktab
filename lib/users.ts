@@ -354,45 +354,6 @@ export const deleteStudentsFromGroup = async ({
 	}
 }
 
-export const updateUserParol = async (
-	id: string,
-	formData: { password: string }
-): Promise<UserResponse> => {
-	try {
-		if (!id) {
-			throw new Error('Foydalanuvchi ID si topilmadi')
-		}
-		const response = await customFetch(`${API_URL}/api/User/Update`, {
-			method: 'PUT',
-			headers: {
-				Accept: '*/*',
-			},
-			body: JSON.stringify({
-				id,
-				password: formData.password,
-			}),
-		})
-
-		// Xatolikni tekshirish
-		if (!response.ok) {
-			const errorData = await response.json()
-			throw new Error(
-				errorData.message ||
-					errorData.title ||
-					errorData.detail ||
-					'Parolni yangilashda xatolik yuz berdi'
-			)
-		}
-
-		// Ma'lumotlarni qaytarish
-		const responseData = await response.json()
-		return responseData
-	} catch (error) {
-		console.error('Xato:', error)
-		throw error
-	}
-}
-
 export interface IExamResult {
 	id: string
 	userId: string
@@ -452,5 +413,52 @@ export const getCheckExem = async ({
 		return data.result
 	} catch (error) {
 		console.error('Error fetching users:', error)
+	}
+}
+
+interface User {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	role: number
+}
+
+interface UpdatePasswordResponse {
+	isSuccess: boolean
+	result: User
+	statusCode: number
+	errorMessages: string[]
+}
+
+export const UpdateOwnPassword = async (
+	currentPassword: string,
+	newPassword: string,
+	token: string
+): Promise<UpdatePasswordResponse> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/User/UpdateOwnPassword?password=${newPassword}`,
+			{
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ currentPassword, newPassword }),
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error('Parolni yangilashda xatolik yuz berdi')
+		}
+
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error('Error updating password:', error)
+		throw error
 	}
 }
