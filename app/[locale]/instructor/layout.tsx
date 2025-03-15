@@ -12,6 +12,7 @@ import {
 	Home,
 	LogOut,
 	Menu,
+	Settings,
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
@@ -26,6 +27,11 @@ const navigation = [
 		name: 'Guruhlar',
 		href: '/groups',
 		icon: ClipboardCheck,
+	},
+	{
+		name: 'Sozlamalar',
+		href: '/settings',
+		icon: Settings,
 	},
 ]
 
