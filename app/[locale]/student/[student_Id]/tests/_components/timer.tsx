@@ -14,11 +14,11 @@ export function Timer({ timeLeft, totalTime }: TimerProps) {
 
 	useEffect(() => {
 		if (timeLeft <= 10) {
-			setColor('bg-red-500')
+			setColor('text-red-500')
 		} else if (timeLeft <= 60) {
-			setColor('bg-yellow-500')
+			setColor('text-yellow-500')
 		} else {
-			setColor('bg-green-500')
+			setColor('text-green-500')
 		}
 	}, [timeLeft])
 

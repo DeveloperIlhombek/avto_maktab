@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { StartDialog } from './start-dialog'
-import { getAllTests, submitAnswer } from '@/lib/test'
+import { getAllTests, submitAnswer, SubmitAnswerResult } from '@/lib/test'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
@@ -12,13 +11,13 @@ import {
 	AlertDialogAction,
 	AlertDialogCancel,
 	AlertDialogContent,
-	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Timer } from './timer'
+import { redirect, usePathname } from 'next/navigation'
 
 interface TestQuestion {
 	id: string
@@ -36,13 +35,10 @@ interface TestPageProps {
 	userId: string
 }
 
-const SECONDS_PER_QUESTION = 5
-const PAGE_SIZE = 50
-const QUESTIONS_PER_ROW = 25
+const SECONDS_PER_QUESTION = 90
 
 export function TestPage({ language, userId }: TestPageProps) {
-	const [isStartDialogOpen, setIsStartDialogOpen] = useState(true)
-	const [totalQuestions, setTotalQuestions] = useState(0)
+	const [totalQuestions, setTotalQuestions] = useState(20)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [questions, setQuestions] = useState<TestQuestion[]>([])
 	const [selectedAnswers, setSelectedAnswers] = useState<
@@ -51,11 +47,21 @@ export function TestPage({ language, userId }: TestPageProps) {
 	const [timeLeft, setTimeLeft] = useState(0)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const [testResults, setTestResults] = useState<any>(null)
+
+	const [testResults, setTestResults] = useState<SubmitAnswerResult>()
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isLoading, setIsLoading] = useState(false)
+	const pathname = usePathname()
 
+	// Extract the language prefix from the pathname
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		// Check if the first segment after the initial slash is a language code
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
 	useEffect(() => {
 		if (timeLeft > 0) {
 			const timer = setInterval(() => {
@@ -72,11 +78,15 @@ export function TestPage({ language, userId }: TestPageProps) {
 		}
 	}, [timeLeft])
 
+	useEffect(() => {
+		handleStart(20)
+	}, [])
+
 	const fetchQuestions = async () => {
 		try {
 			setIsLoading(true)
 			const response = await getAllTests({
-				pageSize: PAGE_SIZE,
+				pageSize: 20,
 				pageNumber: 0,
 				language,
 			})
@@ -95,7 +105,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 		setTotalQuestions(questionCount)
 		const totalTime = questionCount * SECONDS_PER_QUESTION
 		setTimeLeft(totalTime)
-		setIsStartDialogOpen(false)
 		await fetchQuestions()
 	}
 
@@ -139,14 +148,14 @@ export function TestPage({ language, userId }: TestPageProps) {
 				})
 			)
 
-			const result = await submitAnswer({
+			const submitResponse = await submitAnswer({
 				language,
 				userId,
 				examTestCases,
 			})
 
-			if (result.isSuccess) {
-				setTestResults(result.result)
+			if (submitResponse.isSuccess) {
+				setTestResults(submitResponse.result)
 				setIsFinishDialogOpen(true)
 			}
 		} catch (error) {
@@ -160,11 +169,11 @@ export function TestPage({ language, userId }: TestPageProps) {
 		.slice(0, totalQuestions)
 		.every(q => selectedAnswers[q.id])
 
-	if (isStartDialogOpen) {
-		return <StartDialog isOpen={isStartDialogOpen} onStart={handleStart} />
-	}
-
 	const currentQuestion = questions[currentQuestionIndex]
+
+	const handleRedirectToResults = () => {
+		return redirect(`${getLanguagePrefix()}/student/${userId}`)
+	}
 
 	if (!currentQuestion) {
 		return (
@@ -173,18 +182,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 			</div>
 		)
 	}
-
-	// Split questions into rows of 25
-	const questionRows = Array.from({
-		length: Math.ceil(totalQuestions / QUESTIONS_PER_ROW),
-	}).map((_, rowIndex) =>
-		Array.from({
-			length: Math.min(
-				QUESTIONS_PER_ROW,
-				totalQuestions - rowIndex * QUESTIONS_PER_ROW
-			),
-		}).map((_, colIndex) => rowIndex * QUESTIONS_PER_ROW + colIndex)
-	)
 
 	return (
 		<div className='container mx-auto p-4 space-y-6'>
@@ -207,34 +204,32 @@ export function TestPage({ language, userId }: TestPageProps) {
 			</motion.div>
 
 			<div className='space-y-2'>
-				{questionRows.map((row, rowIndex) => (
-					<div key={rowIndex} className='grid grid-cols-25 gap-2'>
-						{row.map(index => (
-							<motion.button
-								key={index}
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-								className={`
-                  p-2 rounded-md flex items-center justify-center
-                  ${
-										currentQuestionIndex === index
-											? 'bg-primary text-primary-foreground'
-											: 'bg-secondary'
-									}
-                  ${
-										selectedAnswers[questions[index]?.id]
-											? 'border-2 border-primary'
-											: ''
-									}
-                  transition-all duration-200
-                `}
-								onClick={() => setCurrentQuestionIndex(index)}
-							>
-								{index + 1}
-							</motion.button>
-						))}
-					</div>
-				))}
+				<div className='grid grid-cols-10 gap-2 sm:grid-cols-20'>
+					{Array.from({ length: totalQuestions }).map((_, index) => (
+						<motion.button
+							key={index}
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className={`
+          p-2 rounded-md flex items-center justify-center
+          ${
+						currentQuestionIndex === index
+							? 'bg-primary text-primary-foreground'
+							: 'bg-secondary'
+					}
+          ${
+						selectedAnswers[questions[index]?.id]
+							? 'border-2 border-primary'
+							: ''
+					}
+          transition-all duration-200
+        `}
+							onClick={() => setCurrentQuestionIndex(index)}
+						>
+							{index + 1}
+						</motion.button>
+					))}
+				</div>
 			</div>
 
 			<AnimatePresence mode='wait'>
@@ -280,7 +275,7 @@ export function TestPage({ language, userId }: TestPageProps) {
                           p-4 rounded-lg border cursor-pointer transition-all
                           ${
 														selectedAnswers[currentQuestion.id] === answer.id
-															? 'border-primary bg-primary/5'
+															? 'border-primary bg-blue-500/25'
 															: 'border-input hover:bg-accent'
 													}
                           ${
@@ -335,36 +330,65 @@ export function TestPage({ language, userId }: TestPageProps) {
 								? 'Test natijalari'
 								: 'Testni yakunlashni tasdiqlang'}
 						</AlertDialogTitle>
-						<AlertDialogDescription>
-							{testResults ? (
-								<div className='space-y-2'>
-									<p>Togri javoblar: {testResults.correctAnswers}</p>
-									<p>Jami savollar: {totalQuestions}</p>
-									<p>
-										Foiz:{' '}
-										{(
-											(testResults.correctAnswers / totalQuestions) *
-											100
-										).toFixed(1)}
-										%
-									</p>
-								</div>
-							) : (
-								'Testni yakunlashni xohlaysizmi? Bu amalni qaytarib bolmaydi.'
-							)}
-						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						{testResults ? (
-							<AlertDialogAction onClick={() => window.location.reload()}>
-								Yangi test boshlash
-							</AlertDialogAction>
+							<div className='flex flex-col gap-6 w-full'>
+								{/* Natijalar statistikasi */}
+								<div className='flex flex-col gap-3'>
+									<div className='flex items-center justify-between'>
+										<span className='font-medium text-gray-700'>
+											To&apos;g&apos;ri javoblar:
+										</span>
+										<span className=' font-semibold text-green-600'>
+											{testResults.corrertAnswers}
+										</span>
+									</div>
+									<div className='flex items-center justify-between'>
+										<span className=' font-medium text-gray-700'>
+											Jami savollar:
+										</span>
+										<span className=' font-semibold text-blue-600'>
+											{totalQuestions}
+										</span>
+									</div>
+									<div className='flex items-center justify-between'>
+										<span className=' font-medium text-gray-700'>Foiz:</span>
+										<span className=' font-semibold text-purple-600'>
+											{(
+												(testResults.corrertAnswers / totalQuestions) *
+												100
+											).toFixed(1)}
+											%
+										</span>
+									</div>
+								</div>
+
+								{/* Tugmalar */}
+								<div className='flex flex-col sm:flex-row gap-3 w-full'>
+									<AlertDialogAction
+										onClick={() => window.location.reload()}
+										className='w-full sm:w-1/2 bg-green-600 hover:bg-green-700'
+									>
+										Yangi test boshlash
+									</AlertDialogAction>
+									<AlertDialogAction
+										onClick={handleRedirectToResults}
+										className='w-full sm:w-1/2 bg-blue-600 hover:bg-blue-700'
+									>
+										Natijalarni ko&apos;rish
+									</AlertDialogAction>
+								</div>
+							</div>
 						) : (
 							<>
-								<AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+								<AlertDialogCancel className='bg-red-600 hover:bg-red-700 text-white'>
+									Bekor qilish
+								</AlertDialogCancel>
 								<AlertDialogAction
 									onClick={handleFinishTest}
 									disabled={isSubmitting}
+									className='bg-primary hover:bg-primary/90'
 								>
 									{isSubmitting ? 'Yuklanmoqda...' : 'Yakunlash'}
 								</AlertDialogAction>

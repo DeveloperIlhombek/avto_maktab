@@ -274,14 +274,14 @@ export interface SubmitAnswersResponse {
 	statusCode: number
 	result?: SubmitAnswerResult
 }
-interface SubmitAnswerResult {
+export interface SubmitAnswerResult {
 	id: string
 	userId: string
 	name: string | null
 	createAt: Date
 	examTestCases: ExamTestCases[]
 	user: UserData
-	correctAnswers: number
+	corrertAnswers: number
 }
 interface ExamTestCases {
 	id: string
