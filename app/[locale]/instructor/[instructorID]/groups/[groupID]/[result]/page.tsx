@@ -24,7 +24,6 @@ function Page() {
 	const Id = pathname.split('/')[6]
 	const InstrucId = pathname.split('/')[3]
 	const groupId = pathname.split('/')[5]
-	const examId = pathname.split('/')[7]
 	useEffect(() => {
 		const fetchExemResult = async () => {
 			try {
@@ -48,7 +47,7 @@ function Page() {
 		}
 	}, [Id])
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
-		if ((correctanswer / totolQuestion) * 100 >= 20) {
+		if ((correctanswer / totolQuestion) * 100 >= 90) {
 			return (
 				<Badge variant={'secondary'} className='bg-green-300 dark:text-black'>
 					O&apos;tdi
@@ -60,7 +59,6 @@ function Page() {
 
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
-		// Check if the first segment after the initial slash is a language code
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
 			return `/${segments[1]}`
 		}
@@ -155,9 +153,12 @@ function Page() {
 											<TableCell>
 												{new Date(test.createAt).toLocaleDateString('uz-UZ')}
 											</TableCell>
-											<TableCell>{test.corrertAnswers} / 20</TableCell>
 											<TableCell>
-												{setStatus(test.corrertAnswers, 20)}
+												{test.corrertAnswers} / {test.questionCount}{' '}
+											</TableCell>
+											<TableCell>
+												{test.questionCount &&
+													setStatus(test.corrertAnswers, test.questionCount)}
 											</TableCell>
 											<TableCell className='text-right'>
 												<Link

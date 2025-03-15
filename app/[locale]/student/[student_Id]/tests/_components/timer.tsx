@@ -1,51 +1,60 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 interface TimerProps {
 	timeLeft: number
-	duration: number
+	totalTime: number
 }
 
-export function Timer({ timeLeft, duration }: TimerProps) {
-	const progress = (timeLeft / duration) * 100
+export function Timer({ timeLeft, totalTime }: TimerProps) {
+	const [color, setColor] = useState('bg-green-500')
+	const progress = (timeLeft / totalTime) * 100
 
-	const getTimerColor = () => {
-		if (timeLeft <= 10) return 'text-red-500'
-		if (timeLeft <= 30) return 'text-yellow-500'
-		return 'text-green-500'
-	}
+	useEffect(() => {
+		if (timeLeft <= 10) {
+			setColor('bg-red-500')
+		} else if (timeLeft <= 60) {
+			setColor('bg-yellow-500')
+		} else {
+			setColor('bg-green-500')
+		}
+	}, [timeLeft])
 
-	const formatTime = (seconds: number) => {
-		const minutes = Math.floor(seconds / 60)
-		const remainingSeconds = seconds % 60
-		return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
-	}
+	const minutes = Math.floor(timeLeft / 60)
+	const seconds = timeLeft % 60
 
 	return (
 		<div className='relative w-20 h-20'>
-			<svg className='w-full h-full -rotate-90'>
+			<svg className='w-full h-full' viewBox='0 0 100 100'>
 				<circle
-					className='text-muted stroke-current'
-					strokeWidth='8'
+					className='text-gray-200 stroke-current'
+					strokeWidth='10'
+					cx='50'
+					cy='50'
+					r='40'
 					fill='transparent'
-					r='32'
-					cx='40'
-					cy='40'
 				/>
 				<motion.circle
-					className={getTimerColor()}
-					strokeWidth='8'
+					className={`stroke-current ${color} transition-colors duration-300`}
+					strokeWidth='10'
+					strokeLinecap='round'
+					cx='50'
+					cy='50'
+					r='40'
 					fill='transparent'
-					r='32'
-					cx='40'
-					cy='40'
-					strokeDasharray={`${(progress * 201) / 100} 201`}
+					strokeDasharray={251.2}
+					strokeDashoffset={251.2 - (251.2 * progress) / 100}
+					transform='rotate(-90 50 50)'
+					initial={{ strokeDashoffset: 251.2 }}
+					animate={{ strokeDashoffset: 251.2 - (251.2 * progress) / 100 }}
+					transition={{ duration: 0.5 }}
 				/>
 			</svg>
-			<div className='absolute inset-0 flex items-center justify-center'>
-				<span className={`text-xl font-bold ${getTimerColor()}`}>
-					{formatTime(timeLeft)}
+			<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
+				<span className='text-lg font-bold'>
+					{minutes}:{seconds.toString().padStart(2, '0')}
 				</span>
 			</div>
 		</div>

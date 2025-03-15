@@ -165,7 +165,7 @@ export const getAllTestsAdmin = async (
 ): Promise<TestsResponse> => {
 	try {
 		const response = await customFetch(
-			`${API_URL}/api/TestCase/GetAll?IsAdmin=true&language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_URL}/api/TestCase/GetAll?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
 			{
 				method: 'GET',
 				headers: {

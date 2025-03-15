@@ -23,7 +23,7 @@ import {
 import { getAllTestsAdmin } from '@/lib/test'
 import type { Test } from '@/lib/test'
 
-export default function AllUserPage() {
+export default function AllUserTestPage() {
 	const [tests, setTests] = useState<Test[]>([])
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
@@ -32,7 +32,6 @@ export default function AllUserPage() {
 	const [error, setError] = useState<string | null>(null)
 	const [imageError, setImageError] = useState(false)
 	const [showExplanation, setShowExplanation] = useState(false)
-	const [showCongratulation, setShowCongratulation] = useState(false)
 	const [correctAnswers, setCorrectAnswers] = useState(0)
 	const [totalAnswered, setTotalAnswered] = useState(0)
 	const [pageNumber, setPageNumber] = useState(0)
@@ -93,14 +92,8 @@ export default function AllUserPage() {
 
 			// Play sound
 			if (correct) {
-				correctSoundRef.current?.play()
 				setCorrectAnswers(prev => prev + 1)
-				setShowCongratulation(true)
-				setTimeout(() => setShowCongratulation(false), 2000)
-			} else {
-				incorrectSoundRef.current?.play()
 			}
-
 			setTotalAnswered(prev => prev + 1)
 		}
 	}
@@ -136,14 +129,6 @@ export default function AllUserPage() {
 		}
 		return null
 	}
-
-	// const playSound = () => {
-	// 	if (isCorrect === true) {
-	// 		correctSoundRef.current?.play()
-	// 	} else if (isCorrect === false) {
-	// 		incorrectSoundRef.current?.play()
-	// 	}
-	// }
 
 	if (loading && tests.length === 0) {
 		return (
@@ -182,29 +167,8 @@ export default function AllUserPage() {
 	const currentQuestion = tests[currentQuestionIndex]
 
 	return (
-		<div className='min-h-screen bg-background p-4 md:p-8 transition-colors duration-300'>
+		<div className='min-h-screen mt-16 bg-background p-4 md:p-8 transition-colors duration-300'>
 			<div className='max-w-7xl mx-auto space-y-6'>
-				{/* Header with controls */}
-				<div className='flex flex-wrap justify-between items-center gap-4'>
-					<div className='flex items-center gap-2'>
-						<h1 className='text-2xl font-bold'>Amaliyot</h1>
-						<span className='text-muted-foreground'>
-							({currentQuestionIndex + 1}/{tests.length})
-						</span>
-					</div>
-
-					<div className='flex items-center gap-4'>
-						<div className='flex items-center gap-2 text-sm'>
-							<span className='text-green-600 font-medium'>
-								{correctAnswers}
-							</span>
-							<span>/</span>
-							<span>{totalAnswered}</span>
-							<span className='text-muted-foreground'>to&apos;g&apos;ri</span>
-						</div>
-					</div>
-				</div>
-
 				{/* Question Card */}
 				<Card className='border-2 shadow-lg'>
 					<CardHeader className='border-b bg-muted/50'>
@@ -230,11 +194,11 @@ export default function AllUserPage() {
 												variant='outline'
 												className={`w-full text-wrap justify-start text-left p-4 h-auto transition-all duration-300 border-2 ${
 													selectedAnswer === answer.id && answer.isCorrect
-														? 'bg-green-600/20 border-green-600 text-green-700 dark:text-green-300 shadow-[0_0_10px_rgba(22,163,74,0.2)]'
+														? 'bg-green-600 border-green-600   shadow-[0_0_10px_rgba(22,163,74,0.2)]'
 														: selectedAnswer === answer.id && !answer.isCorrect
-														? 'bg-red-600/20 border-red-600 text-red-700 dark:text-red-300 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+														? 'bg-red-600 border-red-600  shadow-[0_0_10px_rgba(220,38,38,0.2)]'
 														: selectedAnswer && answer.isCorrect
-														? 'bg-green-600/20 border-green-600 text-green-700 dark:text-green-300 shadow-[0_0_10px_rgba(22,163,74,0.2)]'
+														? 'bg-green-600 border-green-600   shadow-[0_0_10px_rgba(22,163,74,0.2)]'
 														: 'hover:border-primary/50'
 												}`}
 												onClick={() => handleAnswerSelect(answer.id)}
@@ -244,9 +208,9 @@ export default function AllUserPage() {
 													{selectedAnswer && (
 														<div className='mt-0.5'>
 															{answer.isCorrect ? (
-																<CheckCircle2 className='h-5 w-5 text-green-600' />
+																<CheckCircle2 className='h-5 w-5' />
 															) : selectedAnswer === answer.id ? (
-																<XCircle className='h-5 w-5 text-red-600' />
+																<XCircle className='h-5 w-5 ' />
 															) : null}
 														</div>
 													)}
@@ -267,14 +231,6 @@ export default function AllUserPage() {
 										>
 											<Lightbulb className='h-4 w-4' /> <span>Izoh</span>
 										</Button>
-										{/* <Button
-											variant='outline'
-											size='icon'
-											onClick={playSound}
-											className='hover:bg-primary/10'
-										>
-											<Volume2 className='h-4 w-4' />
-										</Button> */}
 									</div>
 								)}
 
@@ -346,7 +302,11 @@ export default function AllUserPage() {
 						<ChevronLeft className='mr-2 h-4 w-4' />
 						Oldingi savol
 					</Button>
-
+					<div className='flex items-center gap-2'>
+						<span className='text-green-600 font-medium'>{correctAnswers}</span>
+						<span>/</span>
+						<span>{totalAnswered}</span>
+					</div>
 					<Button
 						onClick={nextQuestion}
 						disabled={
@@ -361,50 +321,6 @@ export default function AllUserPage() {
 					</Button>
 				</div>
 			</div>
-
-			{/* Congratulation Animation */}
-			<AnimatePresence>
-				{showCongratulation && (
-					<motion.div
-						initial={{ opacity: 0, scale: 0.8 }}
-						animate={{ opacity: 1, scale: 1 }}
-						exit={{ opacity: 0, scale: 0.8 }}
-						className='fixed inset-0 flex items-center justify-center pointer-events-none z-50'
-					>
-						<div className='bg-green-600/20 backdrop-blur-sm p-8 rounded-lg shadow-lg'>
-							<motion.div
-								initial={{ y: -20 }}
-								animate={{ y: [0, -10, 0, -5, 0] }}
-								transition={{ duration: 1 }}
-							>
-								<CheckCircle2 className='h-24 w-24 text-green-600 mx-auto' />
-								<h2 className='text-2xl font-bold text-center mt-4 text-green-700 dark:text-green-300'>
-									Ajoyib!
-								</h2>
-							</motion.div>
-						</div>
-					</motion.div>
-				)}
-			</AnimatePresence>
 		</div>
 	)
 }
-
-// <Button
-// variant='custom'
-// className='w-fit'
-// onClick={resetPractice}
-// title='Qayta boshlash'
-// >
-// <RefreshCw className='h-4 w-4' /> Qayta boshlash
-// </Button>
-
-// const resetPractice = () => {
-// 	setCurrentQuestionIndex(0)
-// 	resetQuestion()
-// 	setCorrectAnswers(0)
-// 	setTotalAnswered(0)
-// 	setPageNumber(0)
-// 	setTests([])
-// 	fetchTests()
-// }

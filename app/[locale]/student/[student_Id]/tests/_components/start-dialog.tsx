@@ -11,24 +11,28 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface StartDialogProps {
 	isOpen: boolean
 	onStart: (questionCount: number) => void
-	maxQuestions: number
 }
 
-export function StartDialog({
-	isOpen,
-	onStart,
-	maxQuestions,
-}: StartDialogProps) {
+export function StartDialog({ isOpen, onStart }: StartDialogProps) {
 	const [questionCount, setQuestionCount] = useState(20)
+	const [error, setError] = useState('')
 
 	const handleStart = () => {
-		if (questionCount > 0 && questionCount <= maxQuestions) {
-			onStart(questionCount)
+		if (questionCount < 20) {
+			setError('Minimal 20 ta savol tanlash kerak')
+			return
 		}
+		if (questionCount > 50) {
+			setError('Maksimal 50 ta savol tanlash mumkin')
+			return
+		}
+		setError('')
+		onStart(questionCount)
 	}
 
 	return (
@@ -37,25 +41,36 @@ export function StartDialog({
 				<DialogHeader>
 					<DialogTitle>Test ishlashni boshlash</DialogTitle>
 					<DialogDescription>
-						Nechta savol yechmoqchi ekanligingizni kiriting
+						Nechta savol yechmoqchi ekanligingizni kiriting (20-50)
 					</DialogDescription>
 				</DialogHeader>
-				<div className='space-y-4'>
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					className='space-y-4'
+				>
 					<div className='space-y-2'>
 						<Input
 							type='number'
-							min={1}
+							min={20}
 							max={50}
 							value={questionCount}
-							onChange={e => setQuestionCount(parseInt(e.target.value, 10))}
+							onChange={e => {
+								setQuestionCount(parseInt(e.target.value, 10))
+								setError('')
+							}}
+							className='text-lg'
 						/>
+						{error && <p className='text-sm text-destructive'>{error}</p>}
 						<p className='text-sm text-muted-foreground'>
-							Maksimal savollar soni: 50
+							Minimal: 20 ta, Maksimal: 50 ta savol
 						</p>
 					</div>
-				</div>
+				</motion.div>
 				<DialogFooter>
-					<Button onClick={handleStart}>Boshlash</Button>
+					<Button onClick={handleStart} size='lg'>
+						Boshlash
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -106,7 +106,7 @@ export default function StudentDashboard() {
 		}
 	}, [Id])
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
-		if ((correctanswer / totolQuestion) * 100 >= 20) {
+		if ((correctanswer / totolQuestion) * 100 >= 30) {
 			return (
 				<Badge variant={'secondary'} className='bg-green-300 dark:text-black'>
 					O&apos;tdi
@@ -195,8 +195,13 @@ export default function StudentDashboard() {
 										<TableCell>
 											{new Date(test.createAt).toLocaleDateString('uz-UZ')}
 										</TableCell>
-										<TableCell>{test.corrertAnswers} / 20</TableCell>
-										<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
+										<TableCell>
+											{test.corrertAnswers} / {test.questionCount}
+										</TableCell>
+										<TableCell>
+											{test.questionCount &&
+												setStatus(test.corrertAnswers, test.questionCount)}
+										</TableCell>
 										<TableCell className='text-right'>
 											<Link
 												href={`${getLanguagePrefix()}/student/${Id}/${test.id}`}

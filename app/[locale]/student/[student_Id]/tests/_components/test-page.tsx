@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StartDialog } from './start-dialog'
 import { getAllTests, submitAnswer } from '@/lib/test'
 import Image from 'next/image'
-import { Timer, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,6 +17,8 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Timer } from './timer'
 
 interface TestQuestion {
 	id: string
@@ -34,8 +36,9 @@ interface TestPageProps {
 	userId: string
 }
 
-const SECONDS_PER_QUESTION = 20
-const QUESTIONS_PER_PAGE = 50
+const SECONDS_PER_QUESTION = 5
+const PAGE_SIZE = 50
+const QUESTIONS_PER_ROW = 25
 
 export function TestPage({ language, userId }: TestPageProps) {
 	const [isStartDialogOpen, setIsStartDialogOpen] = useState(true)
@@ -46,12 +49,12 @@ export function TestPage({ language, userId }: TestPageProps) {
 		Record<string, string>
 	>({})
 	const [timeLeft, setTimeLeft] = useState(0)
-	//const [isLoading, setIsLoading] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [testResults, setTestResults] = useState<any>(null)
-	const [currentPage, setCurrentPage] = useState(0)
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		if (timeLeft > 0) {
@@ -69,28 +72,31 @@ export function TestPage({ language, userId }: TestPageProps) {
 		}
 	}, [timeLeft])
 
-	const fetchQuestions = async (pageNumber: number) => {
+	const fetchQuestions = async () => {
 		try {
+			setIsLoading(true)
 			const response = await getAllTests({
-				pageSize: QUESTIONS_PER_PAGE,
-				pageNumber,
+				pageSize: PAGE_SIZE,
+				pageNumber: 0,
 				language,
 			})
 
 			if (response?.items) {
-				// Faqat yangi sahifadagi savollarni o'rnatamiz, eski savollarni saqlamaymiz
 				setQuestions(response.items)
 			}
 		} catch (error) {
 			console.error('Error fetching questions:', error)
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
 	const handleStart = async (questionCount: number) => {
 		setTotalQuestions(questionCount)
-		setTimeLeft(questionCount * SECONDS_PER_QUESTION)
+		const totalTime = questionCount * SECONDS_PER_QUESTION
+		setTimeLeft(totalTime)
 		setIsStartDialogOpen(false)
-		await fetchQuestions(0) // Dastlabki 20 ta savolni yuklash
+		await fetchQuestions()
 	}
 
 	const handleAnswerSelect = (questionId: string, answerId: string) => {
@@ -102,49 +108,23 @@ export function TestPage({ language, userId }: TestPageProps) {
 
 	const handlePreviousQuestion = () => {
 		if (currentQuestionIndex > 0) {
-			setCurrentQuestionIndex(currentQuestionIndex - 1)
+			setCurrentQuestionIndex(prev => prev - 1)
 		}
 	}
 
 	const handleNextQuestion = () => {
-		if (currentQuestionIndex < QUESTIONS_PER_PAGE - 1) {
-			setCurrentQuestionIndex(currentQuestionIndex + 1)
+		if (currentQuestionIndex < totalQuestions - 1) {
+			setCurrentQuestionIndex(prev => prev + 1)
 		}
 	}
-
-	// const handlePreviousPage = async () => {
-	// 	if (currentPage > 0) {
-	// 		const newPage = currentPage - 1
-	// 		setCurrentPage(newPage)
-	// 		setCurrentQuestionIndex(0) // Sahifa o'zgarganda birinchi savolga qaytamiz
-	// 		await fetchQuestions(newPage) // Oldingi sahifadagi savollarni yuklaymiz
-	// 	}
-	// }
-
-	// const handleNextPage = async () => {
-	// 	const newPage = currentPage + 1
-	// 	if (newPage * QUESTIONS_PER_PAGE < totalQuestions) {
-	// 		setCurrentPage(newPage)
-	// 		setCurrentQuestionIndex(0) // Sahifa o'zgarganda birinchi savolga qaytamiz
-	// 		await fetchQuestions(newPage) // Keyingi sahifadagi savollarni yuklaymiz
-	// 	}
-	// }
 
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
-
 		if (!mediaUrl.includes('\\')) {
 			return `http://213.230.109.74:8080/${mediaUrl}`
 		}
-
 		const filename = mediaUrl.split('\\').pop()
 		return `http://213.230.109.74:8080/${filename}`
-	}
-
-	const formatTime = (seconds: number) => {
-		const minutes = Math.floor(seconds / 60)
-		const remainingSeconds = seconds % 60
-		return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 	}
 
 	const handleFinishTest = async () => {
@@ -168,8 +148,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 			if (result.isSuccess) {
 				setTestResults(result.result)
 				setIsFinishDialogOpen(true)
-			} else {
-				console.error('Error submitting test:', result.errorMessages)
 			}
 		} catch (error) {
 			console.error('Error submitting test:', error)
@@ -178,163 +156,170 @@ export function TestPage({ language, userId }: TestPageProps) {
 		}
 	}
 
-	const allQuestionsAnswered =
-		questions.length > 0 && questions.every(q => selectedAnswers[q.id])
+	const allQuestionsAnswered = questions
+		.slice(0, totalQuestions)
+		.every(q => selectedAnswers[q.id])
 
 	if (isStartDialogOpen) {
-		return (
-			<StartDialog
-				isOpen={isStartDialogOpen}
-				onStart={handleStart}
-				//minQuestions={20}
-				maxQuestions={50}
-			/>
-		)
+		return <StartDialog isOpen={isStartDialogOpen} onStart={handleStart} />
 	}
 
 	const currentQuestion = questions[currentQuestionIndex]
 
 	if (!currentQuestion) {
-		return <div>Savollar yuklanmoqda...</div>
+		return (
+			<div className='flex items-center justify-center min-h-screen'>
+				<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary'></div>
+			</div>
+		)
 	}
 
-	// const startQuestionNumber = currentPage * QUESTIONS_PER_PAGE + 1
-	// const endQuestionNumber = Math.min(
-	// 	(currentPage + 1) * QUESTIONS_PER_PAGE,
-	// 	totalQuestions
-	// )
+	// Split questions into rows of 25
+	const questionRows = Array.from({
+		length: Math.ceil(totalQuestions / QUESTIONS_PER_ROW),
+	}).map((_, rowIndex) =>
+		Array.from({
+			length: Math.min(
+				QUESTIONS_PER_ROW,
+				totalQuestions - rowIndex * QUESTIONS_PER_ROW
+			),
+		}).map((_, colIndex) => rowIndex * QUESTIONS_PER_ROW + colIndex)
+	)
 
 	return (
-		<div className='w-full p-4'>
-			<div className='flex justify-between items-center mb-6'>
-				<div className='flex items-center gap-4'>
-					<div className='flex items-center gap-2 text-lg font-medium'>
-						<Timer className='h-5 w-5' />
-						{formatTime(timeLeft)}
-					</div>
-				</div>
+		<div className='container mx-auto p-4 space-y-6'>
+			<motion.div
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				className='flex justify-between items-center'
+			>
+				<Timer
+					timeLeft={timeLeft}
+					totalTime={totalQuestions * SECONDS_PER_QUESTION}
+				/>
 				<Button
 					onClick={() => setIsFinishDialogOpen(true)}
-					disabled={!allQuestionsAnswered}
+					disabled={!allQuestionsAnswered || timeLeft <= 0}
+					className='bg-primary'
 				>
 					Testni yakunlash
 				</Button>
-			</div>
+			</motion.div>
 
-			{/* <div className='flex items-center justify-between mb-4'>
-				<Button
-					variant='outline'
-					onClick={handlePreviousPage}
-					disabled={currentPage === 0 || isLoading}
-				>
-					<ArrowLeft className='mr-2 h-4 w-4' />
-					Avvalgi {QUESTIONS_PER_PAGE} ta
-				</Button>
-				<span className='text-sm text-muted-foreground'>
-					{startQuestionNumber}-{endQuestionNumber} / {totalQuestions} ta savol
-				</span>
-				<Button
-					variant='outline'
-					onClick={handleNextPage}
-					disabled={
-						(currentPage + 1) * QUESTIONS_PER_PAGE >= totalQuestions ||
-						isLoading
-					}
-				>
-					Keyingi {QUESTIONS_PER_PAGE} ta
-					<ArrowRight className='ml-2 h-4 w-4' />
-				</Button>
-			</div> */}
-
-			<div className='flex flex-wrap gap-2 justify-center mb-6'>
-				{Array.from({ length: totalQuestions }).map((_, index) => {
-					const page = Math.floor(index / QUESTIONS_PER_PAGE)
-					const isCurrentPage = page === currentPage
-					const isCurrentQuestion =
-						index === currentPage * QUESTIONS_PER_PAGE + currentQuestionIndex
-
-					return (
-						<Button
-							key={index}
-							variant={isCurrentQuestion ? 'default' : 'outline'}
-							className={`w-10 h-10 ${
-								selectedAnswers[questions[index % QUESTIONS_PER_PAGE]?.id]
-									? 'bg-primary/20'
-									: ''
-							}`}
-							onClick={() => {
-								if (page !== currentPage) {
-									setCurrentPage(page)
-									fetchQuestions(page)
-								}
-								setCurrentQuestionIndex(index % QUESTIONS_PER_PAGE)
-							}}
-							disabled={!isCurrentPage}
-						>
-							{index + 1}
-						</Button>
-					)
-				})}
-			</div>
-
-			<Card className='w-full'>
-				<CardHeader>
-					<CardTitle>
-						Savol {currentPage * QUESTIONS_PER_PAGE + currentQuestionIndex + 1}{' '}
-						/ {totalQuestions}
-					</CardTitle>
-				</CardHeader>
-				<CardContent className='flex gap-6'>
-					{currentQuestion.mediaUrl && (
-						<div className='relative h-[300px] w-[50%]'>
-							<Image
-								src={getImageUrl(currentQuestion.mediaUrl)}
-								alt='Question illustration'
-								fill
-								className='object-contain'
-								onError={e => {
-									const target = e.target as HTMLImageElement
-									target.src = '/testbox.svg'
-								}}
-							/>
-						</div>
-					)}
-					<div className='w-[50%] space-y-4'>
-						<div className='text-lg'>{currentQuestion.question}</div>
-						{currentQuestion.testAnswersForUser.map(answer => (
-							<div
-								key={answer.id}
-								className={`p-4 rounded-lg border cursor-pointer transition-colors
+			<div className='space-y-2'>
+				{questionRows.map((row, rowIndex) => (
+					<div key={rowIndex} className='grid grid-cols-25 gap-2'>
+						{row.map(index => (
+							<motion.button
+								key={index}
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+								className={`
+                  p-2 rounded-md flex items-center justify-center
                   ${
-										selectedAnswers[currentQuestion.id] === answer.id
-											? 'border-primary bg-primary/5'
-											: 'border-input hover:bg-accent'
-									}`}
-								onClick={() =>
-									handleAnswerSelect(currentQuestion.id, answer.id)
-								}
+										currentQuestionIndex === index
+											? 'bg-primary text-primary-foreground'
+											: 'bg-secondary'
+									}
+                  ${
+										selectedAnswers[questions[index]?.id]
+											? 'border-2 border-primary'
+											: ''
+									}
+                  transition-all duration-200
+                `}
+								onClick={() => setCurrentQuestionIndex(index)}
 							>
-								{answer.answerText}
-							</div>
+								{index + 1}
+							</motion.button>
 						))}
 					</div>
-				</CardContent>
-			</Card>
+				))}
+			</div>
+
+			<AnimatePresence mode='wait'>
+				<motion.div
+					key={currentQuestionIndex}
+					initial={{ opacity: 0, x: 20 }}
+					animate={{ opacity: 1, x: 0 }}
+					exit={{ opacity: 0, x: -20 }}
+					transition={{ duration: 0.2 }}
+				>
+					<Card className='w-full'>
+						<CardHeader>
+							<CardTitle>
+								Savol {currentQuestionIndex + 1} / {totalQuestions}
+							</CardTitle>
+						</CardHeader>
+						<CardContent className='grid md:grid-cols-2 gap-6'>
+							{currentQuestion.mediaUrl && (
+								<div className='relative h-[300px] w-full'>
+									<Image
+										src={getImageUrl(currentQuestion.mediaUrl)}
+										alt='Question illustration'
+										fill
+										className='object-contain rounded-lg'
+										onError={e => {
+											const target = e.target as HTMLImageElement
+											target.src = '/testbox.svg'
+										}}
+									/>
+								</div>
+							)}
+							<div className='space-y-4'>
+								<p className='text-lg'>{currentQuestion.question}</p>
+								<div className='space-y-3'>
+									{currentQuestion.testAnswersForUser.map(answer => (
+										<motion.div
+											key={answer.id}
+											whileHover={{ scale: 1.02 }}
+											whileTap={{ scale: 0.98 }}
+										>
+											<div
+												className={`
+                          p-4 rounded-lg border cursor-pointer transition-all
+                          ${
+														selectedAnswers[currentQuestion.id] === answer.id
+															? 'border-primary bg-primary/5'
+															: 'border-input hover:bg-accent'
+													}
+                          ${
+														timeLeft <= 0
+															? 'pointer-events-none opacity-50'
+															: ''
+													}
+                        `}
+												onClick={() =>
+													handleAnswerSelect(currentQuestion.id, answer.id)
+												}
+											>
+												{answer.answerText}
+											</div>
+										</motion.div>
+									))}
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				</motion.div>
+			</AnimatePresence>
 
 			<div className='flex justify-between mt-6'>
 				<Button
 					onClick={handlePreviousQuestion}
 					disabled={currentQuestionIndex === 0}
 					variant='outline'
+					className='w-[120px]'
 				>
 					<ChevronLeft className='mr-2 h-4 w-4' />
-					Oldingi savol
+					Oldingi
 				</Button>
 				<Button
 					onClick={handleNextQuestion}
-					disabled={currentQuestionIndex === QUESTIONS_PER_PAGE - 1}
+					disabled={currentQuestionIndex === totalQuestions - 1}
+					className='w-[120px]'
 				>
-					Keyingi savol
+					Keyingi
 					<ChevronRight className='ml-2 h-4 w-4' />
 				</Button>
 			</div>
@@ -353,16 +338,16 @@ export function TestPage({ language, userId }: TestPageProps) {
 						<AlertDialogDescription>
 							{testResults ? (
 								<div className='space-y-2'>
-									<div>Togri javoblar: {testResults.corrertAnswers}</div>
-									<div>Jami savollar: {testResults.totalQuestions}</div>
-									<div>
+									<p>Togri javoblar: {testResults.correctAnswers}</p>
+									<p>Jami savollar: {totalQuestions}</p>
+									<p>
 										Foiz:{' '}
 										{(
-											(testResults.corrertAnswers / totalQuestions) *
+											(testResults.correctAnswers / totalQuestions) *
 											100
 										).toFixed(1)}
 										%
-									</div>
+									</p>
 								</div>
 							) : (
 								'Testni yakunlashni xohlaysizmi? Bu amalni qaytarib bolmaydi.'

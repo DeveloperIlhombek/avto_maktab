@@ -93,7 +93,10 @@ export function TestsTab() {
 								<TableCell>
 									{test.corrertAnswers} / {test.questionCount}
 								</TableCell>
-								<TableCell>{setStatus(test.corrertAnswers, 20)}</TableCell>
+								<TableCell>
+									{test.questionCount &&
+										setStatus(test.corrertAnswers, test.questionCount)}
+								</TableCell>
 								<TableCell className='text-right'>
 									<Link
 										href={`${getLanguagePrefix()}/admin/students/${userId}/${
