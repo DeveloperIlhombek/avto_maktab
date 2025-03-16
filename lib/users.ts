@@ -434,7 +434,6 @@ interface UpdatePasswordResponse {
 }
 
 export const UpdateOwnPassword = async (
-	currentPassword: string,
 	newPassword: string,
 	token: string
 ): Promise<UpdatePasswordResponse> => {
@@ -447,7 +446,7 @@ export const UpdateOwnPassword = async (
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ currentPassword, newPassword }),
+				body: JSON.stringify({ newPassword }),
 			}
 		)
 

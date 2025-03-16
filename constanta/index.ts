@@ -1,37 +1,28 @@
 export const navLink = [
 	{
 		id: 1,
-		name: 'Imkoniyatlar',
+		name: 'imkoniyatlar',
 		url: '#imkoniyatlar',
 	},
 	{
 		id: 2,
-		name: 'Funksiyalar',
+		name: 'funksiyalar',
 		url: '#funksiyalar',
 	},
-	{
-		id: 3,
-		name: 'Statistika',
-		url: '#statistika',
-	},
-	{
-		id: 4,
-		name: "Bog'lanish",
-		url: '#boglanish',
-	},
+
 	{
 		id: 5,
-		name: 'Test sinovi',
+		name: 'testsinovi',
 		url: '#test-sinovi',
 	},
 	{
 		id: 6,
-		name: 'Savollar',
+		name: 'savollar',
 		url: '/uz/practice',
 	},
 	{
 		id: 7,
-		name: 'Media',
+		name: 'media',
 		url: '/uz/media',
 	},
 ]

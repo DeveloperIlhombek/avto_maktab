@@ -28,8 +28,8 @@ export default function Home() {
 	}
 
 	return (
-		<div className='mt-24 min-h-[70vh] bg-background flex items-center'>
-			<div className='container mx-auto'>
+		<div className='mt-16 min-h-[75vh] bg-background flex items-center'>
+			<div className='mx-auto'>
 				<motion.div
 					variants={container}
 					initial='hidden'
@@ -37,7 +37,7 @@ export default function Home() {
 					className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'
 				>
 					{/* Left Content */}
-					<div className='space-y-6'>
+					<div className='space-y-6 ml-8'>
 						<motion.h1
 							variants={item}
 							className='text-4xl md:text-6xl font-bold tracking-tight'
@@ -51,8 +51,8 @@ export default function Home() {
 							{t('emaktabdescription')}
 						</motion.p>
 						<motion.div variants={item}>
-							<Button size='lg' className='text-lg px-8'>
-								Tizimga kirish
+							<Button variant={'custom'} size='lg' className='text-lg px-8'>
+								{t('tizimgakirish')}
 							</Button>
 						</motion.div>
 					</div>

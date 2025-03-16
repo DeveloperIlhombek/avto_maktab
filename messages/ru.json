@@ -4,10 +4,78 @@
 		"about": "Перейти на страницу о нас"
 	},
 	"Hero": {
-		"emaktab": "E-АВТОМАКТАБ",
-		"emaktabdescription": "Онлайн платформа дистанционного обучения"
+		"emaktab": "АВТОШКОЛА",
+		"emaktabdescription": "Платформа для подготовки к водительскому удостоверению",
+		"tizimgakirish": "Вход в систему"
 	},
 	"Testadmin": {
 		"Savol malumotlari": "Информация о вопросе"
+	},
+	"Imkoniyatlar": {
+		"bizningimkoniyatlar": "Наши возможности",
+		"imkoniyattalim": "Наша профессиональная автошкола предоставляет вам лучшее обучение и возможности",
+		"zamonaviyavtomobillar": "Современные автомобили",
+		"professionaloqituvchilar": "Профессиональные инструкторы",
+		"sertifikatlangantalim": "Сертифицированное обучение",
+		"zamonaviyavtomobillardescription": "Мы предоставляем безопасные и комфортные автомобили последнего поколения",
+		"professionaloqituvchilardescription": "Команда опытных и сертифицированных инструкторов",
+		"sertifikatlangantalimdescription": "Учебная программа и сертификат, утвержденные государством"
+	},
+
+	"Funksiyalar": {
+		"funksiyalarsarlavha": "Функции АВТОШКОЛА",
+		"funksiyalartavsif": "Мы организуем процесс получения водительского удостоверения легко и удобно с помощью современных технологий",
+		"nazariydarslar": "Теоретические занятия",
+		"videodarslar": "Видеоуроки",
+		"testtopshirish": "Прохождение тестов",
+		"nazariydarslartavsif": "Изучение теоретических знаний в онлайн и офлайн формате",
+		"videodarslartavsif": "Доступ к видеоурокам 24/7",
+		"testtopshirishtavsif": "Онлайн тесты для закрепления знаний"
+	},
+
+	"TestCommonForPage": {
+		"title": "Тестирование",
+		"description": "Проверьте свои знания и подготовьтесь к получению водительского удостоверения",
+		"startTest": "Начать тест",
+		"questionsCounttitle": "1000 тестовых вопросов",
+		"questionsCountdescription": "База тестовых вопросов для всех категорий",
+		"timeLimittitle": "25 минут",
+		"timeLimitdescription": "Отведённое время для сдачи теста",
+		"questionsPerAttempttitle": "20 вопросов",
+		"questionsPerAttemptdescription": "Количество вопросов в одной попытке",
+		"passingScoretitle": "18 правильных ответов",
+		"passingScoredescription": "Минимальный балл для успешного прохождения теста",
+		"vehicleCategoriestitle": "Доступные категории транспортных средств",
+		"vehicleCategoriescategoriesB": "Категория B",
+		"vehicleCategoriescategoriesC": "Категория C",
+		"vehicleCategoriescategoriesD": "Категория D"
+	},
+	"Kirish": {
+		"kirish": "Вход",
+		"tizimgakirish": "Вход в систему",
+		"loginparolkiritish": "Введите логин и пароль",
+		"imkoniyatlar": "Возможности",
+		"funksiyalar": "Функции",
+		"testsinovi": "Тестирование",
+		"savollar": "Вопросы",
+		"media": "Медиа"
+	},
+	"Practise": {
+		"savoljavoblar": "Вопросы и ответы",
+		"ortga": "Назад",
+		"qaytaurinish": "Повторная попытка",
+		"qaytaboshlash": "Перезапустить",
+		"savoljavobi": "Ответ на вопрос:",
+		"izoh": "Комментарий",
+		"keyingi": "Следующий",
+		"oldingi": "Предыдущий"
+	},
+	"Testwithanswer": {
+		"savol": "Вопрос",
+		"izoh": "Комментарий",
+		"oldingisavol": "Предыдущий вопрос",
+		"davometish": "Продолжить",
+		"keyingisavol": "Следующий вопрос",
+		"ortga": "Назад"
 	}
 }

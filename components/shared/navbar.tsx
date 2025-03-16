@@ -17,8 +17,10 @@ import { Input } from '../ui/input'
 import { Eye, EyeOff } from 'lucide-react'
 import { loginUser } from '@/lib/api'
 import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 function Navbar() {
+	const t = useTranslations('Kirish')
 	const [open, setOpen] = useState(false)
 	const router = useRouter()
 	const [showPassword, setShowPassword] = useState(false)
@@ -72,13 +74,13 @@ function Navbar() {
 			<div className='container mx-auto flex h-full max-w-7xl items-center justify-between border-b'>
 				{/* Logo section */}
 				<h1 className='text-4xl text-blue-500 font-extrabold font-roboto'>
-					Avto Maktab
+					<Link href={`${getLanguagePrefix()}`}>Avto Maktab</Link>
 				</h1>
 				{/* Navigation section */}
 				<div className='flex items-center justify-center gap-4 font-bold font-roboto text-xl'>
 					{navLink.map(item => (
 						<Link key={item.id} href={item.url}>
-							{item.name}
+							{t(item.name)}
 						</Link>
 					))}
 				</div>
@@ -91,15 +93,15 @@ function Navbar() {
 					<div className='flex  items-center justify-center gap-4'>
 						<Dialog open={open} onOpenChange={setOpen}>
 							<DialogTrigger asChild>
-								<Button className='px-4 py-2 bg-blue-500 text-white rounded-md'>
-									Kirish
+								<Button className='px-4 py-2 rounded-md' variant={'custom'}>
+									{t('kirish')}
 								</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
-									<DialogTitle>Tizimga kirish</DialogTitle>
+									<DialogTitle>{t('tizimgakirish')}</DialogTitle>
 									<DialogDescription>
-										Login va parolni kiriting
+										{t('loginparolkiritish')}
 									</DialogDescription>
 								</DialogHeader>
 								<form className='space-y-4' onSubmit={handleLogin}>
@@ -132,9 +134,10 @@ function Navbar() {
 									{error && <p className='text-red-500'>{error}</p>}
 									<Button
 										type='submit'
-										className='w-full bg-blue-500 text-white py-2 rounded-md'
+										variant={'custom'}
+										className='w-full py-2 rounded-md'
 									>
-										Kirish
+										{t('kirish')}
 									</Button>
 								</form>
 							</DialogContent>

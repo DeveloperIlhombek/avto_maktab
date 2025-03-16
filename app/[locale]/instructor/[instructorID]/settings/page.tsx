@@ -20,9 +20,6 @@ import { UpdateOwnPassword } from '@/lib/users'
 // Parol validatsiyasi uchun schema
 const passwordSchema = z
 	.object({
-		currentPassword: z.string().min(3, {
-			message: 'Joriy parol kamida 3 ta belgidan iborat boʻlishi kerak',
-		}),
 		newPassword: z.string().min(3, {
 			message: 'Yangi parol kamida 3 ta belgidan iborat boʻlishi kerak',
 		}),
@@ -56,12 +53,7 @@ function Settings() {
 				return
 			}
 
-			const response = await UpdateOwnPassword(
-				data.currentPassword,
-				data.newPassword,
-				token
-			)
-			console.log(response)
+			await UpdateOwnPassword(data.newPassword, token)
 
 			toast.success('Parol muvaffaqiyatli o‘zgartirildi')
 			reset()
@@ -72,7 +64,7 @@ function Settings() {
 	}
 
 	return (
-		<div className='flex justify-center items-center h-screen'>
+		<div className='flex justify-center items-center max-h-screen'>
 			<Card className='w-full max-w-md'>
 				<CardHeader>
 					<CardTitle>Xavfsizlik</CardTitle>
@@ -80,21 +72,6 @@ function Settings() {
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-						{/* Joriy parol */}
-						<div>
-							<Label htmlFor='currentPassword'>Joriy parol</Label>
-							<Input
-								id='currentPassword'
-								type='password'
-								{...register('currentPassword')}
-							/>
-							{errors.currentPassword && (
-								<p className='text-sm text-red-500'>
-									{errors.currentPassword.message}
-								</p>
-							)}
-						</div>
-
 						{/* Yangi parol */}
 						<div>
 							<Label htmlFor='newPassword'>Yangi parol</Label>
@@ -105,7 +82,7 @@ function Settings() {
 							/>
 							{errors.newPassword && (
 								<p className='text-sm text-red-500'>
-									{errors.newPassword.message}
+									{errors.newPassword.message}xatolik
 								</p>
 							)}
 						</div>

@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
 	LayoutDashboard,
@@ -9,7 +8,6 @@ import {
 	ClipboardCheck,
 	GroupIcon,
 	Settings,
-	LogOut,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -97,16 +95,6 @@ export function Sidebar() {
 							)
 						})}
 					</nav>
-				</div>
-
-				<div className='border-t p-4'>
-					<Button
-						variant='ghost'
-						className='w-full justify-start gap-3 text-muted-foreground'
-					>
-						<LogOut className='h-4 w-4' />
-						Chiqish
-					</Button>
 				</div>
 			</div>
 		</div>

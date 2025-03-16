@@ -1,39 +1,24 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Car, Users, Calendar, Award, Shield, Clock } from 'lucide-react'
+import { Car, Users, Award } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 const features = [
 	{
 		icon: Car,
-		title: 'Zamonaviy Avtomobillar',
-		description:
-			"Eng so'nggi rusumdagi xavfsiz va qulay avtomobillar bilan ta'minlaymiz",
+		title: 'zamonaviyavtomobillar',
+		description: 'zamonaviyavtomobillardescription',
 	},
 	{
 		icon: Users,
-		title: "Professional O'qituvchilar",
-		description: 'Tajribali va sertifikatlangan instruktorlar jamoasi',
-	},
-	{
-		icon: Calendar,
-		title: 'Qulay Jadval',
-		description: "Sizga mos vaqtda mashg'ulotlarni rejalashtirish imkoniyati",
+		title: 'professionaloqituvchilar',
+		description: 'professionaloqituvchilardescription',
 	},
 	{
 		icon: Award,
-		title: "Sertifikatlangan Ta'lim",
-		description: "Davlat tomonidan tasdiqlangan o'quv dasturi va guvohnoma",
-	},
-	{
-		icon: Shield,
-		title: 'Xavfsizlik Kafolati',
-		description: "Yuqori darajadagi xavfsizlik choralari va sug'urta",
-	},
-	{
-		icon: Clock,
-		title: 'Tezkor Natija',
-		description: "2 oyda professional haydovchi bo'ling",
+		title: 'sertifikatlangantalim',
+		description: 'sertifikatlangantalimdescription',
 	},
 ]
 
@@ -60,8 +45,12 @@ const item = {
 }
 
 export function Opportunities() {
+	const t = useTranslations('Imkoniyatlar')
 	return (
-		<section className='py-20 bg-muted/50' id='imkoniyatlar'>
+		<section
+			className='py-16 bg-gradient-to-b from-sky-100/10 to-sky-900/40 dark:from-sky-900/10 dark:to-sky-800/20'
+			id='imkoniyatlar'
+		>
 			<div className='container px-4 mx-auto'>
 				<motion.div
 					initial='hidden'
@@ -74,12 +63,11 @@ export function Opportunities() {
 						variants={item}
 						className='text-center max-w-3xl mx-auto space-y-4'
 					>
-						<h2 className='text-3xl md:text-4xl font-bold tracking-tight'>
-							Bizning Imkoniyatlar
+						<h2 className='text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100'>
+							{t('bizningimkoniyatlar')}
 						</h2>
-						<p className='text-lg text-muted-foreground'>
-							Professional haydovchilik maktabimiz sizga eng yaxshi ta&apos;lim
-							va imkoniyatlarni taqdim etadi
+						<p className='text-lg text-muted-foreground dark:text-gray-300'>
+							{t('imkoniyattalim')}
 						</p>
 					</motion.div>
 
@@ -94,15 +82,17 @@ export function Opportunities() {
 								whileHover={{ scale: 1.05 }}
 								className='relative group'
 							>
-								<div className='absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100' />
-								<div className='relative p-8 rounded-lg border bg-card shadow-sm hover:shadow-md transition-shadow'>
-									<div className='mb-6 inline-block p-4 rounded-lg bg-primary/10'>
-										<feature.icon className='w-6 h-6 text-primary' />
+								<div className='absolute inset-0 bg-gradient-to-r from-blue-500/30 to-blue-500/5 dark:from-blue-500/20 dark:to-blue-500/30 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100' />
+								<div className='relative p-8 rounded-lg border bg-card dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col'>
+									<div className='mb-4 inline-block p-4 w-fit rounded-lg bg-green-500/70 dark:green-500/70'>
+										<feature.icon className='w-6 h-6 text-white dark:text-primary-400' />
 									</div>
-									<h3 className='text-xl font-semibold mb-2'>
-										{feature.title}
+									<h3 className='text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100'>
+										{t(feature.title)}
 									</h3>
-									<p className='text-muted-foreground'>{feature.description}</p>
+									<p className='text-muted-foreground dark:text-gray-300 flex-grow'>
+										{t(feature.description)}
+									</p>
 								</div>
 							</motion.div>
 						))}

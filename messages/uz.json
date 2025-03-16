@@ -4,10 +4,76 @@
 		"about": "Haqida sahifasiga o'ting"
 	},
 	"Hero": {
-		"emaktab": "E-AVTOMAKTAB",
-		"emaktabdescription": "Onlayn masofaviy ta'lim platformasi"
+		"emaktab": "AVTO MAKTAB",
+		"emaktabdescription": "Haydovchilik guvohnomasi uchun tayyorlov platformasi",
+		"tizimgakirish": "Tizimga kirish"
 	},
 	"Testadmin": {
 		"Savol malumotlari": "Savol ma'lumotlari"
+	},
+	"Imkoniyatlar": {
+		"bizningimkoniyatlar": "Bizning Imkoniyatlar",
+		"imkoniyattalim": "Professional haydovchilik maktabimiz sizga eng yaxshi ta'lim va imkoniyatlarni taqdim etadi",
+		"zamonaviyavtomobillar": "Zamonaviy Avtomobillar",
+		"professionaloqituvchilar": "Professional O'qituvchilar",
+		"sertifikatlangantalim": "Sertifikatlangan Ta'lim",
+		"zamonaviyavtomobillardescription": "Eng so'nggi rusumdagi xavfsiz va qulay avtomobillar bilan ta'minlaymiz",
+		"professionaloqituvchilardescription": "Tajribali va sertifikatlangan instruktorlar jamoasi",
+		"sertifikatlangantalimdescription": "Davlat tomonidan tasdiqlangan o'quv dasturi va guvohnoma"
+	},
+	"Funksiyalar": {
+		"funksiyalarsarlavha": "AVTO MAKTAB Funksiyalari",
+		"funksiyalartavsif": "Zamonaviy texnologiyalar yordamida haydovchilik guvohnomasini olish jarayonini oson va qulay tarzda tashkil etamiz",
+		"nazariydarslar": "Nazariy Darslar",
+		"videodarslar": "Video Darslar",
+		"testtopshirish": "Test Topshirish",
+		"nazariydarslartavsif": "Online va offline formatda nazariy bilimlarni o'zlashtirish",
+		"videodarslartavsif": "24/7 video darslardan foydalanish imkoniyati",
+		"testtopshirishtavsif": "Bilimlarni mustahkamlash uchun onlayn testlar"
+	},
+	"TestCommonForPage": {
+		"title": "Test Sinovlari",
+		"description": "O'z bilimlaringizni sinab ko'ring va haydovchilik guvohnomasini olishga tayyorligingizni tekshiring",
+		"startTest": "Testni boshlash",
+		"questionsCounttitle": "1000 ta test savoli",
+		"questionsCountdescription": "Barcha toifalar bo'yicha test savollari bazasi",
+		"timeLimittitle": "25 daqiqa",
+		"timeLimitdescription": "Test topshirish uchun ajratilgan vaqt",
+		"questionsPerAttempttitle": "20 ta savol",
+		"questionsPerAttemptdescription": "Har bir urinishda beriladigan savollar soni",
+		"passingScoretitle": "18 to'g'ri javob",
+		"passingScoredescription": "Test sinovidan o'tish uchun minimal ball",
+		"vehicleCategoriestitle": "Mavjud Transport Vositalari Toifalari",
+		"vehicleCategoriescategoriesB": "B toifa",
+		"vehicleCategoriescategoriesC": "C toifa",
+		"vehicleCategoriescategoriesD": "D toifa"
+	},
+	"Kirish": {
+		"kirish": "Kirish",
+		"tizimgakirish": "Tizimga kirish",
+		"loginparolkiritish": "Login va parolni kiriting",
+		"imkoniyatlar": "Imkoniyatlar",
+		"funksiyalar": "Funksiyalar",
+		"testsinovi": "Test sinovi",
+		"savollar": "Savollar",
+		"media": "Media"
+	},
+	"Practise": {
+		"savoljavoblar": "Savol - Javoblar",
+		"ortga": "Ortga",
+		"qaytaurinish": "Qayta urinish",
+		"qaytaboshlash": "Qayta boshlash",
+		"savoljavobi": "Savol Javobi:",
+		"izoh": "Izoh",
+		"keyingi": "Keyingi",
+		"oldingi": "Oldingi"
+	},
+	"Testwithanswer": {
+		"savol": "Savol",
+		"izoh": "Izoh",
+		"oldingisavol": "Oldingi savol",
+		"davometish": "Davom etish",
+		"keyingisavol": "Keyingi savol",
+		"ortga": "Ortga"
 	}
 }

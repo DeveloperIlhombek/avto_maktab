@@ -12,27 +12,28 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 const testInfo = [
 	{
 		icon: ClipboardCheck,
-		title: '1000 ta test savoli',
-		description: "Barcha toifalar bo'yicha test savollari bazasi",
+		title: 'questionsCounttitle',
+		description: 'questionsCountdescription',
 	},
 	{
 		icon: Timer,
-		title: '25 daqiqa',
-		description: 'Test topshirish uchun ajratilgan vaqt',
+		title: 'timeLimittitle',
+		description: 'timeLimitdescription',
 	},
 	{
 		icon: AlertCircle,
-		title: '20 ta savol',
-		description: 'Har bir urinishda beriladigan savollar soni',
+		title: 'questionsPerAttempttitle',
+		description: 'questionsPerAttemptdescription',
 	},
 	{
 		icon: CheckCircle2,
-		title: "18 to'g'ri javob",
-		description: "Test sinovidan o'tish uchun minimal ball",
+		title: 'passingScoretitle',
+		description: 'passingScoredescription',
 	},
 ]
 
@@ -40,17 +41,17 @@ const cars = [
 	{
 		image:
 			'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop',
-		category: 'B toifa',
+		category: 'vehicleCategoriescategoriesB',
 	},
 	{
 		image:
 			'https://images.unsplash.com/photo-1616455579100-2ceaa4eb2d37?q=80&w=1974&auto=format&fit=crop',
-		category: 'C toifa',
+		category: 'vehicleCategoriescategoriesC',
 	},
 	{
 		image:
 			'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1974&auto=format&fit=crop',
-		category: 'D toifa',
+		category: 'vehicleCategoriescategoriesD',
 	},
 ]
 
@@ -77,6 +78,7 @@ const item = {
 }
 
 export function Test() {
+	const t = useTranslations('TestCommonForPage')
 	const pathname = usePathname()
 	const currentLang = pathname.split('/')[1]
 
@@ -84,7 +86,10 @@ export function Test() {
 	const isValidLang = ['uz', 'uzk', 'ru'].includes(currentLang)
 	const testUrl = isValidLang ? `/${currentLang}/test` : '/test'
 	return (
-		<section className='py-24 bg-muted/30' id='test-sinovi'>
+		<section
+			className='py-14 bg-gradient-to-b from-sky-100/10 via-sky-900/30 to-sky-100/10 dark:from-sky-900/10 dark:via-sky-300/20 dark:to-sky-900/10'
+			id='test-sinovi'
+		>
 			<div className='container px-4 mx-auto'>
 				<motion.div
 					initial='hidden'
@@ -96,26 +101,24 @@ export function Test() {
 					{/* Header */}
 					<motion.div
 						variants={item}
-						className='text-center max-w-3xl mx-auto space-y-4'
+						className='text-center max-w-4xl mx-auto space-y-4'
 					>
 						<h2 className='text-3xl md:text-4xl font-bold tracking-tight'>
-							Test Sinovlari
+							{t('title')}
 						</h2>
-						<p className='text-lg text-muted-foreground'>
-							O&apos;z bilimlaringizni sinab ko&apos;ring va haydovchilik
-							guvohnomasini olishga tayyorligingizni tekshiring
-						</p>
+						<p className='text-lg text-muted-foreground'>{t('description')}</p>
 						<div className='pt-4'>
 							<Button
 								size='lg'
-								className=' text-lg px-8 bg-primary hover:bg-primary/90'
+								className='text-lg px-8 py-3  transition-all duration-300 shadow-lg '
+								variant={'custom'}
 							>
 								<Link
 									href={testUrl}
-									className='flex items-center justify-center '
+									className='flex items-center justify-center gap-2'
 								>
-									Testni boshlash
-									<ChevronRight className='ml-2 h-5 w-5' />
+									<span>{t('startTest')}</span>
+									<ChevronRight className='h-5 w-5 transition-transform duration-300 group-hover:translate-x-1' />
 								</Link>
 							</Button>
 						</div>
@@ -130,16 +133,24 @@ export function Test() {
 							<motion.div
 								key={index}
 								variants={item}
-								className='p-6 rounded-xl border bg-card hover:bg-card/50 transition-all duration-300'
+								className='group relative p-6 rounded-xl border bg-white dark:bg-gray-800 hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all duration-300 shadow-sm hover:shadow-md'
 							>
-								<div className='flex items-start space-x-4'>
-									<div className='p-3 rounded-lg bg-primary/10'>
-										<info.icon className='w-6 h-6 text-primary' />
+								{/* Gradient Background on Hover */}
+								<div className='absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/20 to-transparent rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500' />
+
+								<div className='relative flex items-start space-x-4'>
+									{/* Icon Container */}
+									<div className='p-3 rounded-lg bg-green-500/90 group-hover:bg-green-500/90 transition-colors duration-300'>
+										<info.icon className='w-6 h-6 text-primary dark:text-primary-400' />
 									</div>
+
+									{/* Text Content */}
 									<div>
-										<h3 className='text-lg font-semibold mb-1'>{info.title}</h3>
-										<p className='text-sm text-muted-foreground'>
-											{info.description}
+										<h3 className='text-lg font-semibold mb-1 text-gray-900 dark:text-gray-100'>
+											{t(info.title)}
+										</h3>
+										<p className='text-sm text-muted-foreground dark:text-gray-300'>
+											{t(info.description)}
 										</p>
 									</div>
 								</div>
@@ -153,7 +164,7 @@ export function Test() {
 							variants={item}
 							className='text-2xl font-semibold text-center'
 						>
-							Mavjud Transport Vositalari Toifalari
+							{t('vehicleCategoriestitle')}
 						</motion.h3>
 						<motion.div
 							variants={container}
@@ -177,7 +188,7 @@ export function Test() {
 									<div className='absolute inset-0 bg-gradient-to-t from-black/80 to-black/0 flex items-end'>
 										<div className='p-6'>
 											<h4 className='text-xl font-semibold text-white'>
-												{car.category}
+												{t(car.category)}
 											</h4>
 										</div>
 									</div>

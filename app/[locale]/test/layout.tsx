@@ -8,7 +8,7 @@ interface Props {
 function Layout({ children }: Props) {
 	return (
 		<>
-			<div className='container'>
+			<div>
 				<NavbarTest />
 				<main>{children}</main>
 			</div>

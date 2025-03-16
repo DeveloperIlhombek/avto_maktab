@@ -3,8 +3,7 @@ import React from 'react'
 import Hero from './_components/hero'
 import { Opportunities } from './_components/opportunities'
 import { Functions } from './_components/functions'
-import { Statistics } from './_components/statistics'
-import { Contact } from './_components/contact'
+//import { Statistics } from './_components/statistics'
 import { Test } from './_components/test'
 
 function Page() {
@@ -14,9 +13,7 @@ function Page() {
 			<Hero />
 			<Opportunities />
 			<Functions />
-			<Statistics />
 			<Test />
-			<Contact />
 		</>
 	)
 }

@@ -19,11 +19,15 @@ import {
 	XCircle,
 	Image as ImageIcon,
 	Lightbulb,
+	ArrowLeft,
 } from 'lucide-react'
 import { getAllTestsAdmin } from '@/lib/test'
 import type { Test } from '@/lib/test'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 
 export default function AllUserTestPage() {
+	const t = useTranslations('Testwithanswer')
 	const [tests, setTests] = useState<Test[]>([])
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
@@ -45,6 +49,14 @@ export default function AllUserTestPage() {
 		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
 			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
 			: 'uz'
+
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
 
 	useEffect(() => {
 		correctSoundRef.current = new Audio('/correct.mp3')
@@ -168,12 +180,21 @@ export default function AllUserTestPage() {
 
 	return (
 		<div className='min-h-screen mt-16 bg-background p-4 md:p-8 transition-colors duration-300'>
-			<div className='max-w-7xl mx-auto space-y-6'>
+			<div className='max-w-screen-xl mx-auto space-y-6'>
 				{/* Question Card */}
 				<Card className='border-2 shadow-lg'>
 					<CardHeader className='border-b bg-muted/50'>
+						<Button className='w-fit' variant={'custom'}>
+							<Link
+								href={`${getLanguagePrefix()}`}
+								className='flex items-center justify-center gap-2'
+							>
+								<ArrowLeft /> {t('ortga')}
+							</Link>
+						</Button>
+						<br />
 						<CardDescription>
-							Savol {currentQuestionIndex + 1} / {tests.length}
+							{t('savol')} {currentQuestionIndex + 1} / {tests.length}
 						</CardDescription>
 						<CardTitle className='text-xl'>
 							{currentQuestion.question}
@@ -229,7 +250,7 @@ export default function AllUserTestPage() {
 											onClick={() => setShowExplanation(!showExplanation)}
 											className='bg-yellow-500 hover:bg-primary/10 w-fit'
 										>
-											<Lightbulb className='h-4 w-4' /> <span>Izoh</span>
+											<Lightbulb className='h-4 w-4' /> <span>{t('izoh')}</span>
 										</Button>
 									</div>
 								)}
@@ -277,7 +298,7 @@ export default function AllUserTestPage() {
 										</div>
 									) : (
 										<Image
-											src={'/testbox.svg'}
+											src={'/avto6.webp'}
 											alt={currentQuestion.question}
 											width={600}
 											height={400}
@@ -300,7 +321,7 @@ export default function AllUserTestPage() {
 						className='transition-colors duration-300 border-2 hover:bg-primary/10'
 					>
 						<ChevronLeft className='mr-2 h-4 w-4' />
-						Oldingi savol
+						{t('oldingisavol')}
 					</Button>
 					<div className='flex items-center gap-2'>
 						<span className='text-green-600 font-medium'>{correctAnswers}</span>
@@ -315,8 +336,8 @@ export default function AllUserTestPage() {
 						className='transition-colors duration-300 bg-primary hover:bg-primary/90'
 					>
 						{currentQuestionIndex === tests.length - 1
-							? 'Davom etish'
-							: 'Keyingi savol'}
+							? `${t('davometish')}`
+							: `${t('keyingisavol')}`}
 						<ChevronRight className='ml-2 h-4 w-4' />
 					</Button>
 				</div>

@@ -12,22 +12,27 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import { getAllTestsAdmin } from '@/lib/test'
 import type { Test } from '@/lib/test'
+import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export default function PracticePage() {
+	const t = useTranslations('Practise')
+	const pathname = usePathname()
+	const language = pathname.split('/')[1]
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
 	const [tests, setTests] = useState<Test[]>([])
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
-
-	const pathname = usePathname()
-	const pathSegments = pathname.split('/')
-	const language =
-		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
-			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
-			: 'uz'
 
 	useEffect(() => {
 		fetchTests()
@@ -37,7 +42,7 @@ export default function PracticePage() {
 		try {
 			setLoading(true)
 			setError(null)
-			const response = await getAllTestsAdmin(0, 100, language)
+			const response = await getAllTestsAdmin(0, 5000, language)
 
 			if (response.isSuccess) {
 				setTests(response.result.items)
@@ -89,8 +94,19 @@ export default function PracticePage() {
 			<div className='flex justify-center items-center min-h-screen'>
 				<div className='text-center text-destructive'>
 					<p className='text-xl'>{error}</p>
+					<Button
+						variant={'custom'}
+						className='flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-300'
+					>
+						<Link
+							href={`${getLanguagePrefix()}`}
+							className='flex items-center justify-center gap-2 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white'
+						>
+							<ArrowLeft className='w-5 h-5' /> {t('ortga')}
+						</Link>
+					</Button>
 					<Button onClick={fetchTests} className='mt-4'>
-						Qayta urinish
+						{t('qaytaurinish')}
 					</Button>
 				</div>
 			</div>
@@ -103,7 +119,18 @@ export default function PracticePage() {
 				<div className='text-center'>
 					<p className='text-xl'>Savollar topilmadi</p>
 					<Button onClick={fetchTests} className='mt-4'>
-						Qayta urinish
+						{t('qaytaurinish')}
+					</Button>
+					<Button
+						variant={'custom'}
+						className='flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-300'
+					>
+						<Link
+							href={`${getLanguagePrefix()}`}
+							className='flex items-center justify-center gap-2 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white'
+						>
+							<ArrowLeft className='w-5 h-5' /> {t('ortga')}
+						</Link>
 					</Button>
 				</div>
 			</div>
@@ -113,23 +140,43 @@ export default function PracticePage() {
 	const currentQuestion = tests[currentQuestionIndex]
 
 	return (
-		<main className='min-h-screen p-4 md:p-8 bg-background transition-colors duration-300'>
+		<main className='min-h-screen p-4 md:p-2 bg-background transition-colors duration-300'>
 			<div className='max-w-screen-xl h-[80%] mx-auto space-y-6'>
-				<Card className='relative shadow-lg rounded-lg overflow-hidden'>
-					<CardHeader className='p-6 md:p-12'>
-						<Button
-							onClick={() => resetPractice()}
-							size={'default'}
-							variant={'custom'}
-							className='mt-16 w-fit'
-						>
-							<RefreshCw />
-						</Button>
-						<CardTitle className='text-center text-2xl font-bold mb-4'>
-							Savol - Javoblar
+				<Card className='shadow-lg rounded-lg overflow-hidden'>
+					<CardHeader className='p-4 md:p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm dark:shadow-gray-800/50'>
+						<div className='flex items-center justify-between gap-4 mb-6'>
+							{/* Back Button */}
+							<Button
+								variant={'custom'}
+								className='flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-300'
+							>
+								<Link
+									href={`${getLanguagePrefix()}`}
+									className='flex items-center justify-center gap-2 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white'
+								>
+									<ArrowLeft className='w-5 h-5' /> {t('ortga')}
+								</Link>
+							</Button>
+
+							{/* Reset Button */}
+							<Button
+								onClick={() => resetPractice()}
+								size={'default'}
+								variant={'custom'}
+								className='flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-300'
+							>
+								<RefreshCw className='w-5 h-5' />
+								{t('qaytaboshlash')}
+							</Button>
+						</div>
+
+						{/* Title */}
+						<CardTitle className='text-center text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4'>
+							{t('savoljavoblar')}
 						</CardTitle>
 
-						<CardDescription className='text-xl text-muted-foreground'>
+						{/* Question Description */}
+						<CardDescription className='text-xl text-gray-600 dark:text-gray-300 text-center leading-relaxed'>
 							{currentQuestion.question}
 						</CardDescription>
 					</CardHeader>
@@ -138,10 +185,10 @@ export default function PracticePage() {
 							{currentQuestion.mediaUrl === null ||
 							currentQuestion.mediaUrl === '1' ? (
 								<Image
-									src={'/testbox.svg'}
+									src={'/avto6.webp'}
 									alt='default-image'
-									width={500}
-									height={500}
+									width={400}
+									height={400}
 									className='rounded-md shadow-sm w-full h-auto'
 								/>
 							) : (
@@ -164,7 +211,7 @@ export default function PracticePage() {
 						</CardContent>
 						<CardContent className='flex-1 w-full md:w-auto flex flex-col items-start gap-4'>
 							<CardDescription className='text-lg font-semibold'>
-								Savol Javobi:
+								{t('savoljavobi')}
 							</CardDescription>
 							<AnimatePresence mode='popLayout'>
 								{currentQuestion.testAnswers
@@ -184,7 +231,7 @@ export default function PracticePage() {
 							</AnimatePresence>
 							<div>
 								<CardDescription className='text-lg font-semibold'>
-									Izoh:
+									{t('izoh')}
 								</CardDescription>
 								<motion.div
 									initial={{ opacity: 0, height: 0 }}
@@ -204,14 +251,14 @@ export default function PracticePage() {
 									onClick={() => prevQuestion()}
 								>
 									<ChevronLeft />
-									Preview
+									{t('oldingi')}
 								</Button>
 								<Button
 									className='w-1/2'
 									variant={'custom'}
 									onClick={() => nextQuestion()}
 								>
-									Next
+									{t('keyingi')}
 									<ChevronRight />
 								</Button>
 							</div>

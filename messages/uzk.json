@@ -4,10 +4,78 @@
 		"about": "Ҳақида саҳифасига ўтинг"
 	},
 	"Hero": {
-		"emaktab": "E-АВТОМАКТАБ",
-		"emaktabdescription": "Oнлайн масофавий таълим платформаси"
+		"emaktab": "АВТО МАКТАБ",
+		"emaktabdescription": "Ҳайдовчилик гувоҳномаси учун тайёрлов платформаси",
+		"tizimgakirish": "Тизимга кириш"
 	},
 	"Testadmin": {
 		"Savol malumotlari": " Савол маълумотлари"
+	},
+	"Imkoniyatlar": {
+		"bizningimkoniyatlar": "Бизнинг Имкониятлар",
+		"imkoniyattalim": "Профессионал ҳайдовчилик мактабимиз сизга энг яхши таълим ва имкониятларни тақдим этади",
+		"zamonaviyavtomobillar": "Замонавий Автомобиллар",
+		"professionaloqituvchilar": "Профессионал Ўқитувчилар",
+		"sertifikatlangantalim": "Сертификатланган Таълим",
+		"zamonaviyavtomobillardescription": "Энг сўнгги русумдаги хавфсиз ва қулай автомобиллар билан таъминлаймиз",
+		"professionaloqituvchilardescription": "Тажрибали ва сертификатланган инструкторлар жамоаси",
+		"sertifikatlangantalimdescription": "Давлат томонидан тасдиқланган ўқув дастури ва гувоҳнома"
+	},
+
+	"Funksiyalar": {
+		"funksiyalarsarlavha": "АВТО МАКТАБ Функсиялари",
+		"funksiyalartavsif": "Замонавий технологиялар ёрдамида ҳайдовчилик гувоҳномасини олиш жараёнини осон ва қулай тарзда ташкил этамиз",
+		"nazariydarslar": "Назариy Дарслар",
+		"videodarslar": "Видео Дарслар",
+		"testtopshirish": "Тест Топшириш",
+		"nazariydarslartavsif": "Онлайн ва оффлайн форматда назарий билимларни ўзлаштириш",
+		"videodarslartavsif": "24/7 видео дарслардан фойдаланиш имконияти",
+		"testtopshirishtavsif": "Билимларни мустаҳкамлаш учун онлайн тестлар"
+	},
+
+	"TestCommonForPage": {
+		"title": "Тест Синовлари",
+		"description": "Ўз билимларингизни синаб кўринг ва ҳайдовчилик гувоҳномасини олишга тайёрлигингизни текширинг",
+		"startTest": "Тестни бошлаш",
+		"questionsCounttitle": "1000 та тест саволи",
+		"questionsCountdescription": "Барча тоифалар бўйича тест саволлари базаси",
+		"timeLimittitle": "25 дақиқа",
+		"timeLimitdescription": "Тест топшириш учун ажратилган вақт",
+		"questionsPerAttempttitle": "20 та савол",
+		"questionsPerAttemptdescription": "Ҳар бир уринишда бериладиган саволлар сони",
+		"passingScoretitle": "18 тўғри жавоб",
+		"passingScoredescription": "Тест синовидан ўтиш учун минимал балл",
+		"vehicleCategoriestitle": "Мавжуд Транспорт Воситалари Тоифалари",
+		"vehicleCategoriescategoriesB": "B тоифа",
+		"vehicleCategoriescategoriesC": "C тоифа",
+		"vehicleCategoriescategoriesD": "D тоифа"
+	},
+	"Kirish": {
+		"kirish": "Кириш",
+		"tizimgakirish": "Тизимга кириш",
+		"loginparolkiritish": "Логин ва паролни киритинг",
+		"imkoniyatlar": "Имкониятлар",
+		"funksiyalar": "Функциялар",
+		"testsinovi": "Тест синови",
+		"savollar": "Саволлар",
+		"media": "Медиа"
+	},
+	"Practise": {
+		"savoljavoblar": "Савол - Жавоблар",
+		"ortga": "Ортга",
+		"qaytaurinish": "Қайта уриниш",
+		"qaytaboshlash": "Қайта бошлаш",
+		"savoljavobi": "Савол Жавоби:",
+		"izoh": "Изоҳ",
+		"keyingi": "Кейинги",
+		"oldingi": "Олдинги"
+	},
+	"Testwithanswer": {
+		"savol": "Савол",
+		"izoh": "Изоҳ",
+		"oldingisavol": "Олдинги савол",
+		"davometish": "Давом этиш",
+		"keyingisavol": "Кейинги савол",
+		"ortga": "Ортга"
 	}
 }

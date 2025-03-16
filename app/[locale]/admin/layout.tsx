@@ -9,7 +9,7 @@ export default function AdminLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<div className='min-h-screen bg-background'>
+		<div className='max-h-screen bg-background'>
 			<Header />
 			<div className='flex h-[calc(100vh-4rem)]'>
 				<Sidebar />
