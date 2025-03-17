@@ -77,5 +77,15 @@
 		"davometish": "Продолжить",
 		"keyingisavol": "Следующий вопрос",
 		"ortga": "Назад"
+	},
+	"Media": {
+		"ortga": "Назад",
+		"qaytaurinish": "Повторить",
+		"barchamediafayllar": "Все медиафайлы",
+		"malumotlaryuklanmoqda": "Загрузка данных...",
+		"yaratilgansana": "Дата создания",
+		"jami": "Всего",
+		"tapapka": "папок",
+		"sahifa": "страница"
 	}
 }

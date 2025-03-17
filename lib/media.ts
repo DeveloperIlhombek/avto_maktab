@@ -31,6 +31,7 @@ export interface IFileResult {
 }
 
 // Get AllFolder
+
 export const getFolder = async ({
 	pageSize,
 	pageNumber,
@@ -54,12 +55,10 @@ export const getFolder = async ({
 		}
 
 		const data = await response.json()
-		console.log(data)
-
 		return data
 	} catch (error) {
-		console.error('Error fetching tests:', error)
-		return null
+		console.error('Error fetching folders:', error)
+		throw error
 	}
 }
 
