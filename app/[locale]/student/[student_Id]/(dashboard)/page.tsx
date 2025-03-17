@@ -19,6 +19,7 @@ import { ExemItem, getExemsUser } from '@/lib/test'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 const container = {
 	hidden: { opacity: 0 },
@@ -57,6 +58,7 @@ export default function StudentDashboard() {
 	const Id = pathname.split('/')[3]
 	const [userData, setUserData] = useState<UserData | null>(null)
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
+	const t = useTranslations('Student')
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
 		// Check if the first segment after the initial slash is a language code
@@ -91,7 +93,7 @@ export default function StudentDashboard() {
 			try {
 				const exemResponse = await getExemsUser({
 					UserID: Id,
-					pageSize: 20,
+					pageSize: 50,
 					pageNumber: 0,
 				})
 				setExemItem(exemResponse.items)
@@ -106,21 +108,21 @@ export default function StudentDashboard() {
 		}
 	}, [Id])
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
-		if ((correctanswer / totolQuestion) * 100 >= 30) {
+		if ((correctanswer / totolQuestion) * 100 >= 90) {
 			return (
 				<Badge variant={'secondary'} className='bg-green-300 dark:text-black'>
-					O&apos;tdi
+					{t('topshirdi')}
 				</Badge>
 			)
 		}
-		return <Badge variant={'destructive'}>O&apos;tmadi</Badge>
+		return <Badge variant={'destructive'}>{t('topshirmadi')}</Badge>
 	}
 	if (loading) {
 		return (
 			<div className='space-y-4'>
 				<Card>
 					<CardHeader>
-						<CardTitle>Shaxsiy kabinet</CardTitle>
+						<CardTitle>{t('shaxsiykabinet')}</CardTitle>
 					</CardHeader>
 					<CardContent className='grid grid-cols-2 gap-4'>
 						{[1, 2, 3, 4].map(i => (
@@ -163,7 +165,7 @@ export default function StudentDashboard() {
 				<h1 className='text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
 					{userData?.name} {userData?.surname}
 				</h1>
-				<p>Shaxsiy kabinet</p>
+				<p>{t('shaxsiykabinet')}</p>
 			</motion.div>
 
 			{/* Test Results */}
@@ -173,17 +175,19 @@ export default function StudentDashboard() {
 					<CardHeader className='flex flex-row items-center justify-between pb-2'>
 						<CardTitle className='text-xl font-bold flex items-center gap-2'>
 							<Trophy className='w-5 h-5 text-primary animate-pulse' />
-							Test Natijalari
+							{t('testnatijalari')}
 						</CardTitle>
 					</CardHeader>
 					<CardContent className='pt-4'>
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead>Sana</TableHead>
-									<TableHead>To&apos;g&apos;ri javoblar</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead className='text-right'>Tekshirish</TableHead>
+									<TableHead>{t('sana')}</TableHead>
+									<TableHead>{t('togrijavoblar')}</TableHead>
+									<TableHead>{t('status')}</TableHead>
+									<TableHead className='text-right'>
+										{t('tekshirish')}
+									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -208,7 +212,7 @@ export default function StudentDashboard() {
 												className='inline-flex items-center justify-center p-2 rounded-md hover:bg-primary/10 transition-colors'
 											>
 												<LucideEye className='w-5 h-5 text-primary' />
-												<span className='sr-only'>Tekshirish</span>
+												<span className='sr-only'>{t('tekshirish')}</span>
 											</Link>
 										</TableCell>
 									</TableRow>

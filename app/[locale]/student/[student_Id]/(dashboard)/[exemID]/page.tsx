@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 function Page() {
 	const pathname = usePathname()
@@ -32,7 +33,7 @@ function Page() {
 	const [loading, setLoading] = useState(true)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [showQuestions, setShowQuestions] = useState(false)
-
+	const t = useTranslations('Student')
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
@@ -57,7 +58,7 @@ function Page() {
 	}, [lang, examId])
 
 	const getImageUrl = (mediaUrl: string | null) => {
-		if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
+		if (!mediaUrl || mediaUrl === '1') return '/avto6.webp'
 
 		if (!mediaUrl.includes('\\')) {
 			return `http://213.230.109.74:8080/${mediaUrl}`
@@ -117,7 +118,7 @@ function Page() {
 	if (!examResult) return null
 
 	const isPassed =
-		(examResult.corrertAnswers / examResult.questionCount) * 100 >= 20
+		(examResult.corrertAnswers / examResult.questionCount) * 100 >= 90
 	const currentQuestion = examResult.examTestCases[currentQuestionIndex]
 
 	return (
@@ -133,12 +134,12 @@ function Page() {
 							href={`${getLanguagePrefix()}/student/${getExemId}`}
 							className='flex items-center justify-center gap-2'
 						>
-							<ArrowLeft /> Ortga
+							<ArrowLeft /> {t('ortga')}
 						</Link>
 					</Button>
 
 					<h1 className='text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 text-center flex-grow'>
-						Imtixon natijalari
+						{t('imtixonnatijalari')}
 					</h1>
 				</motion.div>
 
@@ -150,7 +151,7 @@ function Page() {
 					<Card className='border-2'>
 						<CardHeader>
 							<CardTitle className='flex items-center justify-between'>
-								<span className='text-2xl'>Natija</span>
+								<span className='text-2xl'>{t('natija')}</span>
 								<div className='flex items-center gap-4'>
 									<div className='flex items-center gap-2'>
 										<Calendar className='h-3 w-3  text-sm' />
@@ -161,7 +162,7 @@ function Page() {
 										</span>
 									</div>
 									<Badge variant={isPassed ? 'custom' : 'destructive'}>
-										{isPassed ? "O'tdi" : "O'tmadi"}
+										{isPassed ? `${t('topshirdi')}` : `${t('topshirmadi')}`}
 									</Badge>
 								</div>
 							</CardTitle>
@@ -180,7 +181,7 @@ function Page() {
 									</div>
 									<div>
 										<p className='text-sm text-muted-foreground'>
-											To&apos;g&apos;ri javoblar
+											{t('togrijavoblar')}
 										</p>
 										<p className='text-2xl font-bold text-green-500'>
 											{examResult.corrertAnswers}
@@ -199,7 +200,7 @@ function Page() {
 									</div>
 									<div>
 										<p className='text-sm text-muted-foreground'>
-											Noto&apos;g&apos;ri javoblar
+											{t('notogrijavoblar')}
 										</p>
 										<p className='text-2xl font-bold text-red-500'>
 											{examResult.questionCount - examResult.corrertAnswers}
@@ -218,7 +219,7 @@ function Page() {
 									</div>
 									<div>
 										<p className='text-sm text-muted-foreground'>
-											Jami savollar
+											{t('jamisavollar')}
 										</p>
 										<p className='text-2xl font-bold text-blue-500'>
 											{examResult.questionCount}
@@ -236,7 +237,10 @@ function Page() {
 										<Award className='h-6 w-6 text-yellow-500' />
 									</div>
 									<div>
-										<p className='text-sm text-muted-foreground'>Foiz</p>
+										<p className='text-sm text-muted-foreground'>
+											{' '}
+											{t('foiz')}
+										</p>
 										<p className='text-2xl font-bold text-yellow-500'>
 											{(
 												(examResult.corrertAnswers / examResult.questionCount) *
@@ -255,8 +259,8 @@ function Page() {
 									className='w-full'
 								>
 									{showQuestions
-										? 'Savollarni yashirish'
-										: "Savollarni ko'rish"}
+										? `${t('savolarnigayashirish')}`
+										: `${t('savolarnikorish')}`}
 								</Button>
 
 								{showQuestions && (
@@ -294,7 +298,9 @@ function Page() {
 										<Card>
 											<CardHeader>
 												<CardTitle className='flex items-center justify-between'>
-													<span>Savol {currentQuestionIndex + 1}</span>
+													<span>
+														{t('savol')} {currentQuestionIndex + 1}
+													</span>
 													<Badge
 														variant={
 															isAnswerCorrect(currentQuestion)
@@ -303,8 +309,8 @@ function Page() {
 														}
 													>
 														{isAnswerCorrect(currentQuestion)
-															? "To'g'ri"
-															: "Noto'g'ri"}
+															? `${t('togri')}`
+															: `${t('notogri')}`}
 													</Badge>
 												</CardTitle>
 											</CardHeader>
@@ -373,7 +379,7 @@ function Page() {
 												disabled={currentQuestionIndex === 0}
 											>
 												<ChevronLeft className='mr-2 h-4 w-4' />
-												Oldingi savol
+												{t('oldingisavol')}
 											</Button>
 											<Button
 												variant='outline'
@@ -383,7 +389,7 @@ function Page() {
 													examResult.examTestCases.length - 1
 												}
 											>
-												Keyingi savol
+												{t('keyingisavol')}
 												<ChevronRight className='ml-2 h-4 w-4' />
 											</Button>
 										</div>

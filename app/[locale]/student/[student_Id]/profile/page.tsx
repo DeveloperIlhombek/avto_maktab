@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { usePathname } from 'next/navigation'
 import { getUserById } from '@/lib/users'
 import { Mail, Phone, User, Shield } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 //import { useForm } from 'react-hook-form'
 //import { zodResolver } from '@hookform/resolvers/zod'
@@ -30,6 +31,7 @@ export default function StudentProfile() {
 	const [error, setError] = useState<string | null>(null)
 	const pathname = usePathname()
 	const Id = pathname.split('/')[3]
+	const t = useTranslations('Student')
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -118,9 +120,9 @@ export default function StudentProfile() {
 		<div className='space-y-6 min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4 sm:p-8 w-full'>
 			<div>
 				<h2 className='text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60'>
-					Profil
+					{t('profil')}
 				</h2>
-				<p className='text-muted-foreground'>Shaxsiy ma&apos;lumotlaringiz</p>
+				<p className='text-muted-foreground'>{t('shaxsiymalumotlar')}</p>
 			</div>
 			<Card className='bg-card/50 backdrop-blur-sm border-border/50'>
 				<CardHeader>
@@ -140,7 +142,7 @@ export default function StudentProfile() {
 							</CardTitle>
 
 							<Badge variant='secondary' className='mt-2'>
-								O&apos;quvchi
+								{t('oquvchi')}
 							</Badge>
 						</div>
 					</div>
@@ -149,18 +151,22 @@ export default function StudentProfile() {
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 						<InfoItem
 							icon={User}
-							label='Foydalanuvchi nomi'
+							label={t('foydalanuvchinomi')}
 							value={userData?.username || ''}
 						/>
-						<InfoItem icon={Mail} label='Email' value={userData?.email || ''} />
+						<InfoItem
+							icon={Mail}
+							label={t('email')}
+							value={userData?.email || ''}
+						/>
 						<InfoItem
 							icon={Phone}
-							label='Telefon'
+							label={t('telefon')}
 							value={userData?.phone || ''}
 						/>
 						<InfoItem
 							icon={Shield}
-							label='Role'
+							label={t('role')}
 							value={userData?.role === 1 ? 'Administrator' : 'Foydalanuvchi'}
 						/>
 					</div>

@@ -128,7 +128,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 	}
 
 	const getImageUrl = (mediaUrl: string | null) => {
-		if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
+		if (!mediaUrl || mediaUrl === '1') return '/avto6.webp'
 		if (!mediaUrl.includes('\\')) {
 			return `http://213.230.109.74:8080/${mediaUrl}`
 		}
@@ -256,7 +256,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 										className='object-contain rounded-lg'
 										onError={e => {
 											const target = e.target as HTMLImageElement
-											target.src = '/testbox.svg'
+											target.src = '/avto6.webp'
 										}}
 									/>
 								</div>

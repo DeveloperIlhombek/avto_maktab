@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
 	ClipboardCheck,
-	Clock,
 	GraduationCap,
 	Home,
 	LogOut,
@@ -16,6 +15,8 @@ import {
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
+import { getUserById, UserData } from '@/lib/users'
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 
 const navigation = [
 	{
@@ -41,6 +42,7 @@ export default function LayoutInstructor({
 	children: React.ReactNode
 }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+	const [userData, setUserData] = useState<UserData | null>(null)
 	const pathname = usePathname()
 	const Id = pathname.split('/')[3]
 	const getLanguagePrefix = () => {
@@ -51,6 +53,25 @@ export default function LayoutInstructor({
 		}
 		return ''
 	}
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				const response = await getUserById(Id)
+
+				if (response.isSuccess && response.result) {
+					setUserData(response.result)
+				}
+			} catch (error) {
+				console.error('Error fetching user:', error)
+			}
+		}
+
+		if (Id) {
+			fetchUser()
+		}
+	}, [Id])
+
 	return (
 		<div className='min-h-screen bg-background'>
 			{/* Navbar */}
@@ -61,9 +82,8 @@ export default function LayoutInstructor({
 							href={`${getLanguagePrefix()}/instructor/${Id}`}
 							className='mr-6 flex items-center space-x-2'
 						>
-							<GraduationCap className='h-6 w-6' />
-							<span className='hidden font-bold sm:inline-block'>
-								E-AVTOMAKTAB
+							<span className='hidden text-3xl text-blue-500 font-bold sm:inline-block'>
+								AVTOMAKTAB
 							</span>
 						</Link>
 					</div>
@@ -80,11 +100,11 @@ export default function LayoutInstructor({
 						</div>
 						<nav className='flex items-center space-x-2'>
 							<ModeToggle />
-							<Button variant='ghost' size='icon' aria-label='Timer'>
-								<Clock className='h-4 w-4' />
-							</Button>
+							<LanguageSwitcher />
 							<Avatar>
-								<AvatarFallback>AR</AvatarFallback>
+								<AvatarFallback className='bg-green-400'>
+									{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
+								</AvatarFallback>
 							</Avatar>
 						</nav>
 					</div>
@@ -160,15 +180,6 @@ export default function LayoutInstructor({
 							</Link>
 						))}
 					</nav>
-					<div className='px-2 mt-auto'>
-						<Button
-							variant='ghost'
-							className='w-full justify-start text-red-500'
-						>
-							<LogOut className='mr-2 h-4 w-4' />
-							Chiqish
-						</Button>
-					</div>
 				</div>
 			</div>
 

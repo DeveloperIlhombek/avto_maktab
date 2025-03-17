@@ -11,9 +11,15 @@ export default function AdminLayout({
 	return (
 		<div className='max-h-screen bg-background'>
 			<Header />
-			<div className='flex h-[calc(100vh-4rem)]'>
+
+			<div className='flex'>
 				<Sidebar />
-				<main className='flex-1 overflow-y-auto p-8'>{children}</main>
+
+				<main className='w-full overflow-y-auto transition-all duration-300 '>
+					<div className='p-14 bg-gradient-to-b from-sky-100/10 via-sky-900/30 to-sky-100/10 dark:from-sky-900/10 dark:via-sky-300/20 dark:to-sky-900/10'>
+						{children}
+					</div>
+				</main>
 			</div>
 		</div>
 	)

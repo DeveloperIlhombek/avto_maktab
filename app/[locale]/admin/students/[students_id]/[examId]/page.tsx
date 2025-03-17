@@ -46,7 +46,7 @@ function Page() {
 	}, [lang, examId])
 
 	const getImageUrl = (mediaUrl: string | null) => {
-		if (!mediaUrl || mediaUrl === '1') return '/testbox.svg'
+		if (!mediaUrl || mediaUrl === '1') return '/avto6.webp'
 
 		if (!mediaUrl.includes('\\')) {
 			return `http://213.230.109.74:8080/${mediaUrl}`

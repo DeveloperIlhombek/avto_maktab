@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
@@ -40,8 +40,8 @@ export default function AllUserTestPage() {
 	const [totalAnswered, setTotalAnswered] = useState(0)
 	const [pageNumber, setPageNumber] = useState(0)
 
-	const correctSoundRef = useRef<HTMLAudioElement | null>(null)
-	const incorrectSoundRef = useRef<HTMLAudioElement | null>(null)
+	// const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+	// const incorrectSoundRef = useRef<HTMLAudioElement | null>(null)
 
 	const pathname = usePathname()
 	const pathSegments = pathname.split('/')
@@ -59,8 +59,8 @@ export default function AllUserTestPage() {
 	}
 
 	useEffect(() => {
-		correctSoundRef.current = new Audio('/correct.mp3')
-		incorrectSoundRef.current = new Audio('/incorrect.mp3')
+		// correctSoundRef.current = new Audio('/correct.mp3')
+		// incorrectSoundRef.current = new Audio('/incorrect.mp3')
 
 		fetchTests()
 	}, [language, pageNumber])
@@ -135,12 +135,68 @@ export default function AllUserTestPage() {
 	}
 
 	const getImageUrl = (mediaUrl: string | null) => {
-		if (!mediaUrl || mediaUrl === '1') return null
+		if (!mediaUrl || mediaUrl === '1') return '/avto6.webp'
 		if (mediaUrl.startsWith('Files/')) {
 			return `http://213.230.109.74:8080/${mediaUrl}`
 		}
 		return null
 	}
+
+	useEffect(() => {
+		const handleKeyDownArrow = (event: KeyboardEvent) => {
+			if (event.key === 'ArrowLeft') {
+				prevQuestion()
+			} else if (event.key === 'ArrowRight') {
+				nextQuestion()
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDownArrow)
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDownArrow)
+		}
+	}, [currentQuestionIndex, tests, selectedAnswer])
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			const currentQuestion = tests[currentQuestionIndex]
+			if (!currentQuestion || selectedAnswer) return
+
+			// F1 dan F8 gacha tugmalarni qo'llash
+			if (event.key === 'F1' && currentQuestion.testAnswers.length > 0) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[0].id)
+			} else if (event.key === 'F2' && currentQuestion.testAnswers.length > 1) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[1].id)
+			} else if (event.key === 'F3' && currentQuestion.testAnswers.length > 2) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[2].id)
+			} else if (event.key === 'F4' && currentQuestion.testAnswers.length > 3) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[3].id)
+			} else if (event.key === 'F5' && currentQuestion.testAnswers.length > 4) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[4].id)
+			} else if (event.key === 'F6' && currentQuestion.testAnswers.length > 5) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[5].id)
+			} else if (event.key === 'F7' && currentQuestion.testAnswers.length > 6) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[6].id)
+			} else if (event.key === 'F8' && currentQuestion.testAnswers.length > 7) {
+				event.preventDefault()
+				handleAnswerSelect(currentQuestion.testAnswers[7].id)
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [currentQuestionIndex, tests, selectedAnswer])
 
 	if (loading && tests.length === 0) {
 		return (
@@ -287,7 +343,7 @@ export default function AllUserTestPage() {
 													alt={currentQuestion.question}
 													width={600}
 													height={400}
-													className='w-full h-auto object-contain max-h-[400px]'
+													className='w-full h-auto object-contain rounded-md max-h-[400px]'
 													onError={() => setImageError(true)}
 												/>
 											) : (

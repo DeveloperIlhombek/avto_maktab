@@ -119,7 +119,7 @@ function Page() {
 									{fetchInstructor.name} {fetchInstructor.surname}
 								</CardTitle>
 								<p className='text-muted-foreground mt-1'>
-									@{fetchInstructor.username}
+									{fetchInstructor.username}
 								</p>
 								<Badge variant='secondary' className='mt-2'>
 									{fetchInstructor.role === 2 ? 'Instruktor' : 'Foydalanuvchi'}

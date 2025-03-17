@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateOwnPassword } from '@/lib/users'
+import { useTranslations } from 'next-intl'
 
 // Parol validatsiyasi uchun schema
 const passwordSchema = z
@@ -33,6 +34,7 @@ const passwordSchema = z
 	})
 
 function Settings() {
+	const t = useTranslations('Student')
 	const token = localStorage.getItem('token')
 
 	const {
@@ -67,14 +69,14 @@ function Settings() {
 		<div className='flex justify-center items-center max-h-screen'>
 			<Card className='w-full max-w-md'>
 				<CardHeader>
-					<CardTitle>Xavfsizlik</CardTitle>
-					<CardDescription>Parolingizni o&apos;zgartirish</CardDescription>
+					<CardTitle>{t('xavfsizlik')}</CardTitle>
+					<CardDescription>{t('parolniozgartirish')}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 						{/* Yangi parol */}
 						<div>
-							<Label htmlFor='newPassword'>Yangi parol</Label>
+							<Label htmlFor='newPassword'>{t('yangiparol')}</Label>
 							<Input
 								id='newPassword'
 								type='password'
@@ -89,7 +91,9 @@ function Settings() {
 
 						{/* Yangi parolni tasdiqlash */}
 						<div>
-							<Label htmlFor='confirmPassword'>Yangi parolni tasdiqlang</Label>
+							<Label htmlFor='confirmPassword'>
+								{t('yangiparolnitasdiqlang')}
+							</Label>
 							<Input
 								id='confirmPassword'
 								type='password'
@@ -103,7 +107,7 @@ function Settings() {
 						</div>
 
 						<Button type='submit' className='w-full'>
-							Parolni o&apos;zgartirish
+							{t('parolniozgartirish')}
 						</Button>
 					</form>
 				</CardContent>

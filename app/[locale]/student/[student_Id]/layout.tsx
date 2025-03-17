@@ -9,46 +9,16 @@ import {
 	ClipboardCheck,
 	GraduationCap,
 	Home,
-	LogOut,
 	Menu,
 	Settings,
 	User,
-	Wallet,
 	X,
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
 import { getUserById } from '@/lib/users'
 import { LanguageSwitcher } from '@/components/shared/language-switcher'
+import { useTranslations } from 'next-intl'
 
-const navigation = [
-	{
-		name: 'Dashboard',
-		href: '/',
-		icon: Home,
-	},
-	{
-		name: "Shaxsiy ma'lumotlar",
-		href: '/profile',
-		icon: User,
-	},
-
-	{
-		name: 'Testlar',
-		href: '/tests',
-		icon: ClipboardCheck,
-	},
-
-	{
-		name: "To'lovlar",
-		href: '/payments',
-		icon: Wallet,
-	},
-	{
-		name: 'Sozlamalar',
-		href: '/settings',
-		icon: Settings,
-	},
-]
 interface UserData {
 	id: string
 	name: string
@@ -69,6 +39,7 @@ export default function StudentLayout({
 	const pathname = usePathname()
 	const pathSegments = pathname.split('/')
 	const Id = pathname.split('/')[3]
+	const t = useTranslations('Student')
 	const language =
 		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
 			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
@@ -98,6 +69,29 @@ export default function StudentLayout({
 		setIsSidebarOpen(false)
 	}, [pathname])
 
+	const navigation = [
+		{
+			name: t('dashboard'),
+			href: '/',
+			icon: Home,
+		},
+		{
+			name: t('shaxsiymalumotlar'),
+			href: '/profile',
+			icon: User,
+		},
+		{
+			name: t('testlar'),
+			href: '/tests',
+			icon: ClipboardCheck,
+		},
+		{
+			name: t('sozlamalar'),
+			href: '/settings',
+			icon: Settings,
+		},
+	]
+
 	return (
 		<div className='min-h-screen bg-background'>
 			{/* Navbar */}
@@ -105,12 +99,11 @@ export default function StudentLayout({
 				<div className='container flex h-14 items-center'>
 					<div className='mr-4 hidden md:flex'>
 						<Link
-							href={`${getLanguagePrefix()}/student/${Id}`}
+							href={`${getLanguagePrefix()}`}
 							className='mr-6 flex items-center space-x-2'
 						>
-							<GraduationCap className='h-6 w-6' />
-							<span className='hidden font-bold sm:inline-block'>
-								E-AVTOMAKTAB
+							<span className='hidden text-3xl text-blue-500 font-bold sm:inline-block'>
+								AVTOMAKTAB
 							</span>
 						</Link>
 					</div>
@@ -156,7 +149,7 @@ export default function StudentLayout({
 							className='flex items-center space-x-2'
 						>
 							<GraduationCap className='h-6 w-6' />
-							<span className='font-bold'>E-AVTOMAKTAB</span>
+							<span className='font-bold'>AVTOMAKTAB</span>
 						</Link>
 						<Button
 							variant='ghost'
@@ -173,18 +166,11 @@ export default function StudentLayout({
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
 									className='w-full justify-start'
 								>
-									<item.icon className='mr-2 h-4 w-4' />
+									<item.icon className=' h-4 w-4' />
 									{item.name}
 								</Button>
 							</Link>
 						))}
-						<Button
-							variant='ghost'
-							className='w-full justify-start text-red-500'
-						>
-							<LogOut className='mr-2 h-4 w-4' />
-							Chiqish
-						</Button>
 					</nav>
 				</div>
 			</div>
@@ -202,13 +188,13 @@ export default function StudentLayout({
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
 									className='w-full justify-start'
 								>
-									<item.icon className='mr-2 h-4 w-4' />
+									<item.icon className='mr-0 h-4 w-4' />
 									{item.name}
 								</Button>
 							</Link>
 						))}
 					</nav>
-					<div className='px-2 mt-auto'>
+					{/* <div className='px-2 mt-auto'>
 						<Button
 							variant='ghost'
 							className='w-full justify-start text-red-500'
@@ -216,7 +202,7 @@ export default function StudentLayout({
 							<LogOut className='mr-2 h-4 w-4' />
 							Chiqish
 						</Button>
-					</div>
+					</div> */}
 				</div>
 			</div>
 
