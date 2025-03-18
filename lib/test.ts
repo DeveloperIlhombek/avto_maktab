@@ -2,6 +2,7 @@ import { customFetch } from './api'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = 'http://213.230.109.74:8080'
+//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 
 export interface TestsResponse {
 	isSuccess: boolean
@@ -134,7 +135,8 @@ export const getAllTests = async ({
 }) => {
 	try {
 		const response = await customFetch(
-			`${API_URL}/api/UserTest/GetQuestions?language=${language}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_URL}/api/TestCase/GetAll?language=${language}&isRandom=true&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+
 			{
 				method: 'GET',
 				headers: {

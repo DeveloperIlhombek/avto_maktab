@@ -2,17 +2,24 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { getMediaFiles, IFileResponse, IFileResult } from '@/lib/media'
+import { getMediaFiles, IFileItems, IFileResult } from '@/lib/media'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Play, Loader2, ArrowLeft } from 'lucide-react'
+import {
+	Calendar,
+	Play,
+	Loader2,
+	ArrowLeft,
+	Image as ImageIcon,
+} from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 
 function Page() {
-	const [mediaFile, setMediaFile] = useState<IFileResult[]>([])
+	const [mediaFile, setMediaFile] = useState<IFileItems[]>([])
 	const [loading, setLoading] = useState(true)
 	const [currentPlaying, setCurrentPlaying] = useState<string | null>(null)
 	const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set())
@@ -29,6 +36,7 @@ function Page() {
 		}
 		return ''
 	}
+
 	useEffect(() => {
 		fetchMediaFile()
 	}, [folderId])
@@ -46,12 +54,12 @@ function Page() {
 	const fetchMediaFile = async () => {
 		setLoading(true)
 		try {
-			const mediaFileResponse: IFileResponse = await getMediaFiles({
+			const mediaFileResponse: IFileResult = await getMediaFiles({
 				pageSize: 1000,
 				folderId: folderId,
 				pageNumber: 0,
 			})
-			setMediaFile(mediaFileResponse.result)
+			setMediaFile(mediaFileResponse.items)
 		} finally {
 			setLoading(false)
 		}
@@ -64,6 +72,11 @@ function Page() {
 
 	const handleVideoPause = () => {
 		setCurrentPlaying(null)
+	}
+
+	const isImageFile = (fileName: string) => {
+		const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
+		return imageExtensions.some(ext => fileName.toLowerCase().endsWith(ext))
 	}
 
 	const containerVariants = {
@@ -88,6 +101,26 @@ function Page() {
 		},
 		hover: {
 			scale: 1.02,
+			transition: {
+				type: 'spring',
+				stiffness: 400,
+				damping: 10,
+			},
+		},
+	}
+
+	const imageVariants = {
+		hidden: { opacity: 0, scale: 0.9 },
+		visible: {
+			opacity: 1,
+			scale: 1,
+			transition: {
+				type: 'spring',
+				stiffness: 100,
+			},
+		},
+		hover: {
+			scale: 1.05,
 			transition: {
 				type: 'spring',
 				stiffness: 400,
@@ -143,65 +176,90 @@ function Page() {
 							{mediaFile.map(media => (
 								<motion.div
 									key={media.id}
-									variants={cardVariants}
+									variants={
+										isImageFile(media.fileName) ? imageVariants : cardVariants
+									}
 									whileHover='hover'
 									layout
 								>
 									<Card className='bg-card/50  backdrop-blur-sm border-2 border-border/50 hover:border-primary/50 overflow-hidden'>
 										<CardHeader className='space-y-2'>
 											<CardTitle className='flex items-center gap-2 text-lg font-medium truncate'>
-												<Play size={18} className='text-primary' />
+												{isImageFile(media.fileName) ? (
+													<ImageIcon size={18} className='text-primary' />
+												) : (
+													<Play size={18} className='text-primary' />
+												)}
 												{media.fileName}
 											</CardTitle>
 										</CardHeader>
 										<CardContent className='space-y-4'>
-											<div className='relative group aspect-video bg-muted rounded-md overflow-hidden'>
-												{!loadedVideos.has(media.id) ? (
-													<div className='absolute inset-0 flex items-center justify-center'>
-														<Button
-															variant='ghost'
-															size='lg'
-															className='w-16 h-16 rounded-full hover:scale-110 transition-transform'
-															onClick={() => handleVideoPlay(media.id)}
-														>
-															<Play className='h-8 w-8 text-primary' />
-														</Button>
-													</div>
-												) : (
-													<video
-														ref={el => {
-															if (el) videoRefs.current[media.id] = el
-														}}
+											{isImageFile(media.fileName) ? (
+												<div className='relative group aspect-video bg-muted rounded-md overflow-hidden'>
+													<Image
+														src={`http://213.230.109.74:8080/${media.filePath}`}
+														alt={media.fileName}
 														className='w-full h-full object-cover'
-														controls
-														controlsList='nodownload'
-														playsInline
-														onPlay={() => handleVideoPlay(media.id)}
-														onPause={handleVideoPause}
-													>
-														<source
-															src={`http://213.230.109.74:8080/${media.filePath}`}
-															type='video/mp4'
-														/>
-														Your browser does not support the video tag.
-													</video>
-												)}
-
-												{/* Loading Overlay */}
-												<AnimatePresence>
-													{loadedVideos.has(media.id) &&
-														!videoRefs.current[media.id]?.readyState && (
-															<motion.div
-																initial={{ opacity: 0 }}
-																animate={{ opacity: 1 }}
-																exit={{ opacity: 0 }}
-																className='absolute inset-0 bg-black/40 flex items-center justify-center'
+														width={500}
+														height={300}
+													/>
+												</div>
+											) : (
+												<div className='relative group aspect-video bg-muted rounded-md overflow-hidden'>
+													{!loadedVideos.has(media.id) ? (
+														<div className='absolute inset-0 flex items-center justify-center'>
+															<Button
+																variant='ghost'
+																size='lg'
+																className='w-16 h-16 rounded-full hover:scale-110 transition-transform'
+																onClick={() => handleVideoPlay(media.id)}
 															>
-																<Loader2 className='h-8 w-8 animate-spin text-white' />
-															</motion.div>
-														)}
-												</AnimatePresence>
-											</div>
+																<Play className='h-8 w-8 text-primary' />
+															</Button>
+														</div>
+													) : (
+														<video
+															ref={el => {
+																if (el) {
+																	videoRefs.current[media.id] = el
+																	el.addEventListener('loadeddata', () => {
+																		if (currentPlaying === media.id) {
+																			el.play()
+																		}
+																	})
+																}
+															}}
+															className='w-full h-full object-cover'
+															controls
+															controlsList='nodownload'
+															playsInline
+															onPlay={() => handleVideoPlay(media.id)}
+															onPause={handleVideoPause}
+														>
+															<source
+																src={`http://213.230.109.74:8080/${media.filePath}`}
+																type='video/mp4'
+															/>
+															Your browser does not support the video tag.
+														</video>
+													)}
+
+													{/* Loading Overlay */}
+													<AnimatePresence>
+														{loadedVideos.has(media.id) &&
+															!videoRefs.current[media.id]?.readyState && (
+																<motion.div
+																	initial={{ opacity: 0 }}
+																	animate={{ opacity: 1 }}
+																	exit={{ opacity: 0 }}
+																	className='absolute inset-0 bg-black/40 flex items-center justify-center'
+																>
+																	<Loader2 className='h-8 w-8 animate-spin text-white' />
+																</motion.div>
+															)}
+													</AnimatePresence>
+												</div>
+											)}
 
 											<div className='flex items-center justify-between text-sm text-muted-foreground'>
 												<div className='flex items-center gap-2'>

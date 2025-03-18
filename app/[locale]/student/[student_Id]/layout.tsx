@@ -99,7 +99,7 @@ export default function StudentLayout({
 				<div className='container flex h-14 items-center'>
 					<div className='mr-4 hidden md:flex'>
 						<Link
-							href={`${getLanguagePrefix()}`}
+							href={`${getLanguagePrefix()}/student/${Id}`}
 							className='mr-6 flex items-center space-x-2'
 						>
 							<span className='hidden text-3xl text-blue-500 font-bold sm:inline-block'>
@@ -194,21 +194,12 @@ export default function StudentLayout({
 							</Link>
 						))}
 					</nav>
-					{/* <div className='px-2 mt-auto'>
-						<Button
-							variant='ghost'
-							className='w-full justify-start text-red-500'
-						>
-							<LogOut className='mr-2 h-4 w-4' />
-							Chiqish
-						</Button>
-					</div> */}
 				</div>
 			</div>
 
 			{/* Main Content */}
 			<div className='md:pl-56'>
-				<main className='container py-6'>{children}</main>
+				<main className='p-6'>{children}</main>
 			</div>
 		</div>
 	)

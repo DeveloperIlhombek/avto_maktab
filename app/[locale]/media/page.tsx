@@ -52,12 +52,12 @@ export default function MediaPage() {
 		try {
 			setLoading(true)
 			setError(null)
-			const response = await getFolder({ pageSize: 20, pageNumber })
+			const response = await getFolder({ pageSize: 12, pageNumber })
 
 			if (response.isSuccess) {
-				setMedia(response.result)
+				setMedia(response.result.items)
 				setTotalPages(response.totalPages)
-				setTotalCount(response.result.length)
+				setTotalCount(response.result.totalCount)
 			} else {
 				throw new Error(
 					response.errorMessages?.join(', ') || 'Failed to fetch folders'

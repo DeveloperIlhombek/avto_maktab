@@ -9,16 +9,16 @@ interface TimerProps {
 }
 
 export function Timer({ timeLeft, totalTime }: TimerProps) {
-	const [color, setColor] = useState('bg-green-500')
+	const [color, setColor] = useState('bg-green-500') // Boshlang'ich rang
 	const progress = (timeLeft / totalTime) * 100
 
 	useEffect(() => {
 		if (timeLeft <= 10) {
-			setColor('text-red-500')
+			setColor('bg-red-500')
 		} else if (timeLeft <= 60) {
-			setColor('text-yellow-500')
+			setColor('bg-yellow-500')
 		} else {
-			setColor('text-green-500')
+			setColor('bg-green-500')
 		}
 	}, [timeLeft])
 
@@ -26,34 +26,16 @@ export function Timer({ timeLeft, totalTime }: TimerProps) {
 	const seconds = timeLeft % 60
 
 	return (
-		<div className='relative w-20 h-20'>
-			<svg className='w-full h-full' viewBox='0 0 100 100'>
-				<circle
-					className='text-gray-200 stroke-current'
-					strokeWidth='10'
-					cx='50'
-					cy='50'
-					r='40'
-					fill='transparent'
-				/>
-				<motion.circle
-					className={`stroke-current ${color} transition-colors duration-300`}
-					strokeWidth='10'
-					strokeLinecap='round'
-					cx='50'
-					cy='50'
-					r='40'
-					fill='transparent'
-					strokeDasharray={251.2}
-					strokeDashoffset={251.2 - (251.2 * progress) / 100}
-					transform='rotate(-90 50 50)'
-					initial={{ strokeDashoffset: 251.2 }}
-					animate={{ strokeDashoffset: 251.2 - (251.2 * progress) / 100 }}
-					transition={{ duration: 0.5 }}
-				/>
-			</svg>
+		<div className='relative w-40 h-10 bg-gray-200 rounded-full overflow-hidden'>
+			<motion.div
+				className={`absolute top-0 left-0 h-full ${color} transition-colors duration-300`}
+				style={{ width: `${progress}%` }}
+				initial={{ width: '100%' }}
+				animate={{ width: `${progress}%` }}
+				transition={{ duration: 0.5 }}
+			/>
 			<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
-				<span className='text-lg font-bold'>
+				<span className='text-2xl font-bold text-gray-800'>
 					{minutes}:{seconds.toString().padStart(2, '0')}
 				</span>
 			</div>

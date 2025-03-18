@@ -1,7 +1,7 @@
 import { customFetch } from './api'
 
 const API_URL = 'http://213.230.109.74:8080'
-
+//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
 export interface IFolderResponse {
 	isSuccess: boolean
 	result: IFolderResult
@@ -23,11 +23,18 @@ export interface IFileResponse {
 }
 
 export interface IFileResult {
-	id: string
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+	items: IFileItems[]
+}
+export interface IFileItems {
 	fileName: string
 	filePath: string
-	uploadedDate: string
 	folderId: string
+	id: string
+	uploadedDate: Date
 }
 
 // Get AllFolder
@@ -42,6 +49,7 @@ export const getFolder = async ({
 	try {
 		const response = await customFetch(
 			`${API_URL}/api/Folder/GetFolders?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+
 			{
 				method: 'GET',
 				headers: {
@@ -88,7 +96,7 @@ export const getMediaFiles = async ({
 		const data = await response.json()
 		console.log(data)
 
-		return data
+		return data.result
 	} catch (error) {
 		console.error('Error fetching tests:', error)
 		return null

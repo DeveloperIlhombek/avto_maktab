@@ -238,7 +238,7 @@ export default function AllUserTestPage() {
 		<div className='min-h-screen mt-16 bg-background p-4 md:p-8 transition-colors duration-300'>
 			<div className='max-w-screen-xl mx-auto space-y-6'>
 				{/* Question Card */}
-				<Card className='border-2 shadow-lg'>
+				<Card className='border-2 '>
 					<CardHeader className='border-b bg-muted/50'>
 						<Button className='w-fit' variant={'custom'}>
 							<Link
@@ -258,7 +258,7 @@ export default function AllUserTestPage() {
 					</CardHeader>
 					<CardContent className='p-6'>
 						<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-							{/* variantlar bo'limi*/}
+							{/* Variantlar bo'limi */}
 							<div className='order-2 lg:order-2 space-y-4'>
 								<div className='grid gap-3'>
 									{currentQuestion.testAnswers.map(answer => (
@@ -269,14 +269,14 @@ export default function AllUserTestPage() {
 										>
 											<Button
 												variant='outline'
-												className={`w-full text-wrap justify-start text-left p-4 h-auto transition-all duration-300 border-2 ${
+												className={`w-full  disabled:opacity-100 text-wrap justify-start text-left p-4 h-auto transition-all duration-300 border-2 ${
 													selectedAnswer === answer.id && answer.isCorrect
-														? 'bg-green-600 border-green-600   shadow-[0_0_10px_rgba(22,163,74,0.2)]'
+														? 'bg-green-500 border-green-500 text-white hover:bg-green-700 hover:border-green-700'
 														: selectedAnswer === answer.id && !answer.isCorrect
-														? 'bg-red-600 border-red-600  shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+														? 'bg-red-500 border-red-500 text-white hover:bg-red-700 hover:border-red-700'
 														: selectedAnswer && answer.isCorrect
-														? 'bg-green-600 border-green-600   shadow-[0_0_10px_rgba(22,163,74,0.2)]'
-														: 'hover:border-primary/50'
+														? 'bg-green-500 border-green-500 text-white hover:bg-green-700 hover:border-green-700'
+														: 'hover:border-primary/50 hover:bg-accent/10'
 												}`}
 												onClick={() => handleAnswerSelect(answer.id)}
 												disabled={!!selectedAnswer}
@@ -285,9 +285,9 @@ export default function AllUserTestPage() {
 													{selectedAnswer && (
 														<div className='mt-0.5'>
 															{answer.isCorrect ? (
-																<CheckCircle2 className='h-5 w-5' />
+																<CheckCircle2 className='h-5 w-5 text-white' />
 															) : selectedAnswer === answer.id ? (
-																<XCircle className='h-5 w-5 ' />
+																<XCircle className='h-5 w-5 text-white' />
 															) : null}
 														</div>
 													)}
@@ -318,10 +318,10 @@ export default function AllUserTestPage() {
 											initial={{ opacity: 0, height: 0 }}
 											animate={{ opacity: 1, height: 'auto' }}
 											exit={{ opacity: 0, height: 0 }}
-											className={`p-4 rounded-lg border-2 ${
+											className={`p-4 rounded-sm border-1 ${
 												isCorrect
-													? 'bg-green-600/10 border-green-600/30'
-													: 'bg-red-600/10 border-red-600/30'
+													? 'bg-green-500/90 border-green-500'
+													: 'bg-red-500/90 border-red-500'
 											}`}
 										>
 											<p className='text-sm leading-relaxed'>
@@ -336,7 +336,7 @@ export default function AllUserTestPage() {
 							<div className='order-1 lg:order-1'>
 								<div className='sticky top-6'>
 									{currentQuestion.mediaUrl ? (
-										<div className='rounded-lg overflow-hidden border-1 shadow-2xl'>
+										<div className='rounded-lg overflow-hidden border-1 shadow-xl'>
 											{getImageUrl(currentQuestion.mediaUrl) && !imageError ? (
 												<Image
 													src={getImageUrl(currentQuestion.mediaUrl)!}

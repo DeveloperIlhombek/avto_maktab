@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getAllTests, submitAnswer, SubmitAnswerResult } from '@/lib/test'
@@ -22,11 +22,15 @@ import { redirect, usePathname } from 'next/navigation'
 interface TestQuestion {
 	id: string
 	question: string
+	name: string | null
 	explanation: string
 	mediaUrl: string | null
-	testAnswersForUser: {
+	testAnswersForUser: null
+	testAnswers: {
 		id: string
+		testCaseId: string
 		answerText: string
+		isCorrect: boolean
 	}[]
 }
 
@@ -44,24 +48,25 @@ export function TestPage({ language, userId }: TestPageProps) {
 	const [selectedAnswers, setSelectedAnswers] = useState<
 		Record<string, string>
 	>({})
+	const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>(
+		{}
+	)
 	const [timeLeft, setTimeLeft] = useState(0)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
-
 	const [testResults, setTestResults] = useState<SubmitAnswerResult>()
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isLoading, setIsLoading] = useState(false)
 	const pathname = usePathname()
 
-	// Extract the language prefix from the pathname
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
-		// Check if the first segment after the initial slash is a language code
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
 			return `/${segments[1]}`
 		}
 		return ''
 	}
+
 	useEffect(() => {
 		if (timeLeft > 0) {
 			const timer = setInterval(() => {
@@ -108,12 +113,25 @@ export function TestPage({ language, userId }: TestPageProps) {
 		await fetchQuestions()
 	}
 
-	const handleAnswerSelect = (questionId: string, answerId: string) => {
-		setSelectedAnswers(prev => ({
-			...prev,
-			[questionId]: answerId,
-		}))
-	}
+	const handleAnswerSelect = useCallback(
+		(questionId: string, answerId: string) => {
+			const currentQuestion = questions.find(q => q.id === questionId)
+			if (currentQuestion) {
+				const isCorrect =
+					currentQuestion.testAnswers.find(a => a.id === answerId)?.isCorrect ||
+					false
+				setCorrectAnswers(prev => ({
+					...prev,
+					[questionId]: isCorrect,
+				}))
+			}
+			setSelectedAnswers(prev => ({
+				...prev,
+				[questionId]: answerId,
+			}))
+		},
+		[questions]
+	)
 
 	const handlePreviousQuestion = () => {
 		if (currentQuestionIndex > 0) {
@@ -175,6 +193,28 @@ export function TestPage({ language, userId }: TestPageProps) {
 		return redirect(`${getLanguagePrefix()}/student/${userId}`)
 	}
 
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key >= 'F1' && event.key <= 'F7') {
+				event.preventDefault()
+				const index = parseInt(event.key.slice(1)) - 1
+				const answer = currentQuestion?.testAnswers[index]
+				if (answer && !selectedAnswers[currentQuestion.id]) {
+					handleAnswerSelect(currentQuestion.id, answer.id)
+				}
+			} else if (event.key === 'ArrowLeft') {
+				handlePreviousQuestion()
+			} else if (event.key === 'ArrowRight') {
+				handleNextQuestion()
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown)
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [currentQuestion, handleAnswerSelect, selectedAnswers])
+
 	if (!currentQuestion) {
 		return (
 			<div className='flex items-center justify-center min-h-screen'>
@@ -184,54 +224,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 	}
 
 	return (
-		<div className='container mx-auto p-4 space-y-6'>
-			<motion.div
-				initial={{ opacity: 0, y: -20 }}
-				animate={{ opacity: 1, y: 0 }}
-				className='flex justify-between items-center'
-			>
-				<Timer
-					timeLeft={timeLeft}
-					totalTime={totalQuestions * SECONDS_PER_QUESTION}
-				/>
-				<Button
-					onClick={() => setIsFinishDialogOpen(true)}
-					disabled={!allQuestionsAnswered || timeLeft <= 0}
-					className='bg-primary'
-				>
-					Testni yakunlash
-				</Button>
-			</motion.div>
-
-			<div className='space-y-2'>
-				<div className='grid grid-cols-10 gap-2 sm:grid-cols-20'>
-					{Array.from({ length: totalQuestions }).map((_, index) => (
-						<motion.button
-							key={index}
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							className={`
-          p-2 rounded-md flex items-center justify-center
-          ${
-						currentQuestionIndex === index
-							? 'bg-primary text-primary-foreground'
-							: 'bg-secondary'
-					}
-          ${
-						selectedAnswers[questions[index]?.id]
-							? 'border-2 border-primary'
-							: ''
-					}
-          transition-all duration-200
-        `}
-							onClick={() => setCurrentQuestionIndex(index)}
-						>
-							{index + 1}
-						</motion.button>
-					))}
-				</div>
-			</div>
-
+		<div className=' mx-auto p-2'>
 			<AnimatePresence mode='wait'>
 				<motion.div
 					key={currentQuestionIndex}
@@ -241,14 +234,16 @@ export function TestPage({ language, userId }: TestPageProps) {
 					transition={{ duration: 0.2 }}
 				>
 					<Card className='w-full'>
-						<CardHeader>
-							<CardTitle>
-								Savol {currentQuestionIndex + 1} / {totalQuestions}
+						<CardHeader className='p-0'>
+							<CardTitle className='text-xl font-roboto tracking-normal bg-sky-100 p-5 mb-4 dark:bg-blue-500/80'>
+								{currentQuestion.question}
 							</CardTitle>
 						</CardHeader>
 						<CardContent className='grid md:grid-cols-2 gap-6'>
 							{currentQuestion.mediaUrl && (
-								<div className='relative h-[300px] w-full'>
+								<div className='relative h-[400px] w-full'>
+									{' '}
+									{/* Rasm o'lchami kattalashtirildi */}
 									<Image
 										src={getImageUrl(currentQuestion.mediaUrl)}
 										alt='Question illustration'
@@ -262,29 +257,41 @@ export function TestPage({ language, userId }: TestPageProps) {
 								</div>
 							)}
 							<div className='space-y-4'>
-								<p className='text-lg'>{currentQuestion.question}</p>
 								<div className='space-y-3'>
-									{currentQuestion.testAnswersForUser.map(answer => (
+									{currentQuestion.testAnswers.map((answer, index) => (
 										<motion.div
 											key={answer.id}
 											whileHover={{ scale: 1.02 }}
 											whileTap={{ scale: 0.98 }}
+											className='flex items-center justify-center gap-2'
 										>
+											<div className='py-3 px-5 flex items-center justify-start border bg-blue-500/80'>
+												F{index + 1}
+											</div>
 											<div
-												className={`
-                          p-4 rounded-lg border cursor-pointer transition-all
-                          ${
-														selectedAnswers[currentQuestion.id] === answer.id
-															? 'border-primary bg-blue-500/25'
-															: 'border-input hover:bg-accent'
-													}
-                          ${
-														timeLeft <= 0
-															? 'pointer-events-none opacity-50'
-															: ''
-													}
-                        `}
+												className={`p-2 flex items-center justify-start flex-grow  border cursor-pointer transition-all
+                                                    ${
+																											selectedAnswers[
+																												currentQuestion.id
+																											] === answer.id
+																												? correctAnswers[
+																														currentQuestion.id
+																												  ]
+																													? 'bg-green-500'
+																													: 'bg-red-500'
+																												: 'border-input hover:bg-accent'
+																										}
+                                                    ${
+																											timeLeft <= 0 ||
+																											selectedAnswers[
+																												currentQuestion.id
+																											]
+																												? 'pointer-events-none opacity-100'
+																												: ''
+																										}
+                                                `}
 												onClick={() =>
+													!selectedAnswers[currentQuestion.id] &&
 													handleAnswerSelect(currentQuestion.id, answer.id)
 												}
 											>
@@ -295,29 +302,85 @@ export function TestPage({ language, userId }: TestPageProps) {
 								</div>
 							</div>
 						</CardContent>
+
+						<div className='flex justify-between m-6'>
+							<Button
+								onClick={handlePreviousQuestion}
+								disabled={currentQuestionIndex === 0}
+								variant='outline'
+								className='w-[120px]'
+							>
+								<ChevronLeft className='mr-2 h-4 w-4' />
+								Oldingi
+							</Button>
+							<span className='text-xl font-bold'>
+								Savol {currentQuestionIndex + 1} / {totalQuestions}
+							</span>
+							<Button
+								onClick={handleNextQuestion}
+								disabled={currentQuestionIndex === totalQuestions - 1}
+								className='w-[120px]'
+							>
+								Keyingi
+								<ChevronRight className='ml-2 h-4 w-4' />
+							</Button>
+						</div>
 					</Card>
 				</motion.div>
 			</AnimatePresence>
 
-			<div className='flex justify-between mt-6'>
+			<div className='flex items-center my-2 justify-between gap-2'>
+				<div className='w-full space-y-2'>
+					<div className='grid grid-cols-10 gap-1 sm:grid-cols-20'>
+						{Array.from({ length: totalQuestions }).map((_, index) => {
+							const questionId = questions[index]?.id
+							const isAnswered = selectedAnswers[questionId]
+							const isCorrect = correctAnswers[questionId]
+
+							return (
+								<motion.button
+									key={index}
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+									className={`
+				p-2 flex items-center justify-center
+				${
+					currentQuestionIndex === index
+						? 'bg-primary text-primary-foreground'
+						: isAnswered
+						? isCorrect
+							? 'bg-green-500'
+							: 'bg-red-500'
+						: 'bg-secondary'
+				}
+				${selectedAnswers[questionId]}
+				transition-all duration-200
+			`}
+									onClick={() => setCurrentQuestionIndex(index)}
+								>
+									{index + 1}
+								</motion.button>
+							)
+						})}
+					</div>
+				</div>
+				<Timer
+					timeLeft={timeLeft}
+					totalTime={totalQuestions * SECONDS_PER_QUESTION}
+				/>
 				<Button
-					onClick={handlePreviousQuestion}
-					disabled={currentQuestionIndex === 0}
-					variant='outline'
-					className='w-[120px]'
+					onClick={() => setIsFinishDialogOpen(true)}
+					disabled={!allQuestionsAnswered || timeLeft <= 0}
+					className='bg-primary'
 				>
-					<ChevronLeft className='mr-2 h-4 w-4' />
-					Oldingi
-				</Button>
-				<Button
-					onClick={handleNextQuestion}
-					disabled={currentQuestionIndex === totalQuestions - 1}
-					className='w-[120px]'
-				>
-					Keyingi
-					<ChevronRight className='ml-2 h-4 w-4' />
+					Testni yakunlash
 				</Button>
 			</div>
+			<motion.div
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				className='flex justify-between items-center'
+			></motion.div>
 
 			<AlertDialog
 				open={isFinishDialogOpen}
@@ -334,7 +397,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 					<AlertDialogFooter>
 						{testResults ? (
 							<div className='flex flex-col gap-6 w-full'>
-								{/* Natijalar statistikasi */}
 								<div className='flex flex-col gap-3'>
 									<div className='flex items-center justify-between'>
 										<span className='font-medium text-gray-700'>
@@ -364,7 +426,6 @@ export function TestPage({ language, userId }: TestPageProps) {
 									</div>
 								</div>
 
-								{/* Tugmalar */}
 								<div className='flex flex-col sm:flex-row gap-3 w-full'>
 									<AlertDialogAction
 										onClick={() => window.location.reload()}
