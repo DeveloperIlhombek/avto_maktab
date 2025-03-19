@@ -46,6 +46,9 @@ export function TestPage({ language }: TestPageProps) {
 	const [totalQuestions, setTotalQuestions] = useState(50)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [questions, setQuestions] = useState<TestQuestion[]>([])
+	const [showExplanation, setShowExplanation] = useState<
+		Record<string, boolean>
+	>({})
 	const [selectedAnswers, setSelectedAnswers] = useState<
 		Record<string, string>
 	>({})
@@ -64,7 +67,6 @@ export function TestPage({ language }: TestPageProps) {
 	const [autoNextTimer, setAutoNextTimer] = useState<NodeJS.Timeout | null>(
 		null
 	)
-	//const t = useTranslations('Funksiyalar')
 	const pathname = usePathname()
 
 	const getLanguagePrefix = () => {
@@ -137,6 +139,10 @@ export function TestPage({ language }: TestPageProps) {
 				...prev,
 				[questionId]: answerId,
 			}))
+			setShowExplanation(prev => ({
+				...prev,
+				[questionId]: true,
+			}))
 			if (autoNextTimer) {
 				clearTimeout(autoNextTimer)
 			}
@@ -153,6 +159,13 @@ export function TestPage({ language }: TestPageProps) {
 	const handlePreviousQuestion = () => {
 		if (currentQuestionIndex > 0) {
 			setCurrentQuestionIndex(prev => prev - 1)
+			const prevQuestionId = questions[currentQuestionIndex - 1].id
+			if (selectedAnswers[prevQuestionId]) {
+				setShowExplanation(prev => ({
+					...prev,
+					[prevQuestionId]: true,
+				}))
+			}
 		}
 	}
 
@@ -304,6 +317,11 @@ export function TestPage({ language }: TestPageProps) {
 										)
 									})}
 								</div>
+								{showExplanation[currentQuestion.id] && (
+									<div className='mt-4 p-4 bg-blue-400 rounded-lg'>
+										<p className='text-black'>{currentQuestion.explanation}</p>
+									</div>
+								)}
 							</div>
 						</CardContent>
 
