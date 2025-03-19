@@ -28,11 +28,10 @@ function Page() {
 	const pathname = usePathname()
 	const examId = pathname.split('/')[4]
 	const lang = pathname.split('/')[1]
-	const getExemId = pathname.split('/')[3]
+	const getUserId = pathname.split('/')[3]
 	const [examResult, setExamResult] = useState<IExamResult>()
 	const [loading, setLoading] = useState(true)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-	const [showQuestions, setShowQuestions] = useState(false)
 	const t = useTranslations('Student')
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
@@ -129,18 +128,39 @@ function Page() {
 					animate={{ opacity: 1, y: 0 }}
 					className='text-center space-y-2 flex gap-4'
 				>
-					<Button variant={'custom'}>
-						<Link
-							href={`${getLanguagePrefix()}/student/${getExemId}`}
-							className='flex items-center justify-center gap-2'
-						>
-							<ArrowLeft /> {t('ortga')}
-						</Link>
-					</Button>
+					<div className='flex items-center justify-center gap-3'>
+						<Button variant={'custom'}>
+							<Link
+								href={`${getLanguagePrefix()}/student/${getUserId}`}
+								className='flex items-center justify-center gap-2'
+							>
+								<ArrowLeft /> {t('barchanatijalar')}
+							</Link>
+						</Button>
+						<Button variant={'custom'}>
+							<Link
+								href={`${getLanguagePrefix()}/student/${getUserId}/tests`}
+								className='flex items-center justify-center gap-2'
+							>
+								{t('testishlash')}
+							</Link>
+						</Button>
+					</div>
 
 					<h1 className='text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 text-center flex-grow'>
 						{t('imtixonnatijalari')}
 					</h1>
+					<div className='flex items-center gap-4'>
+						<div className='flex items-center gap-2'>
+							<Calendar className='h-3 w-3  text-sm' />
+							<span className='text-sm'>
+								{new Date(examResult.createAt).toLocaleDateString('uz-UZ')}
+							</span>
+						</div>
+						<Badge variant={isPassed ? 'custom' : 'destructive'}>
+							{isPassed ? `${t('topshirdi')}` : `${t('topshirmadi')}`}
+						</Badge>
+					</div>
 				</motion.div>
 
 				<motion.div
@@ -149,24 +169,7 @@ function Page() {
 					transition={{ delay: 0.2 }}
 				>
 					<Card className='border-2'>
-						<CardHeader>
-							<CardTitle className='flex items-center justify-between'>
-								<span className='text-2xl'>{t('natija')}</span>
-								<div className='flex items-center gap-4'>
-									<div className='flex items-center gap-2'>
-										<Calendar className='h-3 w-3  text-sm' />
-										<span className='text-sm'>
-											{new Date(examResult.createAt).toLocaleDateString(
-												'uz-UZ'
-											)}
-										</span>
-									</div>
-									<Badge variant={isPassed ? 'custom' : 'destructive'}>
-										{isPassed ? `${t('topshirdi')}` : `${t('topshirmadi')}`}
-									</Badge>
-								</div>
-							</CardTitle>
-						</CardHeader>
+						<CardHeader></CardHeader>
 						<CardContent className='space-y-8'>
 							{/* Stats Grid */}
 							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
@@ -254,166 +257,133 @@ function Page() {
 
 							{/* Question Navigation */}
 							<div className='space-y-4'>
-								<Button
-									onClick={() => setShowQuestions(!showQuestions)}
-									className='w-full'
-								>
-									{showQuestions
-										? `${t('savolarnigayashirish')}`
-										: `${t('savolarnikorish')}`}
-								</Button>
-
-								{showQuestions && (
-									<div className='grid grid-cols-5 md:grid-cols-10 gap-2'>
-										{examResult.examTestCases.map((testCase, index) => (
-											<Button
-												key={testCase.id}
-												variant={
-													currentQuestionIndex === index ? 'default' : 'outline'
-												}
-												className={`aspect-square ${
-													isAnswerCorrect(testCase)
-														? 'bg-green-500/20 hover:bg-green-500/30 border-green-500'
-														: 'bg-red-500/20 hover:bg-red-500/30 border-red-500'
-												}`}
-												onClick={() => setCurrentQuestionIndex(index)}
-											>
-												{index + 1}
-											</Button>
-										))}
-									</div>
-								)}
+								<div className='grid grid-cols-5 md:grid-cols-20 gap-1'>
+									{examResult.examTestCases.map((testCase, index) => (
+										<Button
+											key={testCase.id}
+											variant={
+												currentQuestionIndex === index ? 'default' : 'outline'
+											}
+											className={`aspect-square ${
+												isAnswerCorrect(testCase)
+													? 'bg-green-500 hover:bg-green-500 border-green-500'
+													: 'bg-red-500 hover:bg-red-500 border-red-500'
+											}`}
+											onClick={() => setCurrentQuestionIndex(index)}
+										>
+											{index + 1}
+										</Button>
+									))}
+								</div>
 							</div>
 
 							{/* Question Details */}
 							<AnimatePresence mode='wait'>
-								{showQuestions && (
-									<motion.div
-										key={currentQuestionIndex}
-										initial={{ opacity: 0, y: 20 }}
-										animate={{ opacity: 1, y: 0 }}
-										exit={{ opacity: 0, y: -20 }}
-										className='space-y-6'
-									>
-										<Card>
-											<CardHeader>
-												<CardTitle className='flex items-center justify-between'>
-													<span>
-														{t('savol')} {currentQuestionIndex + 1}
-													</span>
-													<Badge
-														variant={
-															isAnswerCorrect(currentQuestion)
-																? 'default'
-																: 'destructive'
-														}
-													>
-														{isAnswerCorrect(currentQuestion)
-															? `${t('togri')}`
-															: `${t('notogri')}`}
-													</Badge>
-												</CardTitle>
-											</CardHeader>
-											<CardContent className='space-y-6'>
-												<p className='text-lg'>
-													{currentQuestion.testCase.question}
-												</p>
-
-												<div className='w-full flex flex-col md:flex-row items-start justify-between gap-4'>
-													{currentQuestion.testCase.mediaUrl && (
-														<div className='w-full md:w-1/2 rounded-lg overflow-hidden border'>
-															<Image
-																src={getImageUrl(
-																	currentQuestion.testCase.mediaUrl
-																)}
-																alt='Question'
-																width={600}
-																height={400}
-																className='w-full h-auto object-contain max-h-[300px]'
-															/>
-														</div>
-													)}
-
-													<div className='w-full md:w-1/2 space-y-3'>
-														{currentQuestion.testCase.testAnswers.map(
-															answer => (
-																<div
-																	key={answer.id}
-																	className={`p-4 rounded-lg border ${
-																		answer.id ===
-																		currentQuestion.selectedAnswerId
-																			? answer.isCorrect
-																				? 'bg-green-500/20 border-green-500'
-																				: 'bg-red-500/20 border-red-500'
-																			: answer.isCorrect
-																			? 'bg-green-500/20 border-green-500'
-																			: ''
-																	}`}
-																>
-																	<div className='flex items-center gap-2'>
-																		{answer.id ===
-																			currentQuestion.selectedAnswerId &&
-																			(answer.isCorrect ? (
-																				<CheckCircle className='h-5 w-5 text-green-500' />
-																			) : (
-																				<XCircle className='h-5 w-5 text-red-500' />
-																			))}
-																		<span>{answer.answerText}</span>
-																	</div>
-																</div>
-															)
-														)}
-													</div>
-												</div>
-
-												<p className='text-sm text-muted-foreground mt-4'>
-													{currentQuestion.testCase.explanation}
-												</p>
-											</CardContent>
-										</Card>
-
-										<div className='flex justify-between'>
-											<Button
-												variant='outline'
-												onClick={prevQuestion}
-												disabled={currentQuestionIndex === 0}
-											>
-												<ChevronLeft className='mr-2 h-4 w-4' />
-												{t('oldingisavol')}
-											</Button>
-											<Button
-												variant='outline'
-												onClick={nextQuestion}
-												disabled={
-													currentQuestionIndex ===
-													examResult.examTestCases.length - 1
-												}
-											>
-												{t('keyingisavol')}
-												<ChevronRight className='ml-2 h-4 w-4' />
-											</Button>
-										</div>
-									</motion.div>
-								)}
-							</AnimatePresence>
-
-							{/* Result Animation */}
-							{!showQuestions && (
 								<motion.div
-									initial={{ scale: 0 }}
-									animate={{ scale: 1 }}
-									transition={{ delay: 0.7, type: 'spring' }}
-									className='flex justify-center'
+									key={currentQuestionIndex}
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -20 }}
+									className='space-y-6'
 								>
-									<Image
-										src={isPassed ? '/success.png' : '/try-again.webp'}
-										alt='Result'
-										width={200}
-										height={200}
-										className='drop-shadow-xl'
-									/>
+									<Card>
+										<CardHeader>
+											<CardTitle className='flex items-center justify-between'>
+												<span>
+													{t('savol')} {currentQuestionIndex + 1}
+												</span>
+												<Badge
+													variant={
+														isAnswerCorrect(currentQuestion)
+															? 'custom'
+															: 'destructive'
+													}
+													className='text-sm'
+												>
+													{isAnswerCorrect(currentQuestion)
+														? `${t('togri')}`
+														: `${t('notogri')}`}
+												</Badge>
+											</CardTitle>
+										</CardHeader>
+										<CardContent className='space-y-6'>
+											<p className='text-lg'>
+												{currentQuestion.testCase.question}
+											</p>
+
+											<div className='w-full flex flex-col md:flex-row items-start justify-between gap-4'>
+												{currentQuestion.testCase.mediaUrl && (
+													<div className='w-full md:w-1/2 rounded-lg overflow-hidden border'>
+														<Image
+															src={getImageUrl(
+																currentQuestion.testCase.mediaUrl
+															)}
+															alt='Question'
+															width={600}
+															height={400}
+															className='w-full h-auto object-contain max-h-[300px]'
+														/>
+													</div>
+												)}
+
+												<div className='w-full md:w-1/2 space-y-3'>
+													{currentQuestion.testCase.testAnswers.map(answer => (
+														<div
+															key={answer.id}
+															className={`p-4 rounded-lg border ${
+																answer.id === currentQuestion.selectedAnswerId
+																	? answer.isCorrect
+																		? 'bg-green-500 border-green-500'
+																		: 'bg-red-500 border-red-500'
+																	: answer.isCorrect
+																	? 'bg-green-500 border-green-500'
+																	: ''
+															}`}
+														>
+															<div className='flex items-center gap-2'>
+																{answer.id ===
+																	currentQuestion.selectedAnswerId &&
+																	(answer.isCorrect ? (
+																		<CheckCircle className='h-5 w-5 text-green-500' />
+																	) : (
+																		<XCircle className='h-5 w-5 text-red-500' />
+																	))}
+																<span>{answer.answerText}</span>
+															</div>
+														</div>
+													))}
+												</div>
+											</div>
+
+											<p className='text-sm text-muted-foreground mt-4'>
+												{currentQuestion.testCase.explanation}
+											</p>
+										</CardContent>
+									</Card>
+
+									<div className='flex justify-between'>
+										<Button
+											variant='outline'
+											onClick={prevQuestion}
+											disabled={currentQuestionIndex === 0}
+										>
+											<ChevronLeft className='mr-2 h-4 w-4' />
+											{t('oldingisavol')}
+										</Button>
+										<Button
+											variant='outline'
+											onClick={nextQuestion}
+											disabled={
+												currentQuestionIndex ===
+												examResult.examTestCases.length - 1
+											}
+										>
+											{t('keyingisavol')}
+											<ChevronRight className='ml-2 h-4 w-4' />
+										</Button>
+									</div>
 								</motion.div>
-							)}
+							</AnimatePresence>
 						</CardContent>
 					</Card>
 				</motion.div>

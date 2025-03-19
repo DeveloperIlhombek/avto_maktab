@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getAllTests, submitAnswer, SubmitAnswerResult } from '@/lib/test'
+import {
+	getAllTests,
+	getExemsUser,
+	submitAnswer,
+	SubmitAnswerResult,
+} from '@/lib/test'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
@@ -69,6 +74,20 @@ export function TestPage({ language, userId }: TestPageProps) {
 		}
 		return ''
 	}
+
+	useEffect(() => {
+		const fetchExemUser = async () => {
+			const redirectToExemAnswer = await getExemsUser({
+				pageNumber: 0,
+				pageSize: 1,
+				UserID: userId,
+			})
+
+			console.log(redirectToExemAnswer.items[0])
+		}
+
+		fetchExemUser()
+	}, [])
 
 	useEffect(() => {
 		if (timeLeft > 0) {
@@ -203,9 +222,9 @@ export function TestPage({ language, userId }: TestPageProps) {
 		.every(q => selectedAnswers[q.id])
 
 	const currentQuestion = questions[currentQuestionIndex]
-
+	const examID = testResults?.id
 	const handleRedirectToResults = () => {
-		return redirect(`${getLanguagePrefix()}/student/${userId}`)
+		return redirect(`${getLanguagePrefix()}/student/${userId}/${examID}`)
 	}
 
 	useEffect(() => {
