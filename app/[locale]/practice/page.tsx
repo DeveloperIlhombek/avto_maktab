@@ -57,6 +57,22 @@ export default function PracticePage() {
 		}
 	}
 
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'ArrowLeft') {
+				event.preventDefault()
+				prevQuestion()
+			} else if (event.key === 'ArrowRight') {
+				event.preventDefault()
+				nextQuestion()
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown)
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [currentQuestionIndex])
 	const nextQuestion = () => {
 		if (currentQuestionIndex < tests.length - 1) {
 			setCurrentQuestionIndex(prev => prev + 1)
@@ -140,7 +156,7 @@ export default function PracticePage() {
 	const currentQuestion = tests[currentQuestionIndex]
 
 	return (
-		<main className='min-h-screen p-4 md:p-2 bg-background transition-colors duration-300'>
+		<main className='min-h-screen py-4 px-2 md:p-2 bg-background transition-colors duration-300'>
 			<div className='max-w-screen-xl h-[80%] mx-auto space-y-6'>
 				<Card className='shadow-lg rounded-lg overflow-hidden'>
 					<CardHeader className='p-4 md:p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm dark:shadow-gray-800/50'>
@@ -176,7 +192,7 @@ export default function PracticePage() {
 						</CardTitle>
 
 						{/* Question Description */}
-						<CardDescription className='text-xl text-gray-600 dark:text-gray-300 text-center leading-relaxed'>
+						<CardDescription className='text-xl py-4 bg-red-500 text-white dark:text-gray-300 text-center leading-relaxed'>
 							{currentQuestion.question}
 						</CardDescription>
 					</CardHeader>
@@ -223,7 +239,7 @@ export default function PracticePage() {
 											animate={{ opacity: 1, y: 0 }}
 											exit={{ opacity: 0, y: -20 }}
 											transition={{ duration: 0.3 }}
-											className='font-medium border border-green-300 p-4 w-full rounded-md'
+											className='font-medium bg-green-500 border border-green-500 p-4 w-full rounded-md'
 										>
 											{answer.answerText}
 										</motion.div>

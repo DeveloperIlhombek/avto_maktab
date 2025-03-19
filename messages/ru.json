@@ -70,14 +70,7 @@
 		"keyingi": "Следующий",
 		"oldingi": "Предыдущий"
 	},
-	"Testwithanswer": {
-		"savol": "Вопрос",
-		"izoh": "Комментарий",
-		"oldingisavol": "Предыдущий вопрос",
-		"davometish": "Продолжить",
-		"keyingisavol": "Следующий вопрос",
-		"ortga": "Назад"
-	},
+
 	"Media": {
 		"ortga": "Назад",
 		"qaytaurinish": "Повторить",
@@ -126,6 +119,13 @@
 		"natija": "Результат",
 		"dashboard": "Панель управления",
 		"testlar": "Тесты",
-		"sozlamalar": "Настройки"
+		"sozlamalar": "Настройки",
+		"testniyakunlash": "Завершить тест",
+		"testniyakunlashnitasdiqlang": "Подтвердите завершение теста",
+		"yangitestboshlash": "Начать новый тест",
+		"natijalarnikorish": "Посмотреть результаты",
+		"bekorqilish": "Отмена",
+		"yuklanmoqda": "Загружается",
+		"yakunlash": "Завершить"
 	}
 }

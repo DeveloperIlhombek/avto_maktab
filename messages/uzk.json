@@ -70,14 +70,7 @@
 		"keyingi": "Кейинги",
 		"oldingi": "Олдинги"
 	},
-	"Testwithanswer": {
-		"savol": "Савол",
-		"izoh": "Изоҳ",
-		"oldingisavol": "Олдинги савол",
-		"davometish": "Давом этиш",
-		"keyingisavol": "Кейинги савол",
-		"ortga": "Ортга"
-	},
+
 	"Media": {
 		"ortga": "Ортга",
 		"qaytaurinish": "Қайта уриниш",
@@ -126,6 +119,13 @@
 		"natija": "Натижа",
 		"dashboard": "Dashboard",
 		"testlar": "Тестлар",
-		"sozlamalar": "Созламалар"
+		"sozlamalar": "Созламалар",
+		"testniyakunlash": "Тестни якунлаш",
+		"testniyakunlashnitasdiqlang": "Тестни якунлашни тасдиқланг",
+		"yangitestboshlash": "Янги тест бошлаш",
+		"natijalarnikorish": "Натижаларни кўриш",
+		"bekorqilish": "Бекор қилиш",
+		"yuklanmoqda": "Юкланмоқда",
+		"yakunlash": "Якунлаш"
 	}
 }

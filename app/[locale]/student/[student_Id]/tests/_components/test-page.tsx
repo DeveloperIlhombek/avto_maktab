@@ -23,6 +23,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { Timer } from './timer'
 import { redirect, usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 interface TestQuestion {
 	id: string
@@ -47,6 +48,7 @@ interface TestPageProps {
 const SECONDS_PER_QUESTION = 90
 const AUTO_NEXT_DELAY = 5000
 export function TestPage({ language, userId }: TestPageProps) {
+	const t = useTranslations('Student')
 	const [totalQuestions, setTotalQuestions] = useState(20)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [questions, setQuestions] = useState<TestQuestion[]>([])
@@ -342,20 +344,20 @@ export function TestPage({ language, userId }: TestPageProps) {
 								onClick={handlePreviousQuestion}
 								disabled={currentQuestionIndex === 0}
 								variant='outline'
-								className='w-[120px]'
+								className='w-fit'
 							>
 								<ChevronLeft className='mr-2 h-4 w-4' />
-								Oldingi
+								{t('oldingisavol')}
 							</Button>
 							<span className='text-xl font-bold'>
-								Savol {currentQuestionIndex + 1} / {totalQuestions}
+								{t('savol')} {currentQuestionIndex + 1} / {totalQuestions}
 							</span>
 							<Button
 								onClick={handleNextQuestion}
 								disabled={currentQuestionIndex === totalQuestions - 1}
-								className='w-[120px]'
+								className='w-fit'
 							>
-								Keyingi
+								{t('keyingisavol')}
 								<ChevronRight className='ml-2 h-4 w-4' />
 							</Button>
 						</div>
@@ -407,7 +409,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 					disabled={!allQuestionsAnswered || timeLeft <= 0}
 					className='bg-primary'
 				>
-					Testni yakunlash
+					{t('testniyakunlash')}
 				</Button>
 			</div>
 			<motion.div
@@ -424,8 +426,8 @@ export function TestPage({ language, userId }: TestPageProps) {
 					<AlertDialogHeader>
 						<AlertDialogTitle>
 							{testResults
-								? 'Test natijalari'
-								: 'Testni yakunlashni tasdiqlang'}
+								? `${t('testnatijalari')}`
+								: `${t('testniyakunlashnitasdiqlang')}`}
 						</AlertDialogTitle>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -434,7 +436,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 								<div className='flex flex-col gap-3'>
 									<div className='flex items-center justify-between'>
 										<span className='font-medium text-gray-700'>
-											To&apos;g&apos;ri javoblar:
+											{t('togrijavoblar')}
 										</span>
 										<span className=' font-semibold text-green-600'>
 											{testResults.corrertAnswers}
@@ -442,14 +444,16 @@ export function TestPage({ language, userId }: TestPageProps) {
 									</div>
 									<div className='flex items-center justify-between'>
 										<span className=' font-medium text-gray-700'>
-											Jami savollar:
+											{t('jamisavollar')}:
 										</span>
 										<span className=' font-semibold text-blue-600'>
 											{totalQuestions}
 										</span>
 									</div>
 									<div className='flex items-center justify-between'>
-										<span className=' font-medium text-gray-700'>Foiz:</span>
+										<span className=' font-medium text-gray-700'>
+											{t('foiz')}:
+										</span>
 										<span className=' font-semibold text-purple-600'>
 											{(
 												(testResults.corrertAnswers / totalQuestions) *
@@ -465,27 +469,29 @@ export function TestPage({ language, userId }: TestPageProps) {
 										onClick={() => window.location.reload()}
 										className='w-full sm:w-1/2 bg-green-600 hover:bg-green-700'
 									>
-										Yangi test boshlash
+										{t('yangitestboshlash')}
 									</AlertDialogAction>
 									<AlertDialogAction
 										onClick={handleRedirectToResults}
 										className='w-full sm:w-1/2 bg-blue-600 hover:bg-blue-700'
 									>
-										Natijalarni ko&apos;rish
+										{t('natijalarnikorish')}
 									</AlertDialogAction>
 								</div>
 							</div>
 						) : (
 							<>
 								<AlertDialogCancel className='bg-red-600 hover:bg-red-700 text-white'>
-									Bekor qilish
+									{t('bekorqilish')}
 								</AlertDialogCancel>
 								<AlertDialogAction
 									onClick={handleFinishTest}
 									disabled={isSubmitting}
 									className='bg-primary hover:bg-primary/90'
 								>
-									{isSubmitting ? 'Yuklanmoqda...' : 'Yakunlash'}
+									{isSubmitting
+										? `${t('yuklanmoqda')}...`
+										: `${t('yakunlash')}...`}
 								</AlertDialogAction>
 							</>
 						)}
