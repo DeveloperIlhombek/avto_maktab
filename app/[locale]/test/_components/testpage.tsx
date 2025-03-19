@@ -38,6 +38,7 @@ interface TestPageProps {
 }
 
 const SECONDS_PER_QUESTION = 1
+const AUTO_NEXT_DELAY = 5000
 
 export function TestPage({ language }: TestPageProps) {
 	const [totalQuestions, setTotalQuestions] = useState(50)
@@ -58,6 +59,9 @@ export function TestPage({ language }: TestPageProps) {
 		total: number
 		percentage: number
 	}>({ correct: 0, total: 0, percentage: 0 })
+	const [autoNextTimer, setAutoNextTimer] = useState<NodeJS.Timeout | null>(
+		null
+	)
 	//const t = useTranslations('Funksiyalar')
 	const pathname = usePathname()
 
@@ -131,8 +135,17 @@ export function TestPage({ language }: TestPageProps) {
 				...prev,
 				[questionId]: answerId,
 			}))
+			if (autoNextTimer) {
+				clearTimeout(autoNextTimer)
+			}
+			const timer = setTimeout(() => {
+				if (currentQuestionIndex < totalQuestions - 1) {
+					setCurrentQuestionIndex(prev => prev + 1)
+				}
+			}, AUTO_NEXT_DELAY)
+			setAutoNextTimer(timer)
 		},
-		[questions]
+		[questions, currentQuestionIndex, totalQuestions, autoNextTimer]
 	)
 
 	const handlePreviousQuestion = () => {
@@ -142,6 +155,9 @@ export function TestPage({ language }: TestPageProps) {
 	}
 
 	const handleNextQuestion = () => {
+		if (autoNextTimer) {
+			clearTimeout(autoNextTimer)
+		}
 		if (currentQuestionIndex < totalQuestions - 1) {
 			setCurrentQuestionIndex(prev => prev + 1)
 		}

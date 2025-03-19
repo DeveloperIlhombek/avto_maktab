@@ -40,7 +40,7 @@ interface TestPageProps {
 }
 
 const SECONDS_PER_QUESTION = 90
-
+const AUTO_NEXT_DELAY = 5000
 export function TestPage({ language, userId }: TestPageProps) {
 	const [totalQuestions, setTotalQuestions] = useState(20)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -55,6 +55,9 @@ export function TestPage({ language, userId }: TestPageProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
 	const [testResults, setTestResults] = useState<SubmitAnswerResult>()
+	const [autoNextTimer, setAutoNextTimer] = useState<NodeJS.Timeout | null>(
+		null
+	)
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isLoading, setIsLoading] = useState(false)
 	const pathname = usePathname()
@@ -129,8 +132,17 @@ export function TestPage({ language, userId }: TestPageProps) {
 				...prev,
 				[questionId]: answerId,
 			}))
+			if (autoNextTimer) {
+				clearTimeout(autoNextTimer)
+			}
+			const timer = setTimeout(() => {
+				if (currentQuestionIndex < totalQuestions - 1) {
+					setCurrentQuestionIndex(prev => prev + 1)
+				}
+			}, AUTO_NEXT_DELAY)
+			setAutoNextTimer(timer)
 		},
-		[questions]
+		[questions, currentQuestionIndex, totalQuestions, autoNextTimer]
 	)
 
 	const handlePreviousQuestion = () => {
@@ -140,6 +152,9 @@ export function TestPage({ language, userId }: TestPageProps) {
 	}
 
 	const handleNextQuestion = () => {
+		if (autoNextTimer) {
+			clearTimeout(autoNextTimer)
+		}
 		if (currentQuestionIndex < totalQuestions - 1) {
 			setCurrentQuestionIndex(prev => prev + 1)
 		}

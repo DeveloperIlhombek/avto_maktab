@@ -88,12 +88,11 @@ export default function CreateStudent() {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
 			setIsLoading(true)
-			console.log('Submitting values:', values)
 			await createUser(values)
-			toast.success("O'quvchi muvaffaqiyatli qo'shildi")
+			toast.success("Instruktor muvaffaqiyatli qo'shildi")
 			router.push(`${getLanguagePrefix()}/admin/instructors`)
 		} catch (error) {
-			toast.error("O'quvchini qo'shishda xatolik yuz berdi")
+			toast.error("Xatolik! Ushbu ma'lumot allaqachon mavjud.")
 			console.error('Error creating student:', error)
 		} finally {
 			setIsLoading(false)
