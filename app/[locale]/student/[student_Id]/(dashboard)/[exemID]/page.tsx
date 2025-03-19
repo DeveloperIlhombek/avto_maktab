@@ -126,33 +126,37 @@ function Page() {
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
-					className='text-center space-y-2 flex gap-4'
+					className='text-center space-y-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4'
 				>
-					<div className='flex items-center justify-center gap-3'>
-						<Button variant={'custom'}>
+					{/* Buttons Section */}
+					<div className='flex flex-col sm:flex-row items-center justify-center gap-3 w-full md:w-auto'>
+						<Button variant={'custom'} className='w-full sm:w-auto'>
 							<Link
 								href={`${getLanguagePrefix()}/student/${getUserId}`}
-								className='flex items-center justify-center gap-2'
+								className='flex items-center justify-center gap-2 p-2'
 							>
 								<ArrowLeft /> {t('barchanatijalar')}
 							</Link>
 						</Button>
-						<Button variant={'custom'}>
+						<Button variant={'custom'} className='w-full sm:w-auto'>
 							<Link
 								href={`${getLanguagePrefix()}/student/${getUserId}/tests`}
-								className='flex items-center justify-center gap-2'
+								className='flex items-center justify-center gap-2 p-2'
 							>
 								{t('testishlash')}
 							</Link>
 						</Button>
 					</div>
 
+					{/* Title Section */}
 					<h1 className='text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 text-center flex-grow'>
 						{t('imtixonnatijalari')}
 					</h1>
-					<div className='flex items-center gap-4'>
+
+					{/* Date and Badge Section */}
+					<div className='flex flex-col sm:flex-row items-center justify-center gap-4 w-full md:w-auto'>
 						<div className='flex items-center gap-2'>
-							<Calendar className='h-3 w-3  text-sm' />
+							<Calendar className='h-3 w-3 text-sm' />
 							<span className='text-sm'>
 								{new Date(examResult.createAt).toLocaleDateString('uz-UZ')}
 							</span>
