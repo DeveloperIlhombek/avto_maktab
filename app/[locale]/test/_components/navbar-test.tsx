@@ -16,7 +16,7 @@ function PracticeNavbar() {
 		return ''
 	}
 	return (
-		<div className='fixed inset-0 z-40 h-20 bg-background/70 backdrop-blur-xl '>
+		<div className='inset-0 z-40 h-20 bg-background/70 backdrop-blur-xl '>
 			<div className='container mx-auto flex h-full max-w-7xl items-center justify-between border-b'>
 				{/* Logo section */}
 				<h1 className='text-4xl text-blue-500 font-extrabold font-roboto'>

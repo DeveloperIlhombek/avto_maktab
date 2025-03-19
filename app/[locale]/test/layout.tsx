@@ -10,7 +10,7 @@ function Layout({ children }: Props) {
 		<>
 			<div>
 				<NavbarTest />
-				<main>{children}</main>
+				<main className='mx-7'>{children}</main>
 			</div>
 		</>
 	)
