@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { LucideEye, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, LucideEye, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { getUserById } from '@/lib/users'
@@ -20,6 +20,7 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { Button } from '@/components/ui/button'
 
 const container = {
 	hidden: { opacity: 0 },
@@ -42,6 +43,7 @@ const item = {
 		},
 	},
 }
+
 interface UserData {
 	id: string
 	name: string
@@ -51,6 +53,7 @@ interface UserData {
 	phone: string
 	role: number
 }
+
 export default function StudentDashboard() {
 	const pathname = usePathname()
 	const [error, setError] = useState<string | null>(null)
@@ -58,15 +61,33 @@ export default function StudentDashboard() {
 	const Id = pathname.split('/')[3]
 	const [userData, setUserData] = useState<UserData | null>(null)
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
+	const [pageNumber, setPageNumber] = useState(0)
+	const [totalPages, setTotalPages] = useState(0)
 	const t = useTranslations('Student')
+
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
-		// Check if the first segment after the initial slash is a language code
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
 			return `/${segments[1]}`
 		}
 		return ''
 	}
+
+	const fetchExemResult = async (page: number) => {
+		try {
+			const exemResponse = await getExemsUser({
+				UserID: Id,
+				pageSize: 5,
+				pageNumber: page,
+			})
+
+			setExemItem(exemResponse.items)
+			setTotalPages(exemResponse.totalPages)
+		} catch (error) {
+			toast(`Imtixon natijalarini yuklashda xatolik bor: ${error}`)
+		}
+	}
+
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
@@ -89,24 +110,16 @@ export default function StudentDashboard() {
 			}
 		}
 
-		const fetchExemResult = async () => {
-			try {
-				const exemResponse = await getExemsUser({
-					UserID: Id,
-					pageSize: 50,
-					pageNumber: 0,
-				})
-				setExemItem(exemResponse.items)
-			} catch (error) {
-				toast(`imtixon natijalarnini yuklashda xatolik bor: ${error}`)
-			}
-		}
-
 		if (Id) {
 			fetchUser()
-			fetchExemResult()
+			fetchExemResult(pageNumber)
 		}
-	}, [Id])
+	}, [Id, pageNumber])
+
+	const handlePageChange = (newPage: number) => {
+		setPageNumber(newPage)
+	}
+
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
 		if ((correctanswer / totolQuestion) * 100 >= 90) {
 			return (
@@ -117,6 +130,7 @@ export default function StudentDashboard() {
 		}
 		return <Badge variant={'destructive'}>{t('topshirmadi')}</Badge>
 	}
+
 	if (loading) {
 		return (
 			<div className='space-y-4'>
@@ -136,6 +150,7 @@ export default function StudentDashboard() {
 			</div>
 		)
 	}
+
 	if (error) {
 		return (
 			<div className='space-y-4'>
@@ -159,10 +174,10 @@ export default function StudentDashboard() {
 		>
 			<motion.div
 				variants={item}
-				className='relative overflow-hidden rounded-lg bg-gradient-to-r from-green-400 via-green-400 to-green-100 p-8 border shadow-lg'
+				className='relative overflow-hidden rounded-lg bg-gradient-to-r from-green-400 via-green-300 to-green-400 p-3 border shadow-lg'
 			>
 				<div className='absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))] dark:bg-grid-black/5' />
-				<h1 className='text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
+				<h1 className='text-4xl font-bold tracking-tight mb-1 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
 					{userData?.name} {userData?.surname}
 				</h1>
 				<p>{t('shaxsiykabinet')}</p>
@@ -170,15 +185,15 @@ export default function StudentDashboard() {
 
 			{/* Test Results */}
 			<motion.div variants={item}>
-				<Card className='relative overflow-hidden border-2 transition-colors hover:border-primary/50 group'>
+				<Card className='relative overflow-hidden border-1 transition-colors hover:border-primary/50 group'>
 					<div className='absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
-					<CardHeader className='flex flex-row items-center justify-between pb-2'>
+					<CardHeader className='flex flex-row items-center justify-between pb-1'>
 						<CardTitle className='text-xl font-bold flex items-center gap-2'>
-							<Trophy className='w-5 h-5 text-primary animate-pulse' />
+							<Trophy className='w-8 h-8 text-amber-600 animate-pulse' />
 							{t('testnatijalari')}
 						</CardTitle>
 					</CardHeader>
-					<CardContent className='pt-4'>
+					<CardContent className='pt-2'>
 						<Table>
 							<TableHeader>
 								<TableRow>
@@ -221,6 +236,24 @@ export default function StudentDashboard() {
 						</Table>
 					</CardContent>
 				</Card>
+				<div className='flex justify-center gap-6 mt-4'>
+					<Button
+						variant='custom'
+						disabled={pageNumber <= 0} // Sahifa 0 bo'lsa oldingi bosib bo'lmaydi
+						onClick={() => handlePageChange(pageNumber - 1)}
+					>
+						<ArrowLeft /> oldingi
+					</Button>
+
+					<Button
+						variant='custom'
+						disabled={totalPages === 0 || pageNumber >= totalPages - 1} // totalPages mavjudligini tekshirish
+						onClick={() => handlePageChange(pageNumber + 1)}
+						className='ml-2'
+					>
+						keyingi <ArrowRight />
+					</Button>
+				</div>
 			</motion.div>
 		</motion.div>
 	)
