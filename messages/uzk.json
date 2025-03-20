@@ -1,8 +1,4 @@
 {
-	"HomePage": {
-		"title": "Салом дунё!",
-		"about": "Ҳақида саҳифасига ўтинг"
-	},
 	"Hero": {
 		"emaktab": "АВТО МАКТАБ",
 		"emaktabdescription": "Ҳайдовчилик гувоҳномаси учун тайёрлов платформаси",
@@ -99,10 +95,7 @@
 		"notogrijavoblar": "Нотоғри жавоблар",
 		"topshirdi": "Топширди",
 		"topshirmadi": "Топширмади",
-		"xavfsizlik": "Хавфсизлик",
-		"yangiparol": "Янги пароль",
-		"yangiparolnitasdiqlang": "Янги паролни тасдиқланг",
-		"parolniozgartirish": "Паролни ўзгартириш",
+
 		"barchanatijalar": "Барча натижалар",
 		"testishlash": "Тест ишлаш",
 		"ortga": "Орқага",
@@ -127,5 +120,43 @@
 		"bekorqilish": "Бекор қилиш",
 		"yuklanmoqda": "Юкланмоқда",
 		"yakunlash": "Якунлаш"
+	},
+	"Admin": {
+		"dashboard": "Дашборд",
+		"driving_school_info": "Автомактаб статистикаси ва умумий маълумотлар",
+		"total_students": "Жами ўқувчилар",
+		"unit": "нафар",
+		"total_instructors": "Жами инструкторлар",
+		"total_tests": "Жами тестлар",
+		"unit_item": "та",
+		"students": "Ўқувчилар",
+		"instructors": "Инструкторлар",
+		"tests": "Тестлар",
+		"groups": "Гуруҳлар",
+		"settings": "Созламалар"
+	},
+	"SettingsValidation": {
+		"newParolmorthen3symbol": "Янги парол камида 3 та белгидан иборат бўлиши керак",
+		"confirmParolmorthen3symbol": "Тасдиқлаш пароли камида 3 та белгидан иборат бўлиши керак",
+		"newParolAndConfirmSame": "Янги парол ва тасдиқлаш пароли бир хил бўлиши керак",
+		"pleaseLoginFirst": "Аввал тизимга киринг",
+		"xavfsizlik": "Хавфсизлик",
+		"yangiparol": "Янги пароль",
+		"yangiparolnitasdiqlang": "Янги паролни тасдиқланг",
+		"parolniozgartirish": "Паролни ўзгартириш"
+	},
+	"StudentAdmin": {
+		"foydalanuvchilar": "Фойдаланувчилар",
+		"barchafoydalanuvchilarroyxativamalumotlari": "Барча фойдаланувчилар рўйхати ва маълумотлари",
+		"foydalanuvchilarqidirish": "Фойдаланувчилар қидириш ...",
+		"oquvchilarroyxati": "Ўқувчилар рўйхати",
+		"jami": "Жами",
+		"tafoydalanuvchi": "та фойдаланувчи",
+		"oquvchi": "Ўқувчи",
+		"telefon": "Телефон",
+		"role": "Роль",
+		"yangifoydalanuvchi": "Янги фойдаланувчи",
+		"oldingi": "Олдинги",
+		"keyingi": "Кейинги"
 	}
 }

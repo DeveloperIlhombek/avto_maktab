@@ -5,24 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/table'
-import { studentData } from '@/constanta'
-
-const formatCurrency = (amount: number) => {
-	return new Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency: 'UZS',
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	}).format(amount)
-}
+import { Table, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 export function PaymentsTab() {
 	return (
@@ -42,7 +25,7 @@ export function PaymentsTab() {
 							<TableHead>To&apos;lov turi</TableHead>
 						</TableRow>
 					</TableHeader>
-					<TableBody>
+					{/* <TableBody>
 						{studentData.payments.map((payment, index) => (
 							<TableRow key={index}>
 								<TableCell>
@@ -52,7 +35,7 @@ export function PaymentsTab() {
 								<TableCell>{payment.type}</TableCell>
 							</TableRow>
 						))}
-					</TableBody>
+					</TableBody> */}
 				</Table>
 			</CardContent>
 		</Card>

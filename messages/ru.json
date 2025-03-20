@@ -1,8 +1,4 @@
 {
-	"HomePage": {
-		"title": "Привет, мир!",
-		"about": "Перейти на страницу о нас"
-	},
 	"Hero": {
 		"emaktab": "АВТОШКОЛА",
 		"emaktabdescription": "Платформа для подготовки к водительскому удостоверению",
@@ -99,10 +95,7 @@
 		"role": "Роль",
 		"topshirdi": "Сдал",
 		"topshirmadi": "Не сдал",
-		"xavfsizlik": "Безопасность",
-		"yangiparol": "Новый пароль",
-		"yangiparolnitasdiqlang": "Подтвердите новый пароль",
-		"parolniozgartirish": "Изменить пароль",
+
 		"barchanatijalar": "Все результаты",
 		"testishlash": "Тестирование",
 		"ortga": "Назад",
@@ -127,5 +120,43 @@
 		"bekorqilish": "Отмена",
 		"yuklanmoqda": "Загружается",
 		"yakunlash": "Завершить"
+	},
+	"Admin": {
+		"dashboard": "Дашборд",
+		"driving_school_info": "Статистика автошколы и общая информация",
+		"total_students": "Общее количество учеников",
+		"unit": "человек",
+		"total_instructors": "Общее количество инструкторов",
+		"total_tests": "Общее количество тестов",
+		"unit_item": "шт",
+		"students": "Ученики",
+		"instructors": "Инструкторы",
+		"tests": "Тесты",
+		"groups": "Группы",
+		"settings": "Настройки"
+	},
+	"SettingsValidation": {
+		"newParolmorthen3symbol": "Новый пароль должен содержать как минимум 3 символа",
+		"confirmParolmorthen3symbol": "Подтверждающий пароль должен содержать как минимум 3 символа",
+		"newParolAndConfirmSame": "Новый пароль и подтверждающий пароль должны совпадать",
+		"pleaseLoginFirst": "Сначала войдите в систему",
+		"xavfsizlik": "Безопасность",
+		"yangiparol": "Новый пароль",
+		"yangiparolnitasdiqlang": "Подтвердите новый пароль",
+		"parolniozgartirish": "Изменить пароль"
+	},
+	"StudentAdmin": {
+		"foydalanuvchilar": "Пользователи",
+		"barchafoydalanuvchilarroyxativamalumotlari": "Список и информация о всех пользователях",
+		"foydalanuvchilarqidirish": "Поиск пользователей ...",
+		"oquvchilarroyxati": "Список учеников",
+		"jami": "Всего",
+		"tafoydalanuvchi": "пользователь",
+		"oquvchi": "Ученик",
+		"telefon": "Телефон",
+		"role": "Роль",
+		"yangifoydalanuvchi": "Новый пользователь",
+		"oldingi": "Предыдущий",
+		"keyingi": "Следующий"
 	}
 }

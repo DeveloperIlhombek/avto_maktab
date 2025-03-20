@@ -5,16 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/table'
-import { studentData } from '@/constanta'
+import { Table, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 export function PracticeTab() {
 	return (
@@ -34,7 +25,7 @@ export function PracticeTab() {
 							<TableHead>Status</TableHead>
 						</TableRow>
 					</TableHeader>
-					<TableBody>
+					{/* <TableBody>
 						{studentData.practicalLessons.map((lesson, index) => (
 							<TableRow key={index}>
 								<TableCell>
@@ -54,7 +45,7 @@ export function PracticeTab() {
 								</TableCell>
 							</TableRow>
 						))}
-					</TableBody>
+					</TableBody> */}
 				</Table>
 			</CardContent>
 		</Card>

@@ -16,24 +16,25 @@ import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateOwnPassword } from '@/lib/users'
-
-// Parol validatsiyasi uchun schema
-const passwordSchema = z
-	.object({
-		newPassword: z.string().min(3, {
-			message: 'Yangi parol kamida 3 ta belgidan iborat boʻlishi kerak',
-		}),
-		confirmPassword: z.string().min(3, {
-			message: 'Tasdiqlash paroli kamida 3 ta belgidan iborat boʻlishi kerak',
-		}),
-	})
-	.refine(data => data.newPassword === data.confirmPassword, {
-		message: 'Yangi parol va tasdiqlash paroli bir xil boʻlishi kerak',
-		path: ['confirmPassword'],
-	})
+import { useTranslations } from 'next-intl'
 
 function Settings() {
 	const token = localStorage.getItem('token')
+	const t = useTranslations('SettingsValidation')
+	// Parol validatsiyasi uchun schema
+	const passwordSchema = z
+		.object({
+			newPassword: z.string().min(3, {
+				message: `${t('newParolmorthen3symbol')}`,
+			}),
+			confirmPassword: z.string().min(3, {
+				message: `${t('confirmParolmorthen3symbol')}`,
+			}),
+		})
+		.refine(data => data.newPassword === data.confirmPassword, {
+			message: `${t('newParolAndConfirmSame')}`,
+			path: ['confirmPassword'],
+		})
 
 	const {
 		register,
@@ -48,7 +49,7 @@ function Settings() {
 	const onSubmit = async (data: any) => {
 		try {
 			if (!token) {
-				toast.error('Avval tizimga kiring')
+				toast.error(`${t('pleaseLoginFirst')}`)
 				return
 			}
 
@@ -66,14 +67,14 @@ function Settings() {
 		<div className='flex justify-center items-center max-h-screen'>
 			<Card className='w-full max-w-md'>
 				<CardHeader>
-					<CardTitle>Xavfsizlik</CardTitle>
-					<CardDescription>Parolingizni o&apos;zgartirish</CardDescription>
+					<CardTitle>{t('xavfsizlik')}</CardTitle>
+					<CardDescription>{t('parolniozgartirish')}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 						{/* Yangi parol */}
 						<div>
-							<Label htmlFor='newPassword'>Yangi parol</Label>
+							<Label htmlFor='newPassword'>{t('yangiparol')}</Label>
 							<Input
 								id='newPassword'
 								type='password'
@@ -88,7 +89,9 @@ function Settings() {
 
 						{/* Yangi parolni tasdiqlash */}
 						<div>
-							<Label htmlFor='confirmPassword'>Yangi parolni tasdiqlang</Label>
+							<Label htmlFor='confirmPassword'>
+								{t('yangiparolnitasdiqlang')}
+							</Label>
 							<Input
 								id='confirmPassword'
 								type='password'
@@ -102,7 +105,7 @@ function Settings() {
 						</div>
 
 						<Button type='submit' className='w-full'>
-							Parolni o&apos;zgartirish
+							{t('parolniozgartirish')}
 						</Button>
 					</form>
 				</CardContent>

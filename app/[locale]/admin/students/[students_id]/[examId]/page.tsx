@@ -18,13 +18,16 @@ import {
 	ChevronRight,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	Image as ImageIcon,
+	ArrowLeft,
 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 function Page() {
 	const pathname = usePathname()
 	const examId = pathname.split('/')[5]
 	const lang = pathname.split('/')[1]
+	const userID = pathname.split('/')[4]
 	const [examResult, setExamResult] = useState<IExamResult>()
 	const [loading, setLoading] = useState(true)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -78,6 +81,14 @@ function Page() {
 		return selectedAnswer?.isCorrect || false
 	}
 
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
+
 	if (loading) {
 		return (
 			<div className='min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4 md:p-8'>
@@ -115,9 +126,22 @@ function Page() {
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
-					className='text-center space-y-2'
+					className='text-center space-y-2 flex items-center justify-between flex-grow-0'
 				>
-					<h1 className='text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60'>
+					<Button
+						className='flex items-center flex-grow-0'
+						variant={'custom'}
+						size={'lg'}
+					>
+						<Link
+							href={`${getLanguagePrefix()}/admin/students/${userID}`}
+							className='flex items-center justify-center gap-3'
+						>
+							<ArrowLeft />
+							<span>Ortga</span>
+						</Link>
+					</Button>
+					<h1 className='text-2xl flex-grow font-bold tracking-tight '>
 						Imtixon natijalari
 					</h1>
 				</motion.div>

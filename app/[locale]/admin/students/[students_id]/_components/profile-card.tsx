@@ -90,7 +90,7 @@ export function ProfileCard() {
 	}
 
 	return (
-		<Card className='md:col-span-1'>
+		<Card className='md:col-span-1 max-h-80'>
 			<CardContent className='pt-6'>
 				<div className='flex flex-col items-center text-center'>
 					<Avatar className='h-24 w-24 mb-4'>

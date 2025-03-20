@@ -33,6 +33,7 @@ import {
 import { Search, Plus, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getAllStudent } from '@/lib/users'
+import { useTranslations } from 'next-intl'
 
 interface User {
 	id: string
@@ -56,20 +57,17 @@ export default function UsersPage() {
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
-
 	const [searchTerm, setSearchTerm] = useState('')
 	const [loading, setLoading] = useState(true)
 	const [data, setData] = useState<UserResponse | null>(null)
 	const [error, setError] = useState<string | null>(null)
-
-	// Frontend page number (1-based)
 	const currentPage = Number(searchParams.get('page')) || 1
 	const pathSegments = pathname.split('/')
 	const language =
 		pathSegments.length > 1 && ['uz', 'uzk', 'ru'].includes(pathSegments[1])
 			? (pathSegments[1] as 'uz' | 'uzk' | 'ru')
 			: 'uz'
-
+	const t = useTranslations('StudentAdmin')
 	useEffect(() => {
 		async function fetchData() {
 			try {
@@ -121,19 +119,6 @@ export default function UsersPage() {
 				user.phone.toLowerCase().includes(searchTerm.toLowerCase())
 		) || []
 
-	// const getRoleBadgeColor = (role: number) => {
-	// 	switch (role) {
-	// 		case 1:
-	// 			return 'bg-purple-500/10 text-purple-500 hover:bg-purple-500/20'
-	// 		case 2:
-	// 			return 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20'
-	// 		case 3:
-	// 			return ''
-	// 		default:
-	// 			return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20'
-	// 	}
-	// }
-
 	if (error) {
 		return (
 			<div className='flex items-center justify-center min-h-[50vh]'>
@@ -156,10 +141,10 @@ export default function UsersPage() {
 			>
 				<div>
 					<h2 className='text-3xl font-bold tracking-tight'>
-						Foydalanuvchilar
+						{t('foydalanuvchilar')}
 					</h2>
 					<p className='text-muted-foreground'>
-						Barcha foydalanuvchilar ro&apos;yxati va ma&apos;lumotlari
+						{t('barchafoydalanuvchilarroyxativamalumotlari')}
 					</p>
 				</div>
 
@@ -168,7 +153,7 @@ export default function UsersPage() {
 					className='flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors'
 				>
 					<Plus className='h-4 w-4' />
-					<span>Yangi foydalanuvchi</span>
+					<span> {t('yangifoydalanuvchi')}</span>
 				</Link>
 			</motion.div>
 
@@ -182,7 +167,7 @@ export default function UsersPage() {
 					<div className='relative flex-1 max-w-md'>
 						<Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
 						<Input
-							placeholder='Foydalanuvchi qidirish...'
+							placeholder={t('foydalanuvchilarqidirish')}
 							className='pl-8'
 							value={searchTerm}
 							onChange={e => setSearchTerm(e.target.value)}
@@ -198,9 +183,9 @@ export default function UsersPage() {
 			>
 				<Card>
 					<CardHeader>
-						<CardTitle>Foydalanuvchilar ro&apos;yxati</CardTitle>
+						<CardTitle> {t('oquvchilarroyxati')}</CardTitle>
 						<CardDescription>
-							Jami {data?.totalCount || 0} ta foydalanuvchi
+							{t('jami')} {data?.totalCount || 0} {t('tafoydalanuvchi')}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-4'>
@@ -208,12 +193,12 @@ export default function UsersPage() {
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead>Foydalanuvchi</TableHead>
+										<TableHead> {t('oquvchi')}</TableHead>
 
 										<TableHead className='hidden sm:table-cell'>
-											Telefon
+											{t('telefon')}
 										</TableHead>
-										<TableHead>Role</TableHead>
+										<TableHead> {t('role')}</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>

@@ -18,23 +18,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateOwnPassword } from '@/lib/users'
 import { useTranslations } from 'next-intl'
 
-// Parol validatsiyasi uchun schema
-const passwordSchema = z
-	.object({
-		newPassword: z.string().min(3, {
-			message: 'Yangi parol kamida 3 ta belgidan iborat boʻlishi kerak',
-		}),
-		confirmPassword: z.string().min(3, {
-			message: 'Tasdiqlash paroli kamida 3 ta belgidan iborat boʻlishi kerak',
-		}),
-	})
-	.refine(data => data.newPassword === data.confirmPassword, {
-		message: 'Yangi parol va tasdiqlash paroli bir xil boʻlishi kerak',
-		path: ['confirmPassword'],
-	})
-
 function Settings() {
-	const t = useTranslations('Student')
+	const t = useTranslations('SettingsValidation')
+	// Parol validatsiyasi uchun schema
+	const passwordSchema = z
+		.object({
+			newPassword: z.string().min(3, {
+				message: `${t('newParolmorthen3symbol')}`,
+			}),
+			confirmPassword: z.string().min(3, {
+				message: `${t('confirmParolmorthen3symbol')}`,
+			}),
+		})
+		.refine(data => data.newPassword === data.confirmPassword, {
+			message: `${t('newParolAndConfirmSame')}`,
+			path: ['confirmPassword'],
+		})
+
 	const token = localStorage.getItem('token')
 
 	const {
@@ -51,7 +51,7 @@ function Settings() {
 	const onSubmit = async (data: any) => {
 		try {
 			if (!token) {
-				toast.error('Avval tizimga kiring')
+				toast.error(`${t('pleaseLoginFirst')}`)
 				return
 			}
 

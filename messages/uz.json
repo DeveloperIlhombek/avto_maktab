@@ -1,8 +1,4 @@
 {
-	"HomePage": {
-		"title": "Salom dunyo!",
-		"about": "Haqida sahifasiga o'ting"
-	},
 	"Hero": {
 		"emaktab": "AVTO MAKTAB",
 		"emaktabdescription": "Haydovchilik guvohnomasi uchun tayyorlov platformasi",
@@ -97,10 +93,6 @@
 		"role": "Role",
 		"topshirdi": "Topshirdi",
 		"topshirmadi": "Topshirmadi",
-		"xavfsizlik": "Xavfsizlik",
-		"yangiparol": "Yangi parol",
-		"yangiparolnitasdiqlang": "Yangi parolni tasdiqlang",
-		"parolniozgartirish": "Parolni o'zgartirish",
 		"barchanatijalar": "Barcha natijalar",
 		"testishlash": "Test ishlash",
 		"imtixonnatijalari": "Imtihon natijalari",
@@ -124,5 +116,43 @@
 		"bekorqilish": "Bekor qilish",
 		"yuklanmoqda": "Yuklanmoqda",
 		"yakunlash": "Yakunlash"
+	},
+	"Admin": {
+		"dashboard": "Dashboard",
+		"driving_school_info": "Avtomaktab statistikasi va umumiy ma'lumotlar",
+		"total_students": "Jami o'quvchilar",
+		"unit": "nafar",
+		"total_instructors": "Jami instruktorlar",
+		"total_tests": "Jami testlar",
+		"unit_item": "ta",
+		"students": "O'quvchilar",
+		"instructors": "Instruktorlar",
+		"tests": "Testlar",
+		"groups": "Guruhlar",
+		"settings": "Sozlamalar"
+	},
+	"SettingsValidation": {
+		"newParolmorthen3symbol": "Yangi parol kamida 3 ta belgidan iborat boʻlishi kerak",
+		"confirmParolmorthen3symbol": "Tasdiqlash paroli kamida 3 ta belgidan iborat boʻlishi kerak",
+		"newParolAndConfirmSame": "Yangi parol va tasdiqlash paroli bir xil boʻlishi kerak",
+		"pleaseLoginFirst": "Avval tizimga kiring",
+		"xavfsizlik": "Xavfsizlik",
+		"yangiparol": "Yangi parol",
+		"yangiparolnitasdiqlang": "Yangi parolni tasdiqlang",
+		"parolniozgartirish": "Parolni o'zgartirish"
+	},
+	"StudentAdmin": {
+		"foydalanuvchilar": "Foydalanuvchilar",
+		"barchafoydalanuvchilarroyxativamalumotlari": "Barcha foydalanuvchilar ro'yxati va ma'lumotlari",
+		"foydalanuvchilarqidirish": "Foydalanuvchilar qidirish ...",
+		"oquvchilarroyxati": "O'quvchilar ro'yxati",
+		"jami": "Jami",
+		"tafoydalanuvchi": "ta foydalanuvchi",
+		"oquvchi": "O'quvchi",
+		"telefon": "Telefon",
+		"role": "Role",
+		"yangifoydalanuvchi": "Yangi foydalanuvchi",
+		"oldingi": "Oldingi",
+		"keyingi": "Keyingi"
 	}
 }

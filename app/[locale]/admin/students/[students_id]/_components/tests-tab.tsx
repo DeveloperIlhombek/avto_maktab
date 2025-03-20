@@ -22,15 +22,17 @@ import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { LucideEye } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export function TestsTab() {
 	const pathname = usePathname()
 	const userId = pathname.split('/')[4]
 	const [exemItem, setExemItem] = useState<ExemItem[]>([])
-	//const [pageNumber, setPageNumber] = useState(0)
+	const [pageNumber, setPageNumber] = useState(0)
+	const [totalPages, setTotalPages] = useState(0)
+
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
-		// Check if the first segment after the initial slash is a language code
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
 			return `/${segments[1]}`
 		}
@@ -42,18 +44,17 @@ export function TestsTab() {
 			try {
 				const resultExem = await getExemsUser({
 					UserID: userId,
-					pageSize: 1000,
-					pageNumber: 0,
+					pageSize: 4,
+					pageNumber: pageNumber,
 				})
-
-				console.log(resultExem)
 				setExemItem(resultExem.items)
+				setTotalPages(Math.ceil(resultExem.totalCount / 4))
 			} catch (error) {
 				toast(`Xatlik mavjud:  ${error}`)
 			}
 		}
 		fetchStudentExem()
-	}, [userId])
+	}, [userId, pageNumber])
 
 	const setStatus = (correctanswer: number, totolQuestion: number) => {
 		if ((correctanswer / totolQuestion) * 100 >= 90) {
@@ -64,6 +65,18 @@ export function TestsTab() {
 			)
 		}
 		return <Badge variant={'destructive'}>O&apos;tmadi</Badge>
+	}
+
+	const handleNextPage = () => {
+		if (pageNumber < totalPages - 1) {
+			setPageNumber(pageNumber + 1)
+		}
+	}
+
+	const handlePreviousPage = () => {
+		if (pageNumber > 0) {
+			setPageNumber(pageNumber - 1)
+		}
 	}
 
 	return (
@@ -112,6 +125,25 @@ export function TestsTab() {
 						))}
 					</TableBody>
 				</Table>
+				<div className='flex justify-between items-center mt-1'>
+					<Button
+						variant='custom'
+						onClick={handlePreviousPage}
+						disabled={pageNumber === 0}
+					>
+						Oldingi
+					</Button>
+					<span>
+						Sahifa {pageNumber + 1} / {totalPages}
+					</span>
+					<Button
+						variant='custom'
+						onClick={handleNextPage}
+						disabled={pageNumber === totalPages - 1}
+					>
+						Keyingi
+					</Button>
+				</div>
 			</CardContent>
 		</Card>
 	)

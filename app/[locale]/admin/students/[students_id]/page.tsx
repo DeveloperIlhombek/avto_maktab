@@ -119,7 +119,7 @@ export default function StudentDetails() {
 								<TabsTrigger
 									key={tab.value}
 									value={tab.value}
-									className='gap-2'
+									className='gap-4'
 								>
 									<tab.icon className='h-4 w-4' />
 									{tab.label}
@@ -131,12 +131,12 @@ export default function StudentDetails() {
 							<OverviewTab userId={user_id as string} />
 						</TabsContent>
 
-						<TabsContent value='education'>
-							<EducationTab />
-						</TabsContent>
-
 						<TabsContent value='tests'>
 							<TestsTab />
+						</TabsContent>
+
+						<TabsContent value='education'>
+							<EducationTab />
 						</TabsContent>
 
 						<TabsContent value='payments'>

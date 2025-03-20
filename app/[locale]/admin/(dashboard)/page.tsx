@@ -9,6 +9,7 @@ import {
 	UserData,
 } from '@/lib/users'
 import { Users, FileQuestion, UserRoundPen } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -16,6 +17,7 @@ export default function AdminDashboard() {
 	const [instructors, setInstructors] = useState<UserData[]>([])
 	const [student, setStudent] = useState<UserData[]>([])
 	const [totalCount, setTotalCount] = useState(0)
+	const t = useTranslations('Admin')
 	useEffect(() => {
 		const fetchAllInstructor = async () => {
 			try {
@@ -61,46 +63,48 @@ export default function AdminDashboard() {
 	return (
 		<div className='space-y-8'>
 			<div>
-				<h2 className='text-3xl font-bold tracking-tight'>Dashboard</h2>
-				<p className='text-muted-foreground'>
-					Avtomaktab statistikasi va umumiy ma&apos;lumotlar
-				</p>
+				<h2 className='text-3xl font-bold tracking-tight'>{t('dashboard')}</h2>
+				<p className='text-muted-foreground'>{t('driving_school_info')}</p>
 			</div>
 
 			<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
 				<Card>
 					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 						<CardTitle className='text-sm font-medium'>
-							Jami o&apos;quvchilar
+							{t('total_students')}
 							<Users />
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className='text-2xl font-bold'>{student.length} nafar </div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-						<CardTitle className='text-sm font-medium'>
-							Jami Instructor
-							<UserRoundPen />
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
 						<div className='text-2xl font-bold'>
-							{instructors.length} nafar{' '}
+							{student.length} {t('unit')}{' '}
 						</div>
 					</CardContent>
 				</Card>
 				<Card>
 					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 						<CardTitle className='text-sm font-medium'>
-							Jami testlar
+							{t('total_instructors')}
+							<UserRoundPen />
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className='text-2xl font-bold'>
+							{instructors.length} {t('unit')}{' '}
+						</div>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+						<CardTitle className='text-sm font-medium'>
+							{t('total_tests')}
 							<FileQuestion />
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className='text-2xl font-bold'>{totalCount} ta </div>
+						<div className='text-2xl font-bold'>
+							{totalCount} {t('unit_item')}
+						</div>
 					</CardContent>
 				</Card>
 			</div>

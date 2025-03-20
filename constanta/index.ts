@@ -47,15 +47,7 @@ export const studentData = {
 		{ date: '2024-02-15', score: 18, total: 20, status: "O'tdi" },
 		{ date: '2024-02-10', score: 19, total: 20, status: "O'tmadi" },
 	],
-	practicalLessons: [
-		{ date: '2024-02-22', topic: 'Parallel parking', status: 'Bajarildi' },
-		{ date: '2024-02-20', topic: 'City driving', status: 'Bajarildi' },
-		{
-			date: '2024-02-18',
-			topic: 'Highway driving',
-			status: 'Rejalashtirilgan',
-		},
-	],
+
 	payments: [
 		{ date: '2024-02-15', amount: 1000000, type: 'Naqd' },
 		{ date: '2024-02-01', amount: 1000000, type: 'Plastik karta' },

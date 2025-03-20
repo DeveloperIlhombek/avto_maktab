@@ -9,43 +9,12 @@ import {
 	GroupIcon,
 	Settings,
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const menuItems = [
-	{
-		title: 'Dashboard',
-		icon: LayoutDashboard,
-		href: '/admin',
-	},
-	{
-		title: "O'quvchilar",
-		icon: Users,
-		href: '/admin/students',
-	},
-	{
-		title: 'Instruktorlar',
-		icon: GraduationCap,
-		href: '/admin/instructors',
-	},
-	{
-		title: 'Testlar',
-		icon: ClipboardCheck,
-		href: '/admin/tests',
-	},
-	{
-		title: 'Guruhlar',
-		icon: GroupIcon,
-		href: '/admin/groups',
-	},
-	{
-		title: 'Sozlamalar',
-		icon: Settings,
-		href: '/admin/settings',
-	},
-]
-
 export function Sidebar() {
+	const t = useTranslations('Admin')
 	const pathname = usePathname()
 
 	// Extract the language prefix from the pathname
@@ -58,6 +27,38 @@ export function Sidebar() {
 		return ''
 	}
 
+	const menuItems = [
+		{
+			title: `${t('dashboard')}`,
+			icon: LayoutDashboard,
+			href: '/admin',
+		},
+		{
+			title: `${t('students')}`,
+			icon: Users,
+			href: '/admin/students',
+		},
+		{
+			title: `${t('instructors')}`,
+			icon: GraduationCap,
+			href: '/admin/instructors',
+		},
+		{
+			title: `${t('tests')}`,
+			icon: ClipboardCheck,
+			href: '/admin/tests',
+		},
+		{
+			title: `${t('groups')}`,
+			icon: GroupIcon,
+			href: '/admin/groups',
+		},
+		{
+			title: `${t('settings')}`,
+			icon: Settings,
+			href: '/admin/settings',
+		},
+	]
 	const languagePrefix = getLanguagePrefix()
 
 	// Check if a path is active by comparing the route without the language prefix

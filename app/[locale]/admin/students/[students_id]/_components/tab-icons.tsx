@@ -7,15 +7,16 @@ export const TabIcons = [
 		icon: User,
 	},
 	{
-		value: 'education',
-		label: "Ta'lim",
-		icon: GraduationCap,
-	},
-	{
 		value: 'tests',
 		label: 'Testlar',
 		icon: ClipboardCheck,
 	},
+	{
+		value: 'education',
+		label: "Ta'lim",
+		icon: GraduationCap,
+	},
+
 	{
 		value: 'payments',
 		label: "To'lovlar",
