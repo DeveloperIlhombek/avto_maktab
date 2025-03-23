@@ -240,19 +240,9 @@ export default function EditTest() {
 				formData.append('Media', mediaFile)
 			}
 
-			// Add answers
-			values.Answers.forEach((answer, index) => {
-				if (answer.id) {
-					formData.append(`Answers[${index}].id`, answer.id)
-				}
-				formData.append(`Answers[${index}].answerTextUZ`, answer.answerTextUZ)
-				formData.append(`Answers[${index}].answerTextUZK`, answer.answerTextUZK)
-				formData.append(`Answers[${index}].answerTextRU`, answer.answerTextRU)
-				formData.append(
-					`Answers[${index}].isCorrect`,
-					answer.isCorrect.toString()
-				)
-			})
+			// Convert Answers array to JSON and append to FormData
+			const answersJson = JSON.stringify(values.Answers)
+			formData.append('answersJson', answersJson)
 
 			const response = await updateTest('uz', formData)
 

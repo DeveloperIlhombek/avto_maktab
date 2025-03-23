@@ -256,21 +256,6 @@ export function TestPage({ language }: TestPageProps) {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className='grid md:grid-cols-2 gap-6'>
-							{currentQuestion.mediaUrl && (
-								<div className='relative h-[400px] w-full'>
-									{' '}
-									<Image
-										src={getImageUrl(currentQuestion.mediaUrl)}
-										alt='Question illustration'
-										fill
-										className='object-contain rounded-lg'
-										onError={e => {
-											const target = e.target as HTMLImageElement
-											target.src = '/avto6.webp'
-										}}
-									/>
-								</div>
-							)}
 							<div className='space-y-4'>
 								<div className='space-y-3'>
 									{currentQuestion.testAnswers.map((answer, index) => {
@@ -323,6 +308,21 @@ export function TestPage({ language }: TestPageProps) {
 									</div>
 								)}
 							</div>
+							{currentQuestion.mediaUrl && (
+								<div className='relative h-[400px] w-full'>
+									{' '}
+									<Image
+										src={getImageUrl(currentQuestion.mediaUrl)}
+										alt='Question illustration'
+										fill
+										className='object-contain rounded-lg'
+										onError={e => {
+											const target = e.target as HTMLImageElement
+											target.src = '/avto6.webp'
+										}}
+									/>
+								</div>
+							)}
 						</CardContent>
 
 						<div className='flex justify-between m-6'>

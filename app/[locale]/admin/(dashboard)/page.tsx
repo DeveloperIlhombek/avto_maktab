@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getAllTestsAdmin } from '@/lib/test'
 import {
@@ -18,6 +19,7 @@ export default function AdminDashboard() {
 	const [student, setStudent] = useState<UserData[]>([])
 	const [totalCount, setTotalCount] = useState(0)
 	const t = useTranslations('Admin')
+
 	useEffect(() => {
 		const fetchAllInstructor = async () => {
 			try {
@@ -27,7 +29,7 @@ export default function AdminDashboard() {
 				})
 				setInstructors(response.items)
 			} catch (error) {
-				console.log(`Maʼlumotlarni yuklashda xatolik yuz berdi.${error}`)
+				console.error(`Maʼlumotlarni yuklashda xatolik yuz berdi.${error}`)
 			}
 		}
 		const fetchAllStudent = async () => {
@@ -59,7 +61,7 @@ export default function AdminDashboard() {
 		fetchAllStudent()
 		fetchTests()
 	}, [])
-
+	// <Link href=>chiqish</Link>
 	return (
 		<div className='space-y-8'>
 			<div>

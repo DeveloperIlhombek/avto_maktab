@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
+	ArrowLeft,
+	ArrowLeftCircle,
 	ClipboardCheck,
 	GraduationCap,
 	Home,
@@ -18,6 +20,15 @@ import { ModeToggle } from '@/components/shared/mode-toggle'
 import { getUserById } from '@/lib/users'
 import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import { useTranslations } from 'next-intl'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 
 interface UserData {
 	id: string
@@ -69,26 +80,41 @@ export default function StudentLayout({
 		setIsSidebarOpen(false)
 	}, [pathname])
 
+	const handleLogout = () => {
+		localStorage.removeItem('token')
+		window.location.replace(`${getLanguagePrefix()}`)
+	}
+
 	const navigation = [
 		{
+			id: 1,
 			name: t('dashboard'),
 			href: '/',
 			icon: Home,
 		},
 		{
+			id: 2,
 			name: t('shaxsiymalumotlar'),
 			href: '/profile',
 			icon: User,
 		},
 		{
+			id: 3,
 			name: t('testlar'),
 			href: '/tests',
 			icon: ClipboardCheck,
 		},
 		{
+			id: 4,
 			name: t('sozlamalar'),
 			href: '/settings',
 			icon: Settings,
+		},
+		{
+			id: 5,
+			name: 'Bosh sahifaga qaytish',
+			href: `${getLanguagePrefix()}`,
+			icon: ArrowLeft,
 		},
 	]
 
@@ -125,11 +151,52 @@ export default function StudentLayout({
 								<span>{userData?.name}</span>
 								<span>{userData?.surname}</span>
 							</div>
-							<Avatar>
-								<AvatarFallback className='bg-green-400'>
-									{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
-								</AvatarFallback>
-							</Avatar>
+							<DropdownMenu>
+								<DropdownMenuTrigger>
+									<Avatar>
+										<AvatarFallback className='bg-green-400'>
+											{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
+										</AvatarFallback>
+									</Avatar>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									<DropdownMenuLabel>Shaxsiy kabinet</DropdownMenuLabel>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem>
+										<Link
+											href={`${getLanguagePrefix()}/student/${
+												userData?.id
+											}/settings`}
+											className='flex items-center gap-2'
+										>
+											<Settings className='h-4 w-4' />
+											Sozlamalar
+										</Link>
+									</DropdownMenuItem>
+									<DropdownMenuItem>
+										<Link
+											href={`${getLanguagePrefix()}`}
+											className='flex items-center gap-2'
+										>
+											<ArrowLeft /> Bosh sahifa
+										</Link>
+									</DropdownMenuItem>
+									<DropdownMenuItem>
+										<Button
+											variant={'link'}
+											className='w-full h-8 justify-start'
+											onClick={handleLogout}
+										>
+											<Link
+												href={`${getLanguagePrefix()}`}
+												className='flex items-center gap-2 text-red-500 font-bold'
+											>
+												<ArrowLeftCircle /> Chiqish
+											</Link>
+										</Button>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</nav>
 					</div>
 				</div>
@@ -161,7 +228,7 @@ export default function StudentLayout({
 					</div>
 					<nav className='mt-8 flex flex-col space-y-2'>
 						{navigation.map(item => (
-							<Link key={item.href} href={item.href}>
+							<Link key={item.id} href={item.href}>
 								<Button
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
 									className='w-full justify-start'
@@ -171,6 +238,20 @@ export default function StudentLayout({
 								</Button>
 							</Link>
 						))}
+
+						<Button
+							variant={'ghost'}
+							className='w-full justify-start'
+							onClick={handleLogout}
+						>
+							<Link
+								href={`${getLanguagePrefix()}`}
+								className='flex items-center gap-2 text-red-500 font-bold'
+							>
+								<ArrowLeftCircle className='mr-0 h-4 w-4' />
+								Chiqish
+							</Link>
+						</Button>
 					</nav>
 				</div>
 			</div>
@@ -181,8 +262,12 @@ export default function StudentLayout({
 					<nav className='grid mt-12 gap-1 px-2'>
 						{navigation.map(item => (
 							<Link
-								key={item.href}
-								href={`${getLanguagePrefix()}/student/${Id}${item.href}`}
+								key={item.id}
+								href={cn(
+									item.href !== `${getLanguagePrefix()}`
+										? `${getLanguagePrefix()}/student/${Id}${item.href}`
+										: `${getLanguagePrefix()}`
+								)}
 							>
 								<Button
 									variant={pathname === item.href ? 'secondary' : 'ghost'}
@@ -193,6 +278,19 @@ export default function StudentLayout({
 								</Button>
 							</Link>
 						))}
+						<Button
+							variant={'ghost'}
+							className='w-full justify-start'
+							onClick={handleLogout}
+						>
+							<Link
+								href={`${getLanguagePrefix()}`}
+								className='flex items-center gap-2 text-red-500 font-bold'
+							>
+								<ArrowLeftCircle className='mr-0 h-4 w-4' />
+								Chiqish
+							</Link>
+						</Button>
 					</nav>
 				</div>
 			</div>

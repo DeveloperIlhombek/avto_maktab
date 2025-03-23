@@ -95,7 +95,7 @@ export const getAllStudent = async ({
 	}
 }
 
-interface UserDataById {
+export interface UserDataById {
 	id: string
 	name: string
 	surname: string

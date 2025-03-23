@@ -90,6 +90,8 @@ export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 				errorData.errorMessages?.join(', ') || 'Failed to create test'
 			)
 		}
+		console.log(`xatolik `)
+		console.log(111111111)
 
 		return await response.json()
 	} catch (error) {

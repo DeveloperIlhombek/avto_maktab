@@ -165,11 +165,12 @@ export default function CreateTest() {
 			if (response.isSuccess) {
 				toast.success('Test muvaffaqiyatli yaratildi')
 				router.push(`${getLanguagePrefix()}/admin/tests`)
+				console.log('Test yaratildi:', response.result)
 			} else {
 				toast.error(response.errorMessages?.join(', ') || 'Xatolik yuz berdi')
 			}
 		} catch (error) {
-			console.error('Test yaratishda xatolik:', error)
+			console.log('Test yaratishda xatolik:', error)
 			toast.error('Test yaratishda xatolik yuz berdi')
 		} finally {
 			setIsSubmitting(false)

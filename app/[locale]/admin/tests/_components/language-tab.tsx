@@ -13,11 +13,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { UseFormReturn } from 'react-hook-form'
+import { UseFormReturn, useWatch } from 'react-hook-form'
+import { useEffect } from 'react'
 
 interface LanguageTabProps {
 	lang: 'uz' | 'uzk' | 'ru'
-
 	form: UseFormReturn<any>
 	removeAnswer: (index: number) => void
 }
@@ -50,8 +50,19 @@ const labels = {
 }
 
 export function LanguageTab({ lang, form, removeAnswer }: LanguageTabProps) {
+	const answers = useWatch({ control: form.control, name: 'Answers' }) || []
+
+	// Oldindan kiritilgan variantlarni formga yuklash
+	useEffect(() => {
+		const existingAnswers = form.getValues('Answers')
+		if (!existingAnswers || existingAnswers.length === 0) {
+			form.setValue('Answers', [{ answerText: '', isCorrect: false }])
+		}
+	}, [form])
+
 	return (
 		<div className='space-y-4'>
+			{/* SAVOL INPUT */}
 			<FormField
 				control={form.control}
 				name={`Question${lang.toUpperCase()}`}
@@ -70,6 +81,7 @@ export function LanguageTab({ lang, form, removeAnswer }: LanguageTabProps) {
 				)}
 			/>
 
+			{/* IZOHLAR INPUT */}
 			<FormField
 				control={form.control}
 				name={`Explanation${lang.toUpperCase()}`}
@@ -88,8 +100,9 @@ export function LanguageTab({ lang, form, removeAnswer }: LanguageTabProps) {
 				)}
 			/>
 
+			{/* VARIANTLAR RO'YXATI */}
 			<AnimatePresence>
-				{form.getValues('Answers').map((_: any, index: number) => (
+				{answers.map((answer: any, index: number) => (
 					<motion.div
 						key={index}
 						initial={{ opacity: 0, y: 20 }}
@@ -106,8 +119,12 @@ export function LanguageTab({ lang, form, removeAnswer }: LanguageTabProps) {
 											<Input
 												placeholder={`${index + 1}-${labels[lang].variant}`}
 												{...field}
+												defaultValue={
+													answer?.[`answerText${lang.toUpperCase()}`] || ''
+												}
 											/>
 										</FormControl>
+										{/* TO'G'RI JAVOBNI BELGILASH */}
 										<FormField
 											control={form.control}
 											name={`Answers.${index}.isCorrect`}
@@ -120,25 +137,27 @@ export function LanguageTab({ lang, form, removeAnswer }: LanguageTabProps) {
 																className='w-4 h-4'
 																checked={radioField.value}
 																onChange={() => {
-																	const answers = form.getValues('Answers')
-																	answers.forEach((_: any, i: number) => {
-																		form.setValue(
-																			`Answers.${i}.isCorrect`,
-																			i === index
-																		)
-																	})
+																	// Barcha variantlarning isCorrect ni false qilish va faqat bittasini true qilish
+																	const updatedAnswers = answers.map(
+																		(a: any, i: number) => ({
+																			...a,
+																			isCorrect: i === index,
+																		})
+																	)
+																	form.setValue('Answers', updatedAnswers)
 																}}
 															/>
 														</FormControl>
 														<span className='text-sm text-muted-foreground'>
 															{labels[lang].correctAnswer}
 														</span>
+														{/* O'CHIRISH TUGMASI */}
 														<Button
 															type='button'
 															variant='destructive'
 															size='sm'
 															onClick={() => removeAnswer(index)}
-															disabled={form.getValues('Answers').length <= 2}
+															disabled={answers.length <= 2}
 														>
 															<X className='h-4 w-4' />
 														</Button>
