@@ -18,7 +18,6 @@ import {
 } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
 import { getUserById } from '@/lib/users'
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import { useTranslations } from 'next-intl'
 import {
 	DropdownMenu,
@@ -29,6 +28,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { LanguageSwitcherStudent } from '@/components/shared/language-switcher-student'
 
 interface UserData {
 	id: string
@@ -144,59 +144,63 @@ export default function StudentLayout({
 						<div className='w-full flex-1 md:w-auto md:flex-none'>
 							{/* Add search if needed */}
 						</div>
-						<nav className='flex items-center space-x-2'>
-							<ModeToggle />
-							<LanguageSwitcher />
-							<div className='flex p-0 m-0 text-sm font-bold items-center justify-center gap-0 flex-col'>
-								<span>{userData?.name}</span>
-								<span>{userData?.surname}</span>
+						<nav className='flex items-center justify-center space-x-2 flex-1'>
+							<div className=' text-center flex-1'>
+								<LanguageSwitcherStudent />
 							</div>
-							<DropdownMenu>
-								<DropdownMenuTrigger>
-									<Avatar>
-										<AvatarFallback className='bg-green-400'>
-											{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
-										</AvatarFallback>
-									</Avatar>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent>
-									<DropdownMenuLabel>Shaxsiy kabinet</DropdownMenuLabel>
-									<DropdownMenuSeparator />
-									<DropdownMenuItem>
-										<Link
-											href={`${getLanguagePrefix()}/student/${
-												userData?.id
-											}/settings`}
-											className='flex items-center gap-2'
-										>
-											<Settings className='h-4 w-4' />
-											Sozlamalar
-										</Link>
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<Link
-											href={`${getLanguagePrefix()}`}
-											className='flex items-center gap-2'
-										>
-											<ArrowLeft /> Bosh sahifa
-										</Link>
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<Button
-											variant={'link'}
-											className='w-full h-8 justify-start'
-											onClick={handleLogout}
-										>
+							<ModeToggle />
+							<div className='flex items-center justify-center gap-2'>
+								<div className='flex p-0 m-0 text-sm font-bold items-center justify-center gap-0 flex-col'>
+									<span>{userData?.name}</span>
+									<span>{userData?.surname}</span>
+								</div>
+								<DropdownMenu>
+									<DropdownMenuTrigger>
+										<Avatar>
+											<AvatarFallback className='bg-green-400'>
+												{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
+											</AvatarFallback>
+										</Avatar>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent>
+										<DropdownMenuLabel>Shaxsiy kabinet</DropdownMenuLabel>
+										<DropdownMenuSeparator />
+										<DropdownMenuItem>
+											<Link
+												href={`${getLanguagePrefix()}/student/${
+													userData?.id
+												}/settings`}
+												className='flex items-center gap-2'
+											>
+												<Settings className='h-4 w-4' />
+												Sozlamalar
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem>
 											<Link
 												href={`${getLanguagePrefix()}`}
-												className='flex items-center gap-2 text-red-500 font-bold'
+												className='flex items-center gap-2'
 											>
-												<ArrowLeftCircle /> Chiqish
+												<ArrowLeft /> Bosh sahifa
 											</Link>
-										</Button>
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+										</DropdownMenuItem>
+										<DropdownMenuItem>
+											<Button
+												variant={'link'}
+												className='w-full h-8 justify-start'
+												onClick={handleLogout}
+											>
+												<Link
+													href={`${getLanguagePrefix()}`}
+													className='flex items-center gap-2 text-red-500 font-bold'
+												>
+													<ArrowLeftCircle /> Chiqish
+												</Link>
+											</Button>
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+							</div>
 						</nav>
 					</div>
 				</div>

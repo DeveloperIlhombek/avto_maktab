@@ -271,60 +271,52 @@ export function TestPage({ language, userId }: TestPageProps) {
 				>
 					<Card className='w-full'>
 						<CardHeader className='p-0'>
-							<CardTitle className='text-xl font-roboto tracking-normal bg-sky-100 p-5 mb-4 dark:bg-blue-500/80'>
+							<CardTitle className='text-xl border border-blue-500 font-roboto tracking-normal bg-blue-900/90 p-4 text-white break-words'>
 								{currentQuestion.question}
 							</CardTitle>
 						</CardHeader>
-						<CardContent className='grid md:grid-cols-2 gap-6'>
-							<div className='space-y-4'>
-								<div className='space-y-3'>
-									{currentQuestion.testAnswers.map((answer, index) => (
-										<motion.div
-											key={answer.id}
-											whileHover={{ scale: 1.02 }}
-											whileTap={{ scale: 0.98 }}
-											className='flex items-center justify-center gap-2'
+						<CardContent className='p-0 w-full mt-4 flex gap-4'>
+							{/* Variantlar qismi */}
+							<div className='flex-1 space-y-1'>
+								{currentQuestion.testAnswers.map((answer, index) => (
+									<motion.div
+										key={answer.id}
+										whileHover={{ scale: 1.02 }}
+										whileTap={{ scale: 0.98 }}
+										className='flex w-full'
+									>
+										<div className='py-3 px-5 flex items-center justify-start border bg-blue-500/80'>
+											F{index + 1}
+										</div>
+										<div
+											className={`p-2 flex-1 flex items-center justify-start border cursor-pointer transition-all
+            ${
+							selectedAnswers[currentQuestion.id] === answer.id
+								? correctAnswers[currentQuestion.id]
+									? 'bg-green-500'
+									: 'bg-red-500'
+								: 'border-input bg-slate-500 text-white hover:bg-slate-700'
+						}
+            ${
+							timeLeft <= 0 || selectedAnswers[currentQuestion.id]
+								? 'pointer-events-none opacity-100'
+								: ''
+						}
+          `}
+											onClick={() =>
+												!selectedAnswers[currentQuestion.id] &&
+												handleAnswerSelect(currentQuestion.id, answer.id)
+											}
 										>
-											<div className='py-3 px-5 flex items-center justify-start border bg-blue-500/80'>
-												F{index + 1}
-											</div>
-											<div
-												className={`p-2 flex items-center justify-start flex-grow  border cursor-pointer transition-all
-                                                    ${
-																											selectedAnswers[
-																												currentQuestion.id
-																											] === answer.id
-																												? correctAnswers[
-																														currentQuestion.id
-																												  ]
-																													? 'bg-green-500'
-																													: 'bg-red-500'
-																												: 'border-input hover:bg-accent'
-																										}
-                                                    ${
-																											timeLeft <= 0 ||
-																											selectedAnswers[
-																												currentQuestion.id
-																											]
-																												? 'pointer-events-none opacity-100'
-																												: ''
-																										}
-                                                `}
-												onClick={() =>
-													!selectedAnswers[currentQuestion.id] &&
-													handleAnswerSelect(currentQuestion.id, answer.id)
-												}
-											>
-												{answer.answerText}
-											</div>
-										</motion.div>
-									))}
-								</div>
+											{answer.answerText}
+										</div>
+									</motion.div>
+								))}
 							</div>
+
+							{/* Rasm qismi */}
 							{currentQuestion.mediaUrl && (
-								<div className='relative h-[400px] w-full'>
-									{' '}
-									{/* Rasm o'lchami kattalashtirildi */}
+								<div className='flex-1 relative h-[400px]'>
 									<Image
 										src={getImageUrl(currentQuestion.mediaUrl)}
 										alt='Question illustration'
