@@ -39,18 +39,15 @@ const testInfo = [
 
 const cars = [
 	{
-		image:
-			'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop',
+		image: '/b.avif',
 		category: 'vehicleCategoriescategoriesB',
 	},
 	{
-		image:
-			'https://images.unsplash.com/photo-1616455579100-2ceaa4eb2d37?q=80&w=1974&auto=format&fit=crop',
+		image: '/c.avif',
 		category: 'vehicleCategoriescategoriesC',
 	},
 	{
-		image:
-			'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1974&auto=format&fit=crop',
+		image: '/d.avif',
 		category: 'vehicleCategoriescategoriesD',
 	},
 ]

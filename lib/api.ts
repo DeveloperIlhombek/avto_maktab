@@ -90,19 +90,25 @@ export interface IGetUserByIdResult {
 	phone: string
 	role: number
 }
+
+export interface IGetUserByIdResponse {
+	result: IGetUserByIdResult
+	isSuccess?: boolean
+	errorMessages?: string[]
+	statusCode?: number
+}
 export const GetByusername = async (
 	username: string
-): Promise<IGetUserByIdResult> => {
+): Promise<IGetUserByIdResponse> => {
 	try {
 		const response = await fetch(
 			`${API_URL}/api/User/GetByusername?username=${username}`,
 			{
-				method: 'POST',
+				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
 					Accept: '*/*',
 				},
-				body: JSON.stringify(username),
 			}
 		)
 
@@ -114,9 +120,9 @@ export const GetByusername = async (
 		// if (result.token) {
 		// 	localStorage.setItem('token', result.token)
 		// }
-		console.log(result.result)
+		//console.log(result.result)
 
-		return result.result
+		return result
 	} catch (error) {
 		throw new Error(
 			error instanceof Error ? error.message : 'Login request failed'

@@ -36,11 +36,12 @@ function Navbar() {
 				<div className='flex items-center gap-4'>
 					<ModeToggle />
 					<LanguageSwitcher />
+					{/* <EnterDialog
+						trigger={<Button variant='custom'>{t('kirish')}</Button>}
+					/> */}
 					<LoginDialog
 						trigger={<Button variant='custom'>{t('kirish')}</Button>}
 					/>
-
-					{/* <GetbyusernameDialog /> */}
 				</div>
 			</div>
 		</div>

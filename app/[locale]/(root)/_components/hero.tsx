@@ -31,7 +31,7 @@ export default function Home() {
 						className='relative h-[300px] md:h-[500px]'
 					>
 						<motion.img
-							src='https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1470&auto=format&fit=crop'
+							src='driver.avif'
 							alt='Driving School'
 							className='rounded-lg object-cover w-full h-full'
 							animate={{

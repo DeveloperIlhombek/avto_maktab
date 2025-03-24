@@ -69,6 +69,13 @@ export function TestPage({ language }: TestPageProps) {
 	)
 	const pathname = usePathname()
 
+	const [correctAudio, setCorrectAudio] = useState<HTMLAudioElement | null>(
+		null
+	)
+	const [incorrectAudio, setIncorrectAudio] = useState<HTMLAudioElement | null>(
+		null
+	)
+
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
@@ -76,6 +83,27 @@ export function TestPage({ language }: TestPageProps) {
 		}
 		return ''
 	}
+
+	// Initialize audio elements
+	useEffect(() => {
+		// Only initialize on client side
+		if (typeof window !== 'undefined') {
+			setCorrectAudio(new Audio('/correct.mp3'))
+			setIncorrectAudio(new Audio('/incorrect.mp3'))
+		}
+
+		return () => {
+			// Cleanup audio elements
+			if (correctAudio) {
+				correctAudio.pause()
+				correctAudio.currentTime = 0
+			}
+			if (incorrectAudio) {
+				incorrectAudio.pause()
+				incorrectAudio.currentTime = 0
+			}
+		}
+	}, [])
 
 	useEffect(() => {
 		if (timeLeft > 0) {
@@ -130,6 +158,15 @@ export function TestPage({ language }: TestPageProps) {
 				const isCorrect =
 					currentQuestion.testAnswers.find(a => a.id === answerId)?.isCorrect ||
 					false
+
+				// Play appropriate sound effect
+				if (isCorrect && correctAudio) {
+					correctAudio.currentTime = 0
+					correctAudio.play()
+				} else if (!isCorrect && incorrectAudio) {
+					incorrectAudio.currentTime = 0
+					incorrectAudio.play()
+				}
 				setCorrectAnswers(prev => ({
 					...prev,
 					[questionId]: isCorrect,
@@ -153,7 +190,14 @@ export function TestPage({ language }: TestPageProps) {
 			}, AUTO_NEXT_DELAY)
 			setAutoNextTimer(timer)
 		},
-		[questions, currentQuestionIndex, totalQuestions, autoNextTimer]
+		[
+			questions,
+			currentQuestionIndex,
+			totalQuestions,
+			autoNextTimer,
+			correctAudio,
+			incorrectAudio,
+		]
 	)
 
 	const handlePreviousQuestion = () => {
