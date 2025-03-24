@@ -34,14 +34,14 @@ const formSchema = z.object({
 	QuestionRU: z.string().min(2, {
 		message: 'Текст вопроса должен содержать не менее 2 символов',
 	}),
-	ExplanationUZ: z.string().min(2, {
-		message: "Tushuntirish matni kamida 2 ta belgidan iborat bo'lishi kerak",
+	ExplanationUZ: z.string().min(0, {
+		message: "Tushuntirish matni kamida 0 ta belgidan iborat bo'lishi kerak",
 	}),
-	ExplanationUZK: z.string().min(2, {
-		message: 'Тушунтириш матни камида 2 та белгидан иборат бўлиши керак',
+	ExplanationUZK: z.string().min(0, {
+		message: 'Тушунтириш матни камида 0 та белгидан иборат бўлиши керак',
 	}),
-	ExplanationRU: z.string().min(2, {
-		message: 'Текст объяснения должен содержать не менее 2 символов',
+	ExplanationRU: z.string().min(0, {
+		message: 'Текст объяснения должен содержать не менее 0 символов',
 	}),
 	Answers: z
 		.array(

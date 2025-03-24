@@ -231,9 +231,9 @@ export default function EditTest() {
 			formData.append('questionUZ', values.QuestionUZ)
 			formData.append('questionUZK', values.QuestionUZK)
 			formData.append('questionRU', values.QuestionRU)
-			formData.append('explanationUZ', values.ExplanationUZ)
-			formData.append('explanationUZK', values.ExplanationUZK)
-			formData.append('explanationRU', values.ExplanationRU)
+			formData.append('explanationUZ', values.ExplanationUZ || '')
+			formData.append('explanationUZK', values.ExplanationUZK || '')
+			formData.append('explanationRU', values.ExplanationRU || '')
 
 			// Add media if changed
 			if (mediaFile) {
