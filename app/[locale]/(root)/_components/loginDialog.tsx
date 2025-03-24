@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Eye, EyeOff } from 'lucide-react'
-import { loginUser } from '@/lib/api'
+import { GetByusername, loginUser } from '@/lib/api'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
@@ -100,6 +100,74 @@ export function LoginDialog({ trigger }: { trigger: React.ReactNode }) {
 					{error && <p className='text-red-500'>{error}</p>}
 					<Button type='submit' variant='custom' className='w-full'>
 						{t('kirish')}
+					</Button>
+				</form>
+			</DialogContent>
+		</Dialog>
+	)
+}
+export function GetbyusernameDialog({ trigger }: { trigger: React.ReactNode }) {
+	const [open, setOpen] = useState(false)
+	const router = useRouter()
+	const [login, setLogin] = useState('')
+	const [error, setError] = useState<string | null>(null)
+	const pathname = usePathname()
+
+	// Til prefiksini olish
+	const getLanguagePrefix = () => {
+		const segments = pathname.split('/')
+		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
+			return `/${segments[1]}`
+		}
+		return ''
+	}
+
+	// Login funksiyasi
+	const handleLoginByUsername = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		setError(null)
+		try {
+			const enterResult = await GetByusername('Ilhom')
+			console.log(enterResult)
+
+			// Foydalanuvchini yo'naltirish
+			setOpen(false)
+			if (enterResult.role === 2) {
+				router.push(`${getLanguagePrefix()}/instructor/${enterResult.id}`)
+			} else if (enterResult.role === 1) {
+				router.push(`${getLanguagePrefix()}/admin`)
+			} else {
+				router.push(`${getLanguagePrefix()}/student/${enterResult.id}`)
+			}
+		} catch (error) {
+			setError(
+				`Login yoki parol xato: ${
+					error instanceof Error ? error.message : "Noma'lum xatolik"
+				}`
+			)
+		}
+	}
+
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>{trigger}</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>tizimgakirish</DialogTitle>
+					<DialogDescription>loginparolkiritish</DialogDescription>
+				</DialogHeader>
+				<form className='space-y-4' onSubmit={handleLoginByUsername}>
+					<Input
+						type='text'
+						placeholder='login'
+						value={login}
+						onChange={e => setLogin(e.target.value)}
+						required
+					/>
+					<div className='relative'></div>
+					{error && <p className='text-red-500'>{error}</p>}
+					<Button type='submit' variant='custom' className='w-full'>
+						kirish
 					</Button>
 				</form>
 			</DialogContent>

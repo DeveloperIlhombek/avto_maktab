@@ -39,6 +39,8 @@ function Navbar() {
 					<LoginDialog
 						trigger={<Button variant='custom'>{t('kirish')}</Button>}
 					/>
+
+					{/* <GetbyusernameDialog /> */}
 				</div>
 			</div>
 		</div>

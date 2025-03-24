@@ -78,3 +78,48 @@ export const customFetch = async (
 
 	return res
 }
+
+//==================== ========================
+//Get User By Id
+export interface IGetUserByIdResult {
+	id: string
+	name: string
+	surname: string
+	username: string
+	email: string
+	phone: string
+	role: number
+}
+export const GetByusername = async (
+	username: string
+): Promise<IGetUserByIdResult> => {
+	try {
+		const response = await fetch(
+			`${API_URL}/api/User/GetByusername?username=${username}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: '*/*',
+				},
+				body: JSON.stringify(username),
+			}
+		)
+
+		if (!response.ok) {
+			throw new Error('Login failed')
+		}
+		const result = await response.json()
+
+		// if (result.token) {
+		// 	localStorage.setItem('token', result.token)
+		// }
+		console.log(result.result)
+
+		return result.result
+	} catch (error) {
+		throw new Error(
+			error instanceof Error ? error.message : 'Login request failed'
+		)
+	}
+}
