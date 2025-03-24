@@ -251,13 +251,13 @@ export function TestPage({ language }: TestPageProps) {
 				>
 					<Card className='w-full'>
 						<CardHeader className='p-0'>
-							<CardTitle className='text-xl font-roboto tracking-normal bg-sky-100 p-5 mb-4 dark:bg-blue-500/80'>
+							<CardTitle className='text-xl text-white font-roboto tracking-normal border border-blue-500 bg-blue-900/90 p-5 mb-4 '>
 								{currentQuestion.question}
 							</CardTitle>
 						</CardHeader>
 						<CardContent className='grid md:grid-cols-2 gap-6'>
 							<div className='space-y-4'>
-								<div className='space-y-3'>
+								<div className='space-y-2'>
 									{currentQuestion.testAnswers.map((answer, index) => {
 										const isSelected =
 											selectedAnswers[currentQuestion.id] === answer.id
@@ -269,9 +269,9 @@ export function TestPage({ language }: TestPageProps) {
 												key={answer.id}
 												whileHover={{ scale: 1.02 }}
 												whileTap={{ scale: 0.98 }}
-												className='flex items-center justify-center gap-2'
+												className='flex justify-center '
 											>
-												<div className='py-3 px-5 flex rounded-sm items-center justify-start border bg-blue-500/90'>
+												<div className='py-3 px-5 flex rounded-sm items-center justify-start border bg-blue-600/90'>
 													F{index + 1}
 												</div>
 												<div
@@ -283,7 +283,7 @@ export function TestPage({ language }: TestPageProps) {
 										: 'bg-red-500'
 									: isCorrectAnswer && selectedAnswers[currentQuestion.id]
 									? 'bg-green-500'
-									: 'border-input hover:bg-accent'
+									: 'border-input bg-slate-400 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600'
 							}
 							${
 								timeLeft <= 0 || selectedAnswers[currentQuestion.id]
