@@ -295,7 +295,7 @@ export function TestPage({ language }: TestPageProps) {
 				>
 					<Card className='w-full'>
 						<CardHeader className='p-0'>
-							<CardTitle className='text-xl text-white font-roboto tracking-normal border border-blue-500 bg-blue-900/90 p-5 mb-4 '>
+							<CardTitle className='text-xl text-white text-center font-roboto tracking-normal border border-[#3b74a3] bg-[#013b6b] p-5 mb-4 '>
 								{currentQuestion.question}
 							</CardTitle>
 						</CardHeader>
@@ -315,7 +315,7 @@ export function TestPage({ language }: TestPageProps) {
 												whileTap={{ scale: 0.98 }}
 												className='flex justify-center '
 											>
-												<div className='py-3 px-5 flex rounded-sm items-center justify-start border bg-blue-600/90'>
+												<div className='py-3 px-5 flex rounded-sm items-center justify-start border bg-[#013b6b]'>
 													F{index + 1}
 												</div>
 												<div
@@ -327,7 +327,7 @@ export function TestPage({ language }: TestPageProps) {
 										: 'bg-red-500'
 									: isCorrectAnswer && selectedAnswers[currentQuestion.id]
 									? 'bg-green-500'
-									: 'border-input bg-slate-400 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600'
+									: 'border-input bg-slate-400 hover:bg-slate-300 dark:bg-[#2d363d]  dark:hover:bg-slate-600'
 							}
 							${
 								timeLeft <= 0 || selectedAnswers[currentQuestion.id]
