@@ -48,7 +48,7 @@ export function LanguageSwitcherStudent() {
 	}
 
 	return (
-		<div className='flex items-center text-white justify-center p-2 rounded-lg bg-[#020817] backdrop-blur-sm  shadow-sm hover:text-white/90'>
+		<div className='flex items-center text-black hover:text-black dark:text-white justify-center p-2 rounded-lg bg-background  dark:bg-[#020817] backdrop-blur-sm  shadow-sm dark:hover:text-white/90'>
 			<div className='flex items-center gap-2'>
 				{languages.map(language => (
 					<motion.button

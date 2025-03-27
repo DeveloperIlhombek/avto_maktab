@@ -45,7 +45,7 @@ interface TestPageProps {
 	userId: string
 }
 
-const SECONDS_PER_QUESTION = 90
+const SECONDS_PER_QUESTION = 75
 const AUTO_NEXT_DELAY = 5000
 export function TestPage({ language, userId }: TestPageProps) {
 	const t = useTranslations('Student')
@@ -315,7 +315,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 				>
 					<Card className='w-full'>
 						<CardHeader className='p-0'>
-							<CardTitle className='text-xl border border-blue-500 font-roboto tracking-normal bg-blue-900/90 p-4 text-white break-words'>
+							<CardTitle className='text-xl border border-[#3b74a3] font-roboto tracking-normal bg-[#013b6b] p-4 text-white break-words'>
 								{currentQuestion.question}
 							</CardTitle>
 						</CardHeader>
@@ -329,7 +329,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 										whileTap={{ scale: 0.98 }}
 										className='flex w-full'
 									>
-										<div className='py-3 px-5 flex items-center justify-start border bg-blue-500/80'>
+										<div className='py-3 px-5 flex text-white items-center justify-start border bg-[#013b6b]'>
 											F{index + 1}
 										</div>
 										<div
@@ -339,7 +339,7 @@ export function TestPage({ language, userId }: TestPageProps) {
 								? correctAnswers[currentQuestion.id]
 									? 'bg-green-500'
 									: 'bg-red-500'
-								: 'border-input bg-slate-500 text-white hover:bg-slate-700'
+								: 'border-input bg-[#2d363d]  text-white hover:bg-slate-700'
 						}
             ${
 							timeLeft <= 0 || selectedAnswers[currentQuestion.id]

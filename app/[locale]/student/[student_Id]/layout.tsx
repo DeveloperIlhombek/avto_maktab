@@ -9,7 +9,6 @@ import {
 	ArrowLeft,
 	ArrowLeftCircle,
 	ClipboardCheck,
-	GraduationCap,
 	Home,
 	Menu,
 	Settings,
@@ -29,6 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { LanguageSwitcherStudent } from '@/components/shared/language-switcher-student'
+import Image from 'next/image'
 
 interface UserData {
 	id: string
@@ -45,7 +45,6 @@ export default function StudentLayout({
 	children: React.ReactNode
 }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
 	const [userData, setUserData] = useState<UserData | null>(null)
 	const pathname = usePathname()
 	const pathSegments = pathname.split('/')
@@ -59,6 +58,7 @@ export default function StudentLayout({
 	const getLanguagePrefix = () => {
 		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
 	}
+
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
@@ -76,6 +76,7 @@ export default function StudentLayout({
 			fetchUser()
 		}
 	}, [Id])
+
 	useEffect(() => {
 		setIsSidebarOpen(false)
 	}, [pathname])
@@ -85,11 +86,21 @@ export default function StudentLayout({
 		window.location.replace(`${getLanguagePrefix()}`)
 	}
 
+	const toggleSidebar = () => {
+		setIsSidebarOpen(!isSidebarOpen)
+	}
+
 	const navigation = [
 		{
 			id: 1,
-			name: t('dashboard'),
+			name: t('testlar'),
 			href: '/',
+			icon: ClipboardCheck,
+		},
+		{
+			id: 3,
+			name: t('dashboard'),
+			href: '/dashboard',
 			icon: Home,
 		},
 		{
@@ -98,12 +109,7 @@ export default function StudentLayout({
 			href: '/profile',
 			icon: User,
 		},
-		{
-			id: 3,
-			name: t('testlar'),
-			href: '/tests',
-			icon: ClipboardCheck,
-		},
+
 		{
 			id: 4,
 			name: t('sozlamalar'),
@@ -121,25 +127,32 @@ export default function StudentLayout({
 	return (
 		<div className='min-h-screen bg-background'>
 			{/* Navbar */}
-			<header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-				<div className='container flex h-14 items-center'>
+			<header className='px-5 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+				<div className='flex h-20 items-center justify-center space-x-4'>
+					<Button
+						variant='custom'
+						className='mr-2 p-4 text-base hover:bg-transparent focus:ring-0'
+						onClick={toggleSidebar}
+					>
+						{isSidebarOpen ? (
+							<X className='h-6 w-6' />
+						) : (
+							<Menu className='h-6 w-6' />
+						)}
+					</Button>
+
 					<div className='mr-4 hidden md:flex'>
-						<Link
-							href={`${getLanguagePrefix()}/student/${Id}`}
-							className='mr-6 flex items-center space-x-2'
-						>
-							<span className='hidden text-3xl text-blue-500 font-bold sm:inline-block'>
-								AVTOMAKTAB
-							</span>
+						<Link href={`${getLanguagePrefix()}`}>
+							<Image
+								src={'/logofile1.png'}
+								alt='logo'
+								width={240}
+								height={80}
+								className='object-contain'
+							/>
 						</Link>
 					</div>
-					<Button
-						variant='ghost'
-						className='mr-2 px-0 text-base hover:bg-transparent focus:ring-0 md:hidden'
-						onClick={() => setIsSidebarOpen(true)}
-					>
-						<Menu className='h-6 w-6' />
-					</Button>
+
 					<div className='flex flex-1 items-center justify-between space-x-2 md:justify-end'>
 						<div className='w-full flex-1 md:w-auto md:flex-none'>
 							{/* Add search if needed */}
@@ -157,7 +170,7 @@ export default function StudentLayout({
 								<DropdownMenu>
 									<DropdownMenuTrigger>
 										<Avatar>
-											<AvatarFallback className='bg-green-400'>
+											<AvatarFallback className='bg-green-500/75'>
 												{`${userData?.name[0]}${userData?.surname[0]}` || 'CN'}
 											</AvatarFallback>
 										</Avatar>
@@ -206,102 +219,97 @@ export default function StudentLayout({
 				</div>
 			</header>
 
-			{/* Sidebar */}
-			<div
-				className={`fixed inset-0 z-50 md:hidden ${
-					isSidebarOpen ? 'block' : 'hidden'
-				}`}
-			>
-				<div className='fixed inset-0 bg-background/80 backdrop-blur-sm' />
-				<div className='fixed inset-y-0 left-0 w-full max-w-xs border-r bg-background p-6 shadow-lg'>
-					<div className='flex items-center justify-between'>
-						<Link
-							href={`${getLanguagePrefix()}/student/dashboard`}
-							className='flex items-center space-x-2'
-						>
-							<GraduationCap className='h-6 w-6' />
-							<span className='font-bold'>AVTOMAKTAB</span>
-						</Link>
-						<Button
-							variant='ghost'
-							size='icon'
-							onClick={() => setIsSidebarOpen(false)}
-						>
-							<X className='h-6 w-6' />
-						</Button>
+			{/* Mobile Sidebar - Only shown when isSidebarOpen is true */}
+			{isSidebarOpen && (
+				<div className='fixed inset-0 z-50 md:hidden'>
+					<div
+						className='fixed inset-0 bg-background/80 backdrop-blur-sm'
+						onClick={() => setIsSidebarOpen(false)}
+					/>
+					<div className='fixed inset-y-0 left-0 w-full max-w-xs border-r bg-background p-6 shadow-lg'>
+						<div className='flex items-center justify-end'>
+							<Button
+								variant='custom'
+								size='icon'
+								onClick={() => setIsSidebarOpen(false)}
+							>
+								<X className='h-6 w-6' />
+							</Button>
+						</div>
+						<nav className='mt-8 flex flex-col space-y-2'>
+							{navigation.map(item => (
+								<Link key={item.id} href={item.href}>
+									<Button
+										variant={pathname === item.href ? 'secondary' : 'ghost'}
+										className='w-full justify-start'
+									>
+										<item.icon className=' h-4 w-4' />
+										{item.name}
+									</Button>
+								</Link>
+							))}
+							<Button
+								variant={'ghost'}
+								className='w-full justify-start'
+								onClick={handleLogout}
+							>
+								<Link
+									href={`${getLanguagePrefix()}`}
+									className='flex items-center gap-2 text-red-500 font-bold'
+								>
+									<ArrowLeftCircle className='mr-0 h-4 w-4' />
+									Chiqish
+								</Link>
+							</Button>
+						</nav>
 					</div>
-					<nav className='mt-8 flex flex-col space-y-2'>
-						{navigation.map(item => (
-							<Link key={item.id} href={item.href}>
-								<Button
-									variant={pathname === item.href ? 'secondary' : 'ghost'}
-									className='w-full justify-start'
-								>
-									<item.icon className=' h-4 w-4' />
-									{item.name}
-								</Button>
-							</Link>
-						))}
-
-						<Button
-							variant={'ghost'}
-							className='w-full justify-start'
-							onClick={handleLogout}
-						>
-							<Link
-								href={`${getLanguagePrefix()}`}
-								className='flex items-center gap-2 text-red-500 font-bold'
-							>
-								<ArrowLeftCircle className='mr-0 h-4 w-4' />
-								Chiqish
-							</Link>
-						</Button>
-					</nav>
 				</div>
-			</div>
+			)}
 
-			{/* Desktop Sidebar */}
-			<div className='hidden border-r bg-background md:fixed md:inset-y-0 md:flex md:w-56 md:flex-col'>
-				<div className='flex flex-col space-y-4 py-4'>
-					<nav className='grid mt-12 gap-1 px-2'>
-						{navigation.map(item => (
-							<Link
-								key={item.id}
-								href={cn(
-									item.href !== `${getLanguagePrefix()}`
-										? `${getLanguagePrefix()}/student/${Id}${item.href}`
-										: `${getLanguagePrefix()}`
-								)}
-							>
-								<Button
-									variant={pathname === item.href ? 'secondary' : 'ghost'}
-									className='w-full justify-start'
+			{/* Desktop Sidebar - Only shown when isSidebarOpen is true */}
+			{isSidebarOpen && (
+				<div className='hidden md:fixed md:inset-y-0 md:flex md:w-56 md:flex-col border-r bg-background'>
+					<div className='flex flex-col space-y-4 py-4'>
+						<nav className='grid mt-4 gap-1 px-2'>
+							{navigation.map(item => (
+								<Link
+									key={item.id}
+									href={cn(
+										item.href !== `${getLanguagePrefix()}`
+											? `${getLanguagePrefix()}/student/${Id}${item.href}`
+											: `${getLanguagePrefix()}`
+									)}
 								>
-									<item.icon className='mr-0 h-4 w-4' />
-									{item.name}
-								</Button>
-							</Link>
-						))}
-						<Button
-							variant={'ghost'}
-							className='w-full justify-start'
-							onClick={handleLogout}
-						>
-							<Link
-								href={`${getLanguagePrefix()}`}
-								className='flex items-center gap-2 text-red-500 font-bold'
+									<Button
+										variant={pathname === item.href ? 'secondary' : 'ghost'}
+										className='w-full justify-start'
+									>
+										<item.icon className='mr-0 h-4 w-4' />
+										{item.name}
+									</Button>
+								</Link>
+							))}
+							<Button
+								variant={'ghost'}
+								className='w-full justify-start'
+								onClick={handleLogout}
 							>
-								<ArrowLeftCircle className='mr-0 h-4 w-4' />
-								Chiqish
-							</Link>
-						</Button>
-					</nav>
+								<Link
+									href={`${getLanguagePrefix()}`}
+									className='flex items-center gap-2 text-red-500 font-bold'
+								>
+									<ArrowLeftCircle className='mr-0 h-4 w-4' />
+									Chiqish
+								</Link>
+							</Button>
+						</nav>
+					</div>
 				</div>
-			</div>
+			)}
 
 			{/* Main Content */}
-			<div className='md:pl-56'>
-				<main className='p-6'>{children}</main>
+			<div className={isSidebarOpen ? 'md:pl-56' : ''}>
+				<main className='p-2'>{children}</main>
 			</div>
 		</div>
 	)
