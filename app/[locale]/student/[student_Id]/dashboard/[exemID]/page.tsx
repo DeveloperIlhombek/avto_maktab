@@ -26,7 +26,7 @@ import { useTranslations } from 'next-intl'
 
 function Page() {
 	const pathname = usePathname()
-	const examId = pathname.split('/')[4]
+	const examId = pathname.split('/')[5]
 	const lang = pathname.split('/')[1]
 	const getUserId = pathname.split('/')[3]
 	const [examResult, setExamResult] = useState<IExamResult>()
@@ -132,7 +132,7 @@ function Page() {
 					<div className='flex flex-col sm:flex-row items-center justify-center gap-3 w-full md:w-auto'>
 						<Button variant={'custom'} className='w-full sm:w-auto'>
 							<Link
-								href={`${getLanguagePrefix()}/student/${getUserId}`}
+								href={`${getLanguagePrefix()}/student/${getUserId}/dashboard`}
 								className='flex items-center justify-center gap-2 p-2'
 							>
 								<ArrowLeft /> {t('barchanatijalar')}
@@ -140,7 +140,7 @@ function Page() {
 						</Button>
 						<Button variant={'custom'} className='w-full sm:w-auto'>
 							<Link
-								href={`${getLanguagePrefix()}/student/${getUserId}/tests`}
+								href={`${getLanguagePrefix()}/student/${getUserId}`}
 								className='flex items-center justify-center gap-2 p-2'
 							>
 								{t('testishlash')}

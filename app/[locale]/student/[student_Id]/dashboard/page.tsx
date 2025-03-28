@@ -223,7 +223,9 @@ export default function StudentDashboard() {
 										</TableCell>
 										<TableCell className='text-right'>
 											<Link
-												href={`${getLanguagePrefix()}/student/${Id}/${test.id}`}
+												href={`${getLanguagePrefix()}/student/${Id}/dashboard/${
+													test.id
+												}`}
 												className='inline-flex items-center justify-center p-2 rounded-md hover:bg-primary/10 transition-colors'
 											>
 												<LucideEye className='w-5 h-5 text-primary' />

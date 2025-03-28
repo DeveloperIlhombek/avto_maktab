@@ -270,7 +270,9 @@ export function TestPage({ language, userId }: TestPageProps) {
 	const currentQuestion = questions[currentQuestionIndex]
 	const examID = testResults?.id
 	const handleRedirectToResults = () => {
-		return redirect(`${getLanguagePrefix()}/student/${userId}/${examID}`)
+		return redirect(
+			`${getLanguagePrefix()}/student/${userId}/dashboard/${examID}`
+		)
 	}
 
 	useEffect(() => {

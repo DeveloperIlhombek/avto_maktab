@@ -164,11 +164,7 @@ export default function StudentProfile() {
 							label={t('telefon')}
 							value={userData?.phone || ''}
 						/>
-						<InfoItem
-							icon={Shield}
-							label={t('role')}
-							value={userData?.role === 1 ? 'Administrator' : 'Foydalanuvchi'}
-						/>
+						<InfoItem icon={Shield} label={t('role')} value={'Student'} />
 					</div>
 				</CardContent>
 			</Card>

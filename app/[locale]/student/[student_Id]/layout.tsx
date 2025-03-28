@@ -92,12 +92,6 @@ export default function StudentLayout({
 
 	const navigation = [
 		{
-			id: 1,
-			name: t('testlar'),
-			href: '/',
-			icon: ClipboardCheck,
-		},
-		{
 			id: 3,
 			name: t('dashboard'),
 			href: '/dashboard',
@@ -108,6 +102,12 @@ export default function StudentLayout({
 			name: t('shaxsiymalumotlar'),
 			href: '/profile',
 			icon: User,
+		},
+		{
+			id: 1,
+			name: t('testlar'),
+			href: '/',
+			icon: ClipboardCheck,
 		},
 
 		{
@@ -130,7 +130,7 @@ export default function StudentLayout({
 			<header className='px-5 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
 				<div className='flex h-20 items-center justify-center space-x-4'>
 					<Button
-						variant='custom'
+						variant='ghost'
 						className='mr-2 p-4 text-base hover:bg-transparent focus:ring-0'
 						onClick={toggleSidebar}
 					>
@@ -146,9 +146,9 @@ export default function StudentLayout({
 							<Image
 								src={'/logofile1.png'}
 								alt='logo'
-								width={240}
-								height={80}
-								className='object-contain'
+								width={200}
+								height={200}
+								className='object-contain w-[200px] h-[200px]'
 							/>
 						</Link>
 					</div>
@@ -229,7 +229,7 @@ export default function StudentLayout({
 					<div className='fixed inset-y-0 left-0 w-full max-w-xs border-r bg-background p-6 shadow-lg'>
 						<div className='flex items-center justify-end'>
 							<Button
-								variant='custom'
+								variant='ghost'
 								size='icon'
 								onClick={() => setIsSidebarOpen(false)}
 							>
@@ -270,7 +270,7 @@ export default function StudentLayout({
 			{isSidebarOpen && (
 				<div className='hidden md:fixed md:inset-y-0 md:flex md:w-56 md:flex-col border-r bg-background'>
 					<div className='flex flex-col space-y-4 py-4'>
-						<nav className='grid mt-4 gap-1 px-2'>
+						<nav className='grid mt-20 gap-1 px-2'>
 							{navigation.map(item => (
 								<Link
 									key={item.id}
