@@ -47,10 +47,7 @@ const item = {
 export function Opportunities() {
 	const t = useTranslations('Imkoniyatlar')
 	return (
-		<section
-			className='py-16 bg-gradient-to-b from-sky-100/10 to-sky-900/40 dark:from-sky-900/10 dark:to-sky-800/20'
-			id='imkoniyatlar'
-		>
+		<section className='py-16 bg-gradient-to-b from-sky-100/10 to-sky-900/40 dark:from-sky-900/10 dark:to-sky-800/20'>
 			<div className='container px-4 mx-auto'>
 				<motion.div
 					initial='hidden'

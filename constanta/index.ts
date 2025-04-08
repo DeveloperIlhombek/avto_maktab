@@ -1,13 +1,13 @@
 export const navLink = [
 	{
 		id: 1,
-		name: 'imkoniyatlar',
-		url: '#imkoniyatlar',
+		name: 'roadSigns',
+		url: '/uz/roadSigns',
 	},
 	{
 		id: 2,
-		name: 'funksiyalar',
-		url: '#funksiyalar',
+		name: 'fines',
+		url: '/uz/fines',
 	},
 
 	{

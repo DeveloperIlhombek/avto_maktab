@@ -62,10 +62,7 @@ export function Functions() {
 	}
 
 	return (
-		<section
-			className='py-14 bg-gradient-to-b from-sky-900/40 to-sky-100/10 dark:from-sky-800/20 dark:to-sky-900/10'
-			id='funksiyalar'
-		>
+		<section className='py-14 bg-gradient-to-b from-sky-900/40 to-sky-100/10 dark:from-sky-800/20 dark:to-sky-900/10'>
 			<div className='container px-4 mx-auto'>
 				<motion.div
 					initial='hidden'

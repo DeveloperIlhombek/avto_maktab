@@ -6,7 +6,7 @@ import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-function NavbarMedia() {
+function ChildrenNavbar() {
 	const pathname = usePathname()
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
@@ -32,4 +32,4 @@ function NavbarMedia() {
 		</header>
 	)
 }
-export default NavbarMedia
+export default ChildrenNavbar
