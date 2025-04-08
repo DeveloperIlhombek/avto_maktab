@@ -1,8 +1,7 @@
 import { customFetch } from './api'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const API_URL = 'http://213.230.109.74:8080'
-//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export interface TestsResponse {
 	isSuccess: boolean
@@ -90,8 +89,6 @@ export async function createTest(data: CreateTestData): Promise<ApiResponse> {
 				errorData.errorMessages?.join(', ') || 'Failed to create test'
 			)
 		}
-		console.log(`xatolik `)
-		console.log(111111111)
 
 		return await response.json()
 	} catch (error) {

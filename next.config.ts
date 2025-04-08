@@ -10,8 +10,7 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: 'http',
-				hostname: '213.230.109.74',
-				port: '8080',
+				hostname: 'testapi.sammkk.uz',
 			},
 		],
 	},

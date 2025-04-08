@@ -140,7 +140,9 @@ export default function EditTest() {
 					form.reset(initialValues)
 
 					if (testUZ.mediaUrl) {
-						setMediaPreview(`http://213.230.109.74:8080/${testUZ.mediaUrl}`)
+						setMediaPreview(
+							`${process.env.NEXT_PUBLIC_API_URL}/${testUZ.mediaUrl}`
+						)
 					}
 				} else {
 					setError(

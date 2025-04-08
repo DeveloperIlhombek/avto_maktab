@@ -92,7 +92,7 @@ export default function PracticePage() {
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return null
 		if (mediaUrl.startsWith('Files/')) {
-			return `http://213.230.109.74:8080/${mediaUrl}`
+			return `${process.env.NEXT_PUBLIC_API_URL}/${mediaUrl}`
 		}
 		return null
 	}

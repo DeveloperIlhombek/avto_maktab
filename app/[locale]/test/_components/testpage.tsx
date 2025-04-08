@@ -225,10 +225,10 @@ export function TestPage({ language }: TestPageProps) {
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return '/avto6.webp'
 		if (!mediaUrl.includes('\\')) {
-			return `http://213.230.109.74:8080/${mediaUrl}`
+			return `${process.env.NEXT_PUBLIC_API_URL}/${mediaUrl}`
 		}
 		const filename = mediaUrl.split('\\').pop()
-		return `http://213.230.109.74:8080/${filename}`
+		return `${process.env.NEXT_PUBLIC_API_URL}/${filename}`
 	}
 
 	const allQuestionsAnswered = questions

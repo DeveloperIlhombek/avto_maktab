@@ -280,7 +280,7 @@ export default function QuestionDetails({
 								<div className='rounded-lg overflow-hidden border w-1/2 h-1/2'>
 									{!imageError ? (
 										<Image
-											src={`http://213.230.109.74:8080/${testData.mediaUrl}`}
+											src={`${process.env.NEXT_PUBLIC_API_URL}/${testData.mediaUrl}`}
 											alt='Question illustration'
 											width={500}
 											height={300}

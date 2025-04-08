@@ -28,7 +28,6 @@ function Page() {
 	const pathname = usePathname()
 	const folderId = pathname.split('/')[3]
 	const t = useTranslations('Media')
-
 	const getLanguagePrefix = () => {
 		const segments = pathname.split('/')
 		if (segments.length > 1 && ['uz', 'uzk', 'ru'].includes(segments[1])) {
@@ -197,7 +196,7 @@ function Page() {
 											{isImageFile(media.fileName) ? (
 												<div className='relative group aspect-video bg-muted rounded-md overflow-hidden'>
 													<Image
-														src={`http://213.230.109.74:8080/${media.filePath}`}
+														src={`${process.env.NEXT_PUBLIC_API_URL}/${media.filePath}`}
 														alt={media.fileName}
 														className='w-full h-full object-cover'
 														width={500}
@@ -237,7 +236,7 @@ function Page() {
 															onPause={handleVideoPause}
 														>
 															<source
-																src={`http://213.230.109.74:8080/${media.filePath}`}
+																src={`${process.env.NEXT_PUBLIC_API_URL}/${media.filePath}`}
 																type='video/mp4'
 															/>
 															Your browser does not support the video tag.

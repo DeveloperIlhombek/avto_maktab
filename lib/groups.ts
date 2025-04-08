@@ -1,7 +1,6 @@
 import { customFetch } from './api'
 
-const API_URL = 'http://213.230.109.74:8080'
-//const API_URL = 'https://9284dgg8-5000.euw.devtunnels.ms'
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 // Groups API interfaces
 export interface GroupItem {
 	id: string
