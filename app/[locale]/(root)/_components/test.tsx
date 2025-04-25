@@ -82,6 +82,7 @@ export function Test() {
 	// Check if the current path includes a valid language code
 	const isValidLang = ['uz', 'uzk', 'ru'].includes(currentLang)
 	const testUrl = isValidLang ? `/${currentLang}/test` : '/test'
+	const testUrl20 = isValidLang ? `/${currentLang}/test20` : '/test20'
 	return (
 		<section
 			className='py-14 bg-gradient-to-b from-sky-100/10 via-sky-900/30 to-sky-100/10 dark:from-sky-900/10 dark:via-sky-300/20 dark:to-sky-900/10'
@@ -104,7 +105,20 @@ export function Test() {
 							{t('title')}
 						</h2>
 						<p className='text-lg text-muted-foreground'>{t('description')}</p>
-						<div className='pt-4'>
+						<div className='pt-4 flex items-center justify-center gap-4 flex-wrap'>
+							<Button
+								size='lg'
+								className='text-lg px-8 py-3  transition-all duration-300 shadow-lg '
+								variant={'custom'}
+							>
+								<Link
+									href={testUrl20}
+									className='flex items-center justify-center gap-2'
+								>
+									<span> 20 ta test</span>
+									<ChevronRight className='h-5 w-5 transition-transform duration-300 group-hover:translate-x-1' />
+								</Link>
+							</Button>
 							<Button
 								size='lg'
 								className='text-lg px-8 py-3  transition-all duration-300 shadow-lg '
@@ -114,7 +128,7 @@ export function Test() {
 									href={testUrl}
 									className='flex items-center justify-center gap-2'
 								>
-									<span>{t('startTest')}</span>
+									<span>50 ta test</span>
 									<ChevronRight className='h-5 w-5 transition-transform duration-300 group-hover:translate-x-1' />
 								</Link>
 							</Button>
