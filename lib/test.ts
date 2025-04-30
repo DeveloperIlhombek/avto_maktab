@@ -20,6 +20,7 @@ export interface Test {
 	id: string
 	name: string | null
 	question: string
+	number: number
 	explanation: string
 	mediaUrl: string | null
 	testAnswers: TestAnswer[]

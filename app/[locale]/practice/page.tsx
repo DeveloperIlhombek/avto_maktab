@@ -227,7 +227,7 @@ export default function PracticePage() {
 						</CardContent>
 						<CardContent className='flex-1 w-full md:w-auto flex flex-col items-start gap-4'>
 							<CardDescription className='text-lg font-semibold'>
-								{t('savoljavobi')}
+								{`${currentQuestion.number}` + ' - ' + t('savoljavobi')}
 							</CardDescription>
 							<AnimatePresence mode='popLayout'>
 								{currentQuestion.testAnswers

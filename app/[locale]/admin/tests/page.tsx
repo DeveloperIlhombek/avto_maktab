@@ -23,11 +23,11 @@ import {
 import {
 	Pagination,
 	PaginationContent,
-	PaginationEllipsis,
 	PaginationItem,
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
+	PaginationEllipsis,
 } from '@/components/ui/pagination'
 import { Search, Plus, Pencil, Eye, Image as ImageIcon } from 'lucide-react'
 import { getAllTestsAdmin } from '@/lib/test'
@@ -43,6 +43,7 @@ export default function QuestionsPage() {
 			: 'uz'
 
 	const [searchTerm, setSearchTerm] = useState('')
+	const [orderNumberSearch, setOrderNumberSearch] = useState('')
 	const [tests, setTests] = useState<Test[]>([])
 	const [currentPage, setCurrentPage] = useState(0)
 	const [totalPages, setTotalPages] = useState(0)
@@ -54,15 +55,15 @@ export default function QuestionsPage() {
 
 	useEffect(() => {
 		fetchTests()
-	}, [currentPage, language, searchTerm])
+	}, [currentPage, language, searchTerm, orderNumberSearch])
 
 	const fetchTests = async () => {
 		try {
 			setLoading(true)
 			setError(null)
 			const data = await getAllTestsAdmin(
-				searchTerm ? 0 : currentPage,
-				searchTerm ? 2000 : pageSize,
+				searchTerm || orderNumberSearch ? 0 : currentPage,
+				searchTerm || orderNumberSearch ? 2000 : pageSize,
 				language
 			)
 
@@ -81,11 +82,30 @@ export default function QuestionsPage() {
 		}
 	}
 
-	const filteredTests = searchTerm
-		? tests.filter(test =>
-				test.question.toLowerCase().includes(searchTerm.toLowerCase())
-		  )
-		: tests
+	// Savol matni bo'yicha filtr
+	const filterByQuestion = (test: Test, term: string) => {
+		if (!term) return true
+		return test.question.toLowerCase().includes(term.toLowerCase())
+	}
+
+	// Tartib raqami bo'yicha filtr
+	const filterByOrderNumber = (test: Test, number: string) => {
+		if (!number) return true
+		const parsedNumber = parseInt(number, 10)
+		if (isNaN(parsedNumber)) return false
+		return test.number === parsedNumber
+	}
+
+	// Filtrlash logikasi
+	const filteredTests = tests.filter(test => {
+		if (searchTerm && !orderNumberSearch) {
+			return filterByQuestion(test, searchTerm)
+		}
+		if (orderNumberSearch && !searchTerm) {
+			return filterByOrderNumber(test, orderNumberSearch)
+		}
+		return true
+	})
 
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return null
@@ -101,6 +121,17 @@ export default function QuestionsPage() {
 
 	const getLanguagePrefix = () => {
 		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
+	}
+
+	// Input o'zgarganda boshqa maydonni bo'shatish
+	const handleSearchTermChange = (value: string) => {
+		setSearchTerm(value)
+		if (value) setOrderNumberSearch('') // Tartib raqamini bo'shatish
+	}
+
+	const handleOrderNumberChange = (value: string) => {
+		setOrderNumberSearch(value)
+		if (value) setSearchTerm('') // Savol matnini bo'shatish
 	}
 
 	return (
@@ -125,10 +156,19 @@ export default function QuestionsPage() {
 					<div className='relative flex-1 max-w-md'>
 						<Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
 						<Input
-							placeholder='Savol qidirish...'
+							placeholder='Savol matni bo‘yicha qidirish...'
 							className='pl-8'
 							value={searchTerm}
-							onChange={e => setSearchTerm(e.target.value)}
+							onChange={e => handleSearchTermChange(e.target.value)}
+						/>
+					</div>
+					<div className='relative flex-1 max-w-xs'>
+						<Input
+							type='number'
+							placeholder='Tartib raqami bo‘yicha qidirish...'
+							className='pl-8'
+							value={orderNumberSearch}
+							onChange={e => handleOrderNumberChange(e.target.value)}
 						/>
 					</div>
 				</div>
@@ -138,7 +178,7 @@ export default function QuestionsPage() {
 				<CardHeader>
 					<CardTitle>Savollar ro&apos;yxati</CardTitle>
 					<CardDescription>
-						{searchTerm
+						{searchTerm || orderNumberSearch
 							? `Qidiruv natijalari: ${filteredTests.length} ta savol`
 							: `Jami ${totalCount} ta savol`}
 					</CardDescription>
@@ -155,6 +195,7 @@ export default function QuestionsPage() {
 							<Table>
 								<TableHeader>
 									<TableRow>
+										<TableHead>Tartib raqami</TableHead>
 										<TableHead>Rasm</TableHead>
 										<TableHead className='w-[400px]'>Savol</TableHead>
 										<TableHead>To&apos;g&apos;ri javob</TableHead>
@@ -164,6 +205,7 @@ export default function QuestionsPage() {
 								<TableBody>
 									{filteredTests.map(test => (
 										<TableRow key={test.id} className='group'>
+											<TableCell>{test.number}</TableCell>
 											<TableCell>
 												{getImageUrl(test.mediaUrl) && !imageErrors[test.id] ? (
 													<Image
@@ -224,7 +266,7 @@ export default function QuestionsPage() {
 								</TableBody>
 							</Table>
 
-							{!searchTerm && totalPages > 1 && (
+							{!searchTerm && !orderNumberSearch && totalPages > 1 && (
 								<div className='mt-4'>
 									<Pagination>
 										<PaginationContent>
