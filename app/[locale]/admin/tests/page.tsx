@@ -54,13 +54,17 @@ export default function QuestionsPage() {
 
 	useEffect(() => {
 		fetchTests()
-	}, [currentPage, language])
+	}, [currentPage, language, searchTerm])
 
 	const fetchTests = async () => {
 		try {
 			setLoading(true)
 			setError(null)
-			const data = await getAllTestsAdmin(currentPage, pageSize, language)
+			const data = await getAllTestsAdmin(
+				searchTerm ? 0 : currentPage,
+				searchTerm ? 2000 : pageSize,
+				language
+			)
 
 			if (data.isSuccess) {
 				setTests(data.result.items)
@@ -77,9 +81,11 @@ export default function QuestionsPage() {
 		}
 	}
 
-	const filteredTests = tests.filter(test =>
-		test.question.toLowerCase().includes(searchTerm.toLowerCase())
-	)
+	const filteredTests = searchTerm
+		? tests.filter(test =>
+				test.question.toLowerCase().includes(searchTerm.toLowerCase())
+		  )
+		: tests
 
 	const getImageUrl = (mediaUrl: string | null) => {
 		if (!mediaUrl || mediaUrl === '1') return null
@@ -93,7 +99,6 @@ export default function QuestionsPage() {
 		setImageErrors(prev => ({ ...prev, [testId]: true }))
 	}
 
-	// Create base URL with language prefix if it exists
 	const getLanguagePrefix = () => {
 		return ['uz', 'uzk', 'ru'].includes(language) ? `/${language}` : ''
 	}
@@ -132,7 +137,11 @@ export default function QuestionsPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Savollar ro&apos;yxati</CardTitle>
-					<CardDescription>Jami {totalCount} ta savol</CardDescription>
+					<CardDescription>
+						{searchTerm
+							? `Qidiruv natijalari: ${filteredTests.length} ta savol`
+							: `Jami ${totalCount} ta savol`}
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					{loading ? (
@@ -215,71 +224,71 @@ export default function QuestionsPage() {
 								</TableBody>
 							</Table>
 
-							<div className='mt-4'>
-								<Pagination>
-									<PaginationContent>
-										<PaginationItem>
-											<PaginationPrevious
-												href='#'
-												onClick={() =>
-													setCurrentPage(prev => Math.max(0, prev - 1))
-												}
-												className={
-													currentPage === 0
-														? 'pointer-events-none opacity-50'
-														: ''
-												}
-											/>
-										</PaginationItem>
+							{!searchTerm && totalPages > 1 && (
+								<div className='mt-4'>
+									<Pagination>
+										<PaginationContent>
+											<PaginationItem>
+												<PaginationPrevious
+													href='#'
+													onClick={() =>
+														setCurrentPage(prev => Math.max(0, prev - 1))
+													}
+													className={
+														currentPage === 0
+															? 'pointer-events-none opacity-50'
+															: ''
+													}
+												/>
+											</PaginationItem>
 
-										{[...Array(totalPages)].map((_, index) => {
-											// Show first page, current page, last page, and neighbors
-											if (
-												index === 0 ||
-												index === totalPages - 1 ||
-												(index >= currentPage - 1 && index <= currentPage + 1)
-											) {
-												return (
-													<PaginationItem key={index}>
-														<PaginationLink
-															href='#'
-															onClick={() => setCurrentPage(index)}
-															isActive={currentPage === index}
-														>
-															{index + 1}
-														</PaginationLink>
-													</PaginationItem>
-												)
-											}
-											// Show ellipsis
-											if (index === 1 || index === totalPages - 2) {
-												return (
-													<PaginationItem key={index}>
-														<PaginationEllipsis />
-													</PaginationItem>
-												)
-											}
-											return null
-										})}
-
-										<PaginationItem>
-											<PaginationNext
-												href='#'
-												onClick={() =>
-													setCurrentPage(prev =>
-														Math.min(totalPages - 1, prev + 1)
+											{[...Array(totalPages)].map((_, index) => {
+												if (
+													index === 0 ||
+													index === totalPages - 1 ||
+													(index >= currentPage - 1 && index <= currentPage + 1)
+												) {
+													return (
+														<PaginationItem key={index}>
+															<PaginationLink
+																href='#'
+																onClick={() => setCurrentPage(index)}
+																isActive={currentPage === index}
+															>
+																{index + 1}
+															</PaginationLink>
+														</PaginationItem>
 													)
 												}
-												className={
-													currentPage === totalPages - 1
-														? 'pointer-events-none opacity-50'
-														: ''
+												if (index === 1 || index === totalPages - 2) {
+													return (
+														<PaginationItem key={index}>
+															<PaginationEllipsis />
+														</PaginationItem>
+													)
 												}
-											/>
-										</PaginationItem>
-									</PaginationContent>
-								</Pagination>
-							</div>
+												return null
+											})}
+
+											<PaginationItem>
+												<PaginationNext
+													href='#'
+													onClick={() =>
+														setCurrentPage(prev =>
+															Math.min(totalPages - 1, prev + 1)
+														)
+													}
+													className={
+														currentPage === totalPages - 1
+															? 'pointer-events-none opacity-50'
+															: ''
+													}
+												/>
+											</PaginationItem>
+										</PaginationContent>
+									</Pagination>
+								</div>
+							)}
 						</>
 					)}
 				</CardContent>
